@@ -23,134 +23,134 @@ export const SideNavBar = (props) => {
     const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'));
 
     const content = (
-        // <Scrollbar
-        //   sx={{
-        //     height: '100%',
-        //     '& .simplebar-content': {
-        //       height: '100%'
-        //     },
-        //     '& .simplebar-scrollbar:before': {
-        //       background: 'neutral.400'
-        //     }
-        //   }}
-        // >
-        <Box
+        <Scrollbar
             sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                height: '100%'
+                height: '100%',
+                '& .simplebar-content': {
+                    height: '100%'
+                },
+                '& .simplebar-scrollbar:before': {
+                    background: 'neutral.400'
+                }
             }}
         >
-            <Box sx={{p: 3}}>
-                <Box
-                    component={NextLink}
-                    href="/"
-                    sx={{
-                        display: 'inline-flex',
-                        height: 32,
-                        width: 32,
-                        ml: -2.2
-                    }}
-                >
-                    <Image
-                        src="/Emeral-ParcelHub-Logo2.png"
-                        alt="Logo"
-                        width={42}
-                        height={42}
-                        style={{
-                            width: 42,
-                            height: 42
-                        }}
-                        priority
-                    />
-                </Box>
-                <Box
-                    sx={{
-                        display: 'inline-flex',
-                        ml: 2.4,
-                        position: 'relative',
-                        top: '-14px'
-                    }}
-                >
-                    <Typography sx={{ fontSize: '20.5px' ,fontWeight: 'bold'}}>
-                        Emerald-Parcel Hub
-                    </Typography>
-                </Box>
-                <Box
-                    sx={{
-                        alignItems: 'center',
-                        backgroundColor: 'rgba(255, 255, 255, 0.04)',
-                        borderRadius: 1,
-                        cursor: 'pointer',
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        mt: 1.2,
-                        ml:-1,
-                        width: '106%',
-                        p: '13px'
-                    }}
-                >
-                    <div>
-                        <Typography
-                            color="inherit"
-                            variant="subtitle1"
-                            sx={{ml: 0.7}}
-                        >
-                            Shijin Zhang
-                        </Typography>
-                        <Typography
-                            color="neutral.400"
-                            variant="body2"
-                            sx={{mb: 0.5,ml: 0.7}}
-                        >
-                            Parcel Hub Station Manager
-                        </Typography>
-                    </div>
-                    <SvgIcon
-                        fontSize="small"
-                        sx={{color: 'neutral.500', mr: -0.8}}
-                    >
-                        <ChevronUpDownIcon/>
-                    </SvgIcon>
-                </Box>
-            </Box>
-            <Divider sx={{borderColor: 'neutral.700'}}/>
             <Box
-                component="nav"
                 sx={{
-                    flexGrow: 1,
-                    px: 2,
-                    py: 3
+                    display: 'flex',
+                    flexDirection: 'column',
+                    height: '100%'
                 }}
             >
-                <Stack
-                    component="ul"
-                    spacing={0.5}
+                <Box sx={{p: 3}}>
+                    <Box
+                        component={NextLink}
+                        href="/"
+                        sx={{
+                            display: 'inline-flex',
+                            height: 32,
+                            width: 32,
+                            ml: -2.2
+                        }}
+                    >
+                        <Image
+                            src="/Emeral-ParcelHub-Logo2.png"
+                            alt="Logo"
+                            width={42}
+                            height={42}
+                            style={{
+                                width: 42,
+                                height: 42
+                            }}
+                            priority
+                        />
+                    </Box>
+                    <Box
+                        sx={{
+                            display: 'inline-flex',
+                            ml: 2.4,
+                            position: 'relative',
+                            top: '-14px'
+                        }}
+                    >
+                        <Typography sx={{fontSize: '20.5px', fontWeight: 'bold'}}>
+                            Emerald-Parcel Hub
+                        </Typography>
+                    </Box>
+                    <Box
+                        sx={{
+                            alignItems: 'center',
+                            backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                            borderRadius: 1,
+                            cursor: 'pointer',
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            mt: 1.2,
+                            ml: -1,
+                            width: '106%',
+                            p: '13px'
+                        }}
+                    >
+                        <div>
+                            <Typography
+                                color="inherit"
+                                variant="subtitle1"
+                                sx={{ml: 0.7}}
+                            >
+                                Shijin Zhang
+                            </Typography>
+                            <Typography
+                                color="neutral.400"
+                                variant="body2"
+                                sx={{mb: 0.5, ml: 0.7}}
+                            >
+                                Parcel Hub Station Manager
+                            </Typography>
+                        </div>
+                        <SvgIcon
+                            fontSize="small"
+                            sx={{color: 'neutral.500', mr: -0.8}}
+                        >
+                            <ChevronUpDownIcon/>
+                        </SvgIcon>
+                    </Box>
+                </Box>
+                <Divider sx={{borderColor: 'neutral.700'}}/>
+                <Box
+                    component="nav"
                     sx={{
-                        listStyle: 'none',
-                        p: 0,
-                        m: 0
+                        flexGrow: 1,
+                        px: 2,
+                        py: 3
                     }}
                 >
-                    {items.map((item) => {
-                        const active = item.path ? (pathname === item.path) : false;
-                        return (
-                            <SideNavItemButton
-                                active={active}
-                                disabled={item.disabled}
-                                external={item.external}
-                                icon={item.icon}
-                                key={item.title}
-                                path={item.path}
-                                title={item.title}
-                            />
-                        );
-                    })}
-                </Stack>
+                    <Stack
+                        component="ul"
+                        spacing={0.5}
+                        sx={{
+                            listStyle: 'none',
+                            p: 0,
+                            m: 0
+                        }}
+                    >
+                        {items.map((item) => {
+                            const active = item.path ? (pathname === item.path) : false;
+                            return (
+                                <SideNavItemButton
+                                    active={active}
+                                    disabled={item.disabled}
+                                    external={item.external}
+                                    icon={item.icon}
+                                    key={item.title}
+                                    path={item.path}
+                                    title={item.title}
+                                />
+                            );
+                        })}
+                    </Stack>
+                </Box>
+                <Divider sx={{borderColor: 'neutral.700'}}/>
             </Box>
-            <Divider sx={{borderColor: 'neutral.700'}}/>
-        </Box>
-        // </Scrollbar>
+        </Scrollbar>
     );
 
     if (lgUp) {

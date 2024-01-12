@@ -109,7 +109,7 @@ const TopAppBar = () => {
                         display: 'block',
                         position: 'absolute',
                         top: 0,
-                        right: 15,
+                        right: 36,
                         width: 10,
                         height: 10,
                         bgcolor: 'background.paper',
