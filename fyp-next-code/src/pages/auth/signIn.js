@@ -1,7 +1,7 @@
-import { useCallback, useState } from 'react';
+import {useCallback, useState} from 'react';
 import Head from 'next/head';
 import NextLink from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/router';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import {
@@ -22,7 +22,9 @@ import {useAuthContext} from "@/contexts/auth-context";
 const SignInPage = () => {
     const router = useRouter();
     const auth = useAuthContext();
+    const continueUrl = router.query.continueUrl || '/';
     const [method, setMethod] = useState('email');
+
     const formik = useFormik({
         initialValues: {
             email: '20104636@mail.wit.ie',
@@ -43,7 +45,7 @@ const SignInPage = () => {
         onSubmit: async (values, helpers) => {
             try {
                 await auth.signIn(values.email, values.password);
-                router.push('/');
+                router.push(continueUrl);
             } catch (err) {
                 helpers.setStatus({ success: false });
                 helpers.setErrors({ submit: err.message });

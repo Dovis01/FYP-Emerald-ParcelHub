@@ -14,6 +14,7 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import {Avatar, Divider, Tooltip} from "@mui/material";
+import {useAuthContext} from "@/contexts/auth-context";
 
 const SIDE_NAV_WIDTH = 285;
 
@@ -60,12 +61,18 @@ const StyledInputBase = styled(InputBase)(({theme}) => ({
 const TopAppBar = () => {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const isMenuOpen = Boolean(anchorEl);
+    const auth = useAuthContext();
 
     const handleProfileMenuOpen = (event) => {
         setAnchorEl(event.currentTarget);
     };
 
     const handleMenuClose = () => {
+        setAnchorEl(null);
+    };
+
+    const handleSignOut = async () => {
+        await auth.signOut();
         setAnchorEl(null);
     };
 
@@ -118,7 +125,7 @@ const TopAppBar = () => {
                 <Avatar/> My Profile
             </MenuItem>
             <Divider/>
-            <MenuItem onClick={handleMenuClose}>
+            <MenuItem onClick={handleSignOut}>
                 Sign Out
             </MenuItem>
         </Menu>

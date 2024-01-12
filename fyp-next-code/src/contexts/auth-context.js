@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useReducer, useRef } from 'react';
 import PropTypes from 'prop-types';
+import { useRouter } from 'next/router';
 
 const HANDLERS = {
   INITIALIZE: 'INITIALIZE',
@@ -63,6 +64,7 @@ export const AuthContextProvider = (props) => {
   const { children } = props;
   const [state, dispatch] = useReducer(reducer, initialState);
   const initialized = useRef(false);
+  const router = useRouter();
 
   const initialize = async () => {
     // Prevent from calling twice in development mode with React.StrictMode enabled
@@ -156,6 +158,8 @@ export const AuthContextProvider = (props) => {
   };
 
   const signOut = () => {
+    window.sessionStorage.removeItem('authenticated');
+    router.reload();
     dispatch({
       type: HANDLERS.SIGN_OUT
     });
