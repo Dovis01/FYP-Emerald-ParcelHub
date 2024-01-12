@@ -73,7 +73,7 @@ const SignInPage = () => {
         <>
             <Head>
                 <title>
-                    Login | Emerald-Parcel Hub
+                    Sign In | Emerald-Parcel Hub
                 </title>
             </Head>
             <Box

@@ -48,7 +48,7 @@ const SignUpPage = () => {
     <>
       <Head>
         <title>
-          Register | Emerald-Parcel Hub
+          Sign Up | Emerald-Parcel Hub
         </title>
       </Head>
       <Box
