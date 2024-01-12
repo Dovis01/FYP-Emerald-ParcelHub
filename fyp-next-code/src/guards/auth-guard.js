@@ -1,5 +1,6 @@
 import {useEffect, useRef, useState} from 'react';
 import {useRouter} from 'next/router';
+import nProgress from 'nprogress';
 import PropTypes from 'prop-types';
 import {useAuthContext} from '@/contexts/auth-context';
 
@@ -26,6 +27,7 @@ const AuthGuard = (props) => {
 
             ignore.current = true;
             const isAuthenticated = window.sessionStorage.getItem('authenticated') === 'true';
+
             if (!isAuthenticated) {
                 console.log('Not authenticated, redirecting');
                 router
@@ -33,7 +35,9 @@ const AuthGuard = (props) => {
                         pathname: '/auth/signIn',
                         query: router.asPath !== '/' ? {continueUrl: router.asPath} : undefined
                     })
-                    .catch(console.error);
+                    .catch((error) => {
+                        console.error(error);
+                    });
             } else {
                 setChecked(true);
             }

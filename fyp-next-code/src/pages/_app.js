@@ -1,19 +1,42 @@
 import {ThemeProvider} from '@mui/material/styles';
+import Head from 'next/head';
+import {CacheProvider} from '@emotion/react';
+import {createEmotionCache} from '@/components/customized/createEmotionCache';
 import {createTheme} from '@/theme';
-import UsersContextProvider from "@/contexts/usersContext";
+import { CssBaseline } from '@mui/material';
+import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
+import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
 import {AuthContextProvider} from "@/contexts/auth-context";
+import {useNProgressBar} from '@/components/customized/nProgressBar';
+import 'simplebar-react/dist/simplebar.min.css';
 
-function App({Component, pageProps}) {
+const clientSideEmotionCache = createEmotionCache();
+const App = (props) => {
+    const {Component, emotionCache = clientSideEmotionCache, pageProps} = props;
     const getLayout = Component.getLayout || ((page) => page);
     const theme = createTheme();
+    useNProgressBar();
+
     return (
-        <UsersContextProvider>
-            <AuthContextProvider>
-                <ThemeProvider theme={theme}>
-                    {getLayout(<Component {...pageProps} />)}
-                </ThemeProvider>
-            </AuthContextProvider>
-        </UsersContextProvider>
+        <CacheProvider value={emotionCache}>
+            <Head>
+                <title>
+                    Emerald-Parcel Hub
+                </title>
+                <meta
+                    name="viewport"
+                    content="initial-scale=1, width=device-width"
+                />
+            </Head>
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <AuthContextProvider>
+                    <ThemeProvider theme={theme}>
+                        <CssBaseline />
+                        {getLayout(<Component {...pageProps} />)}
+                    </ThemeProvider>
+                </AuthContextProvider>
+            </LocalizationProvider>
+        </CacheProvider>
     )
 }
 
