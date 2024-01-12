@@ -21,8 +21,38 @@ export const products=[
         updatedAt: subDays(subHours(now, 1), 1).getTime()
     },
     {
-        id: 'a6ede15670da63f49f752c89',
+        id: 'a6ede555t5da73t49tt5tc89',
         image: '/assets/products/product-6.png',
+        name: 'Makeup Lipstick',
+        updatedAt: subDays(subHours(now, 3), 3).getTime()
+    },
+    {
+        id: 'a6edel56l0dl63i4lfl52c89',
+        image: '/assets/products/product-1.png',
+        name: 'Makeup Lipstick',
+        updatedAt: subDays(subHours(now, 3), 2).getTime()
+    },
+    {
+        id: 'a6ede1p670pa63fp9fp52c89',
+        image: '/assets/products/product-2.png',
+        name: 'Makeup Lipstick',
+        updatedAt: subDays(subHours(now, 3), 8).getTime()
+    },
+    {
+        id: 'a1edj1j66jdaj3f49f752c89',
+        image: '/assets/products/product-7.png',
+        name: 'Makeup Lipstick',
+        updatedAt: subDays(subHours(now, 3), 6).getTime()
+    },
+    {
+        id: 'a6ed415677d164f44f754c49',
+        image: '/assets/products/product-5.png',
+        name: 'Makeup Lipstick',
+        updatedAt: subDays(subHours(now, 3), 7).getTime()
+    },
+    {
+        id: 'a6ede15y7yda6yf4yfy8yc89',
+        image: '/assets/products/product-4.png',
         name: 'Makeup Lipstick',
         updatedAt: subDays(subHours(now, 3), 3).getTime()
     },
@@ -36,11 +66,41 @@ export const products=[
 
 export const order = [
     {
-        id: 'f69f88012978187a6c12897f',
+        id: 'f69f38313938387a6c12897f',
         ref: 'DEV1049',
         amount: 30.5,
         customer: {
             name: 'Ekaterina Tankova'
+        },
+        createdAt: 1704296500000,
+        status: 'pending'
+    },
+    {
+        id: 'f69f880ggg78187a6c12897f',
+        ref: 'DEV1049',
+        amount: 30.5,
+        customer: {
+            name: 'Era Oova'
+        },
+        createdAt: 1704296500000,
+        status: 'pending'
+    },
+    {
+        id: 'm69fuu0u29u81u7u6c12897f',
+        ref: 'DEV1049',
+        amount: 30.5,
+        customer: {
+            name: 'Eka Tanova'
+        },
+        createdAt: 1704296500000,
+        status: 'pending'
+    },
+    {
+        id: 'f69f88012978187a6c12897f',
+        ref: 'DEV1049',
+        amount: 30.5,
+        customer: {
+            name: 'Lia Ankova'
         },
         createdAt: 1704296500000,
         status: 'pending'
