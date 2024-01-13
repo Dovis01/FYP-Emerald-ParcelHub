@@ -27,7 +27,6 @@ export const AuthLayout = (props) => {
             <Box
                 component="main"
                 sx={{
-                    mt: -1,
                     mr: -1,
                     display: 'flex',
                     flex: '1 1 auto',
@@ -50,7 +49,7 @@ export const AuthLayout = (props) => {
                         <Box
                             component="header"
                             sx={{
-                                ml:1.9,
+                                ml:2.1,
                                 mt:1.9,
                                 width: '100%'
                             }}

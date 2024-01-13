@@ -14,7 +14,7 @@ const NotFoundPage = () => (
         <Box
             component="main"
             sx={{
-                mt: 15,
+                mt:-10,
                 alignItems: 'center',
                 display: 'flex',
                 flexGrow: 1,

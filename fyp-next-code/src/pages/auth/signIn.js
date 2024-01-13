@@ -193,7 +193,7 @@ const SignInPage = () => {
                                 <Alert
                                     color="primary"
                                     severity="info"
-                                    sx={{mt:-0.6, ml:2.5,width: '100%' }}
+                                    sx={{mt:-0.6,ml:-0.3,width: '101%' }}
                                 >
                                     <div>
                                         You can use <b>20104636@mail.wit.ie</b> and password <b>Password123!</b>
