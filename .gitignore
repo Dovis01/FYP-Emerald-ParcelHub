@@ -34,3 +34,36 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+fyp-springboot-code/HELP.md
+target/
+!fyp-springboot-code/.mvn/wrapper/maven-wrapper.jar
+!fyp-springboot-code/src/main/**/target/
+!fyp-springboot-code/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+fyp-springboot-code/nbproject/private/
+fyp-springboot-code/nbbuild/
+fyp-springboot-code/dist/
+fyp-springboot-code/nbdist/
+fyp-springboot-code/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
