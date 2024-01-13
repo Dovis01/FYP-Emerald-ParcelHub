@@ -8,6 +8,7 @@ import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
 import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
 import {AuthContextProvider} from "@/contexts/auth-context";
 import {useNProgressBar} from '@/components/customized/nProgressBar';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import 'simplebar-react/dist/simplebar.min.css';
 
 const clientSideEmotionCache = createEmotionCache();
@@ -33,6 +34,7 @@ const App = (props) => {
                     <ThemeProvider theme={theme}>
                         <CssBaseline />
                         {getLayout(<Component {...pageProps} />)}
+                        <SpeedInsights />
                     </ThemeProvider>
                 </AuthContextProvider>
             </LocalizationProvider>
