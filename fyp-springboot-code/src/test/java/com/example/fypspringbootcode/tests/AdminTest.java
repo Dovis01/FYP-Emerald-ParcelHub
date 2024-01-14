@@ -1,4 +1,4 @@
-package com.example.fypspringbootcode;
+package com.example.fypspringbootcode.tests;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
@@ -10,10 +10,18 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.stereotype.Service;
 
+/**
+ * @title:FinalYearProjectCode
+ * @description:<TODO description class purpose>
+ * @author: Shijin Zhang
+ * @version:1.0.0
+ * @create:15/01/2024 04:35
+ **/
 @SpringBootTest
 @Slf4j //用于异常错误抛出 下方log.error
-class FypSpringbootCodeApplicationTests {
+public class AdminTest {
 
     private static final String DEFAULT_PASS = "123456";
     private static final String PASS_SALT = "Dovis"; //密码盐
@@ -21,12 +29,12 @@ class FypSpringbootCodeApplicationTests {
     @Autowired
     AdminMapper adminMapper;
     @Test
-    public Admin getById(Integer id) {
-        return adminMapper.selectById(id);
+    public void getById() {
+        System.out.println(adminMapper.selectById(1));
     }
     @Test
     public void save() {
-        Admin admin = new Admin(1,"admin","zsj123456");
+        Admin admin = new Admin(3,"admin3","zsj123456");
         //如果admin对象的密码属性为空 则设置默认密码 123
         //hutool包下的工具类StrUtil
         if (StrUtil.isBlank(admin.getPassword())) {
@@ -51,5 +59,4 @@ class FypSpringbootCodeApplicationTests {
     private String securePass(String password) {
         return SecureUtil.md5(password + PASS_SALT);
     }
-
 }

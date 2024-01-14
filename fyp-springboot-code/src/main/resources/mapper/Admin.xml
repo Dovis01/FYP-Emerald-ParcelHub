@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.fypspringbootcode.mapper.AdminMapper">
+    <select id="getByAdminNameAndPassword" resultType="com.example.fypspringbootcode.entity.Admin">
+        select * from admin where admin_name = #{adminName} and password = #{password}
+    </select>
+
+    <select id="listByCondition" resultType="com.example.fypspringbootcode.entity.Admin">
+        select * from admin
+        <where>
+            <if test="adminName != null and adminName != ''">
+                admin_name like concat('%', #{adminName}, '%')
+            </if>
+        </where>
+        order by admin_id desc
+    </select>
+
+    <update id="updatePassword">
+        update admin set password = #{newPass} where admin_name = #{adminName} and password = #{password}
+    </update>
+</mapper>
