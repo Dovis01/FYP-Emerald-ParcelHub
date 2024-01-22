@@ -25,8 +25,8 @@ public class WebConfig implements  WebMvcConfigurer {
     // 加自定义拦截器JwtInterceptor，设置拦截规则
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        //在登陆界面时要放开不去拦截，因为还没登陆成功不会有token
-        registry.addInterceptor(jwtInterceptor).addPathPatterns("/api/**").excludePathPatterns("/api/admin/login");
+        //在登陆界面时要放开不去拦截，因为还没登陆成功不会有token "/api/admin/login"
+        registry.addInterceptor(jwtInterceptor).addPathPatterns("/api/**").excludePathPatterns("/api/admin/**");
     }
 
 

@@ -16,7 +16,7 @@ public class FypSpringbootCodeApplication {
     }
 
     // 健康检查的接口
-    @GetMapping
+    @GetMapping("/")
     public String health() {
         return "SUCCESS";
     }

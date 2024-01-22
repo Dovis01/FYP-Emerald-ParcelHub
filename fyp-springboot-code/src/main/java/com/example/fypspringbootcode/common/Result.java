@@ -27,6 +27,21 @@ public class Result {
         return result;
     }
 
+    public static Result success(String msg) {
+        Result result = new Result();
+        result.setCode(SUCCESS_CODE);
+        result.setMsg(msg);
+        return result;
+    }
+
+    public static Result success(Object data,String msg) {
+        Result result = new Result();
+        result.setCode(SUCCESS_CODE);
+        result.setData(data);
+        result.setMsg(msg);
+        return result;
+    }
+
     public static Result error(String msg) {
         Result result = new Result();
         result.setCode(ERROR_CODE);

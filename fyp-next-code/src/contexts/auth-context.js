@@ -1,6 +1,7 @@
-import { createContext, useContext, useEffect, useReducer, useRef } from 'react';
+import {createContext, useContext, useEffect, useReducer, useRef, useState} from 'react';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
+import {loginByEmail, loginByUsername} from "@/api/springboot-api";
 
 const HANDLERS = {
   INITIALIZE: 'INITIALIZE',
@@ -64,6 +65,7 @@ export const AuthContextProvider = (props) => {
   const { children } = props;
   const [state, dispatch] = useReducer(reducer, initialState);
   const initialized = useRef(false);
+  const [authToken, setAuthToken] = useState(null);
   const router = useRouter();
 
   const initialize = async () => {
@@ -129,9 +131,46 @@ export const AuthContextProvider = (props) => {
     });
   };
 
-  const signIn = async (email, password) => {
-    if (email !== '20104636@mail.wit.ie' || password !== 'Password123!') {
-      throw new Error('Please check your email and password');
+  const setToken = (data) => {
+    window.sessionStorage.setItem("token", data);
+    setAuthToken(data);
+  }
+
+  const signInByEmail = async (email, password) => {
+    const result = await loginByEmail(email, password);
+
+    if (result.data.token) {
+      setToken(result.data.token);
+    } else {
+      throw new Error(result.msg);
+    }
+
+    try {
+      window.sessionStorage.setItem('authenticated', 'true');
+    } catch (err) {
+      console.error(err);
+    }
+
+    const user = {
+      id: '5e86809283e28b96d2d38537',
+      avatar: '/assets/avatars/avatar-anika-visser.png',
+      name: 'Anika Visser',
+      email: 'anika.visser@devias.io'
+    };
+
+    dispatch({
+      type: HANDLERS.SIGN_IN,
+      payload: user
+    });
+  };
+
+  const signInByUsername = async (username, password) => {
+    const result = await loginByUsername(username, password);
+
+    if (result.data.token) {
+      setToken(result.data.token);
+    } else {
+      throw new Error(result.msg);
     }
 
     try {
@@ -169,8 +208,10 @@ export const AuthContextProvider = (props) => {
     <AuthContext.Provider
       value={{
         ...state,
+        authToken,
         skip,
-        signIn,
+        signInByEmail,
+        signInByUsername,
         signUp,
         signOut
       }}

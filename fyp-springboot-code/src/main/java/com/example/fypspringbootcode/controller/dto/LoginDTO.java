@@ -11,6 +11,7 @@ import lombok.Data;
 public class LoginDTO {
     private Integer id;
     private String adminName;
+    private String adminEmail;
     //作为前端访问后端的凭证存到Cookies里面
     private String token;
 }

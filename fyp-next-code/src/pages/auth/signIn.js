@@ -23,12 +23,40 @@ const SignInPage = () => {
     const router = useRouter();
     const auth = useAuthContext();
     const continueUrl = router.query.continueUrl || '/';
-    const [method, setMethod] = useState('email');
+    const [method, setMethod] = useState('username');
 
-    const formik = useFormik({
+    const formikUsername = useFormik({
         initialValues: {
-            email: '20104636@mail.wit.ie',
-            password: 'Password123!',
+            username: '',
+            password: '',
+            submit: null
+        },
+        validationSchema: Yup.object({
+            username: Yup
+                .string()
+                .max(64)
+                .required('Username is required'),
+            password: Yup
+                .string()
+                .max(255)
+                .required('Password is required')
+        }),
+        onSubmit: async (values, helpers) => {
+            try {
+                await auth.signInByUsername(values.username, values.password);
+                await router.push(continueUrl);
+            } catch (err) {
+                helpers.setStatus({ success: false });
+                helpers.setErrors({ submit: err.message });
+                helpers.setSubmitting(false);
+            }
+        }
+    });
+
+    const formikEmail = useFormik({
+        initialValues: {
+            email: '',
+            password: '',
             submit: null
         },
         validationSchema: Yup.object({
@@ -44,8 +72,8 @@ const SignInPage = () => {
         }),
         onSubmit: async (values, helpers) => {
             try {
-                await auth.signIn(values.email, values.password);
-                router.push(continueUrl);
+                await auth.signInByEmail(values.email, values.password);
+                await router.push(continueUrl);
             } catch (err) {
                 helpers.setStatus({ success: false });
                 helpers.setErrors({ submit: err.message });
@@ -124,53 +152,121 @@ const SignInPage = () => {
                             value={method}
                         >
                             <Tab
+                                label="User Name"
+                                value="username"
+                            />
+                            <Tab
                                 label="Email"
                                 value="email"
                             />
-                            <Tab
-                                label="Phone Number"
-                                value="phoneNumber"
-                            />
                         </Tabs>
-                        {method === 'email' && (
+                        {method === 'username' && (
                             <form
                                 noValidate
-                                onSubmit={formik.handleSubmit}
+                                onSubmit={formikUsername.handleSubmit}
                             >
                                 <Stack spacing={3}>
                                     <TextField
-                                        error={!!(formik.touched.email && formik.errors.email)}
+                                        error={!!(formikUsername.touched.username && formikUsername.errors.username)}
                                         fullWidth
-                                        helperText={formik.touched.email && formik.errors.email}
-                                        label="Email Address"
-                                        name="email"
-                                        onBlur={formik.handleBlur}
-                                        onChange={formik.handleChange}
-                                        type="email"
-                                        value={formik.values.email}
+                                        helperText={formikUsername.touched.username && formikUsername.errors.username}
+                                        label="User Name"
+                                        name="username"
+                                        onBlur={formikUsername.handleBlur}
+                                        onChange={formikUsername.handleChange}
+                                        value={formikUsername.values.username}
                                     />
                                     <TextField
-                                        error={!!(formik.touched.password && formik.errors.password)}
+                                        error={!!(formikUsername.touched.password && formikUsername.errors.password)}
                                         fullWidth
-                                        helperText={formik.touched.password && formik.errors.password}
+                                        helperText={formikUsername.touched.password && formikUsername.errors.password}
                                         label="Password"
                                         name="password"
-                                        onBlur={formik.handleBlur}
-                                        onChange={formik.handleChange}
+                                        onBlur={formikUsername.handleBlur}
+                                        onChange={formikUsername.handleChange}
                                         type="password"
-                                        value={formik.values.password}
+                                        value={formikUsername.values.password}
                                     />
                                 </Stack>
                                 <FormHelperText sx={{ mt: 1 }}>
                                     Optionally you can skip.
                                 </FormHelperText>
-                                {formik.errors.submit && (
+                                {formikUsername.errors.submit && (
                                     <Typography
                                         color="error"
                                         sx={{ mt: 3 }}
                                         variant="body2"
                                     >
-                                        {formik.errors.submit}
+                                        {formikUsername.errors.submit}
+                                    </Typography>
+                                )}
+                                <Button
+                                    fullWidth
+                                    size="large"
+                                    sx={{ mt: 3 }}
+                                    type="submit"
+                                    variant="contained"
+                                >
+                                    Continue
+                                </Button>
+                                <Button
+                                    fullWidth
+                                    size="large"
+                                    sx={{ mt: 1 }}
+                                    onClick={handleSkip}
+                                >
+                                    Skip authentication
+                                </Button>
+                                <Alert
+                                    color="primary"
+                                    severity="info"
+                                    sx={{mt:-0.6,ml:6.5,width: '100%' }}
+                                >
+                                    <div>
+                                        You can use <b>admin</b> and password <b>zsj123456</b>
+                                    </div>
+                                </Alert>
+                            </form>
+                        )}
+                        {method === 'email' && (
+                            <form
+                                noValidate
+                                onSubmit={formikEmail.handleSubmit}
+                            >
+                                <Stack spacing={3}>
+                                    <TextField
+                                        error={!!(formikEmail.touched.email && formikEmail.errors.email)}
+                                        fullWidth
+                                        helperText={formikEmail.touched.email && formikEmail.errors.email}
+                                        label="Email Address"
+                                        name="email"
+                                        onBlur={formikEmail.handleBlur}
+                                        onChange={formikEmail.handleChange}
+                                        type="email"
+                                        value={formikEmail.values.email}
+                                    />
+                                    <TextField
+                                        error={!!(formikEmail.touched.password && formikEmail.errors.password)}
+                                        fullWidth
+                                        helperText={formikEmail.touched.password && formikEmail.errors.password}
+                                        label="Password"
+                                        name="password"
+                                        onBlur={formikEmail.handleBlur}
+                                        onChange={formikEmail.handleChange}
+                                        type="password"
+                                        value={formikEmail.values.password}
+                                    />
+                                </Stack>
+                                <FormHelperText sx={{ mt: 1 }}>
+                                    Optionally you can skip.
+                                </FormHelperText>
+                                {formikEmail.errors.submit && (
+                                    <Typography
+                                        color="error"
+                                        sx={{ mt: 3 }}
+                                        variant="body2"
+                                    >
+                                        {formikEmail.errors.submit}
                                     </Typography>
                                 )}
                                 <Button
@@ -200,19 +296,6 @@ const SignInPage = () => {
                                     </div>
                                 </Alert>
                             </form>
-                        )}
-                        {method === 'phoneNumber' && (
-                            <div>
-                                <Typography
-                                    sx={{ mb: 1 }}
-                                    variant="h6"
-                                >
-                                    Not available in the demo
-                                </Typography>
-                                <Typography color="text.secondary">
-                                    To prevent unnecessary costs we disabled this feature in the demo.
-                                </Typography>
-                            </div>
                         )}
                     </div>
                 </Box>

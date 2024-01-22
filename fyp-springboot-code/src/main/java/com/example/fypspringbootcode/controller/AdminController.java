@@ -3,7 +3,8 @@ package com.example.fypspringbootcode.controller;
 import com.example.fypspringbootcode.common.Result;
 import com.example.fypspringbootcode.controller.dto.LoginDTO;
 import com.example.fypspringbootcode.controller.request.AdminPageRequest;
-import com.example.fypspringbootcode.controller.request.LoginRequest;
+import com.example.fypspringbootcode.controller.request.LoginEmailRequest;
+import com.example.fypspringbootcode.controller.request.LoginUsernameRequest;
 import com.example.fypspringbootcode.controller.request.PasswordRequest;
 import com.example.fypspringbootcode.entity.Admin;
 import com.example.fypspringbootcode.service.IAdminService;
@@ -20,10 +21,16 @@ public class AdminController {
     @Autowired
     IAdminService adminService;
 
-    @PostMapping("/login")
-    public Result login(@RequestBody LoginRequest request) {
-        LoginDTO login = adminService.login(request);
-        return Result.success(login);
+    @PostMapping("/login/username")
+    public Result loginByUsername(@RequestBody LoginUsernameRequest request) {
+        LoginDTO login = adminService.loginByUsername(request);
+        return Result.success(login, "login by username successfully");
+    }
+
+    @PostMapping("/login/email")
+    public Result loginByEmail(@RequestBody LoginEmailRequest request) {
+        LoginDTO login = adminService.loginByEmail(request);
+        return Result.success(login,"login by email successfully");
     }
 
     @PutMapping("/password")
@@ -35,7 +42,7 @@ public class AdminController {
     @PostMapping("/save")
     public Result save(@RequestBody Admin obj) {
         adminService.save(obj);
-        return Result.success();
+        return Result.success("register successfully");
     }
 
     @DeleteMapping("/delete/{id}")

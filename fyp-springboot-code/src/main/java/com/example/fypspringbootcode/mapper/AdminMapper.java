@@ -12,6 +12,5 @@ import java.util.List;
 public interface AdminMapper extends BaseMapper<Admin> {
     List<Admin> listByCondition(BaseRequest baseRequest);
     Admin getByAdminNameAndPassword(@Param("adminName") String adminName, @Param("password") String password);
-
     int updatePassword(PasswordRequest request);
 }
