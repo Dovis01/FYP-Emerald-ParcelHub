@@ -14,40 +14,37 @@ const AccountPage = () => (
         <Box
             component="main"
             sx={{
-                ml:-25,
+                ml: -27,
                 mt: -5,
                 flexGrow: 1,
-                py: 8
+                pt: 8,
+                height: '100vh'
             }}
         >
             <Container maxWidth="lg">
                 <Stack spacing={3}>
-                    <div>
-                        <Typography variant="h4">
-                            Account
-                        </Typography>
-                    </div>
-                    <div>
+                    <Typography variant="h4">
+                        Account
+                    </Typography>
+                    <Grid
+                        container
+                        spacing={3}
+                    >
                         <Grid
-                            container
-                            spacing={3}
+                            xs={12}
+                            md={6}
+                            lg={4}
                         >
-                            <Grid
-                                xs={12}
-                                md={6}
-                                lg={4}
-                            >
-                                <AccountProfile/>
-                            </Grid>
-                            <Grid
-                                xs={12}
-                                md={6}
-                                lg={8}
-                            >
-                                <AccountProfileDetails/>
-                            </Grid>
+                            <AccountProfile/>
                         </Grid>
-                    </div>
+                        <Grid
+                            xs={12}
+                            md={6}
+                            lg={8}
+                        >
+                            <AccountProfileDetails/>
+                        </Grid>
+                    </Grid>
                 </Stack>
             </Container>
         </Box>

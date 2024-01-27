@@ -162,7 +162,8 @@ export const SideNavBar = (props) => {
                     sx: {
                         backgroundColor: 'neutral.800',
                         color: 'common.white',
-                        width: 285
+                        width: 285,
+                        borderRight: 0
                     }
                 }}
                 variant="permanent"

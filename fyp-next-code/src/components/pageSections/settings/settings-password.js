@@ -1,6 +1,5 @@
 import {useCallback, useState} from 'react';
 import {
-    Box,
     Button,
     Card,
     CardActions,
@@ -36,7 +35,7 @@ export const SettingsPassword = () => {
 
     return (
         <form onSubmit={handleSubmit}>
-            <Paper elevation={10} sx={{width: '100%', height: '100%', ml: 20}}>
+            <Paper elevation={10} sx={{width: '100%', height: '100%', ml: 23.5}}>
                 <Card>
                     <CardHeader
                         subheader="Update password"

@@ -16,7 +16,10 @@ function MainPageLayout({children}) {
     const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'));
     return (
         <RootLayout>
-            <Box sx={{display: 'flex'}}>
+            <Box sx={{
+                display: 'flex',
+                background: "linear-gradient(129deg, rgba(176,232,247,0.9949229691876751) 3%, rgba(191,151,231,1) 100%)",
+            }}>
                 <CssBaseline/>
                 <TopAppBar/>
                 {lgUp && (

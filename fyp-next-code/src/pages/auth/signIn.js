@@ -106,7 +106,7 @@ const SignInPage = () => {
             </Head>
             <Box
                 sx={{
-                    backgroundColor: 'background.paper',
+                    background: 'linear-gradient(169deg, rgba(246,246,246,0.9725140056022409) 67%, rgba(173,230,232,0.64) 100%)',
                     flex: '1 1 auto',
                     alignItems: 'center',
                     display: 'flex',
@@ -220,7 +220,7 @@ const SignInPage = () => {
                                 <Alert
                                     color="primary"
                                     severity="info"
-                                    sx={{mt:-0.6,ml:6.5,width: '100%' }}
+                                    sx={{mt:-0.6,width: '100%' , display: 'flex', justifyContent: 'center',backgroundColor: 'transparent'}}
                                 >
                                     <div>
                                         You can use <b>admin</b> and password <b>zsj123456</b>
@@ -289,7 +289,7 @@ const SignInPage = () => {
                                 <Alert
                                     color="primary"
                                     severity="info"
-                                    sx={{mt:-0.6,ml:-0.3,width: '101%' }}
+                                    sx={{mt:-0.6,width: '101%', display: 'flex', justifyContent: 'center' ,backgroundColor: 'transparent'}}
                                 >
                                     <div>
                                         You can use <b>20104636@mail.wit.ie</b> and password <b>Password123!</b>

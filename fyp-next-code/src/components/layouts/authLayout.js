@@ -40,7 +40,7 @@ export const AuthLayout = (props) => {
                         xs={12}
                         lg={5.9}
                         sx={{
-                            backgroundColor: 'background.paper',
+                            background: 'linear-gradient(144deg, rgba(207,239,247,0.9725140056022409) 2%, rgba(169,90,237,1) 100%)',
                             display: 'flex',
                             flexDirection: 'column',
                             position: 'relative'
@@ -50,7 +50,8 @@ export const AuthLayout = (props) => {
                             component="header"
                             sx={{
                                 ml:2.1,
-                                mt:1.9,
+                                mt:1.1,
+                                mb:0.7,
                                 width: '100%'
                             }}
                         >

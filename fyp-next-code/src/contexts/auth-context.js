@@ -1,4 +1,4 @@
-import {createContext, useContext, useEffect, useReducer, useRef, useState} from 'react';
+import {createContext, useContext, useReducer, useState} from 'react';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
 import {loginByEmail, loginByUsername} from "@/api/springboot-api";
@@ -57,59 +57,13 @@ const reducer = (state, action) => (
   handlers[action.type] ? handlers[action.type](state, action) : state
 );
 
-// The role of this context is to propagate authentication state through the App tree.
-
 export const AuthContext = createContext({ undefined });
 
 export const AuthContextProvider = (props) => {
   const { children } = props;
   const [state, dispatch] = useReducer(reducer, initialState);
-  const initialized = useRef(false);
   const [authToken, setAuthToken] = useState(null);
   const router = useRouter();
-
-  const initialize = async () => {
-    // Prevent from calling twice in development mode with React.StrictMode enabled
-    if (initialized.current) {
-      return;
-    }
-
-    initialized.current = true;
-
-    let isAuthenticated = false;
-
-    try {
-      isAuthenticated = window.sessionStorage.getItem('authenticated') === 'true';
-    } catch (err) {
-      console.error(err);
-    }
-
-    if (isAuthenticated) {
-      const user = {
-        id: '5e86809283e28b96d2d38537',
-        avatar: '/assets/avatars/avatar-anika-visser.png',
-        name: 'Anika Visser',
-        email: 'anika.visser@devias.io'
-      };
-
-      dispatch({
-        type: HANDLERS.INITIALIZE,
-        payload: user
-      });
-    } else {
-      dispatch({
-        type: HANDLERS.INITIALIZE
-      });
-    }
-  };
-
-  useEffect(
-    () => {
-      initialize();
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  );
 
   const skip = () => {
     try {
@@ -145,11 +99,7 @@ export const AuthContextProvider = (props) => {
       throw new Error(result.msg);
     }
 
-    try {
-      window.sessionStorage.setItem('authenticated', 'true');
-    } catch (err) {
-      console.error(err);
-    }
+    window.sessionStorage.setItem('authenticated', 'true');
 
     const user = {
       id: '5e86809283e28b96d2d38537',
@@ -173,11 +123,7 @@ export const AuthContextProvider = (props) => {
       throw new Error(result.msg);
     }
 
-    try {
-      window.sessionStorage.setItem('authenticated', 'true');
-    } catch (err) {
-      console.error(err);
-    }
+    window.sessionStorage.setItem('authenticated', 'true');
 
     const user = {
       id: '5e86809283e28b96d2d38537',

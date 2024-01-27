@@ -53,6 +53,7 @@ const SignUpPage = () => {
       </Head>
       <Box
         sx={{
+          background: 'linear-gradient(169deg, rgba(246,246,246,0.9725140056022409) 67%, rgba(173,230,232,0.64) 100%)',
           flex: '1 1 auto',
           alignItems: 'center',
           display: 'flex',
