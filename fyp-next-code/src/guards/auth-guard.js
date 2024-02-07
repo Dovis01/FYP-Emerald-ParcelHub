@@ -1,6 +1,5 @@
 import {useEffect, useRef, useState} from 'react';
 import {useRouter} from 'next/router';
-import nProgress from 'nprogress';
 import PropTypes from 'prop-types';
 import {useAuthContext} from '@/contexts/auth-context';
 
@@ -26,7 +25,6 @@ const AuthGuard = (props) => {
             }
 
             ignore.current = true;
-            const isAuthenticated = window.sessionStorage.getItem('authenticated') === 'true';
 
             if (!isAuthenticated) {
                 console.log('Not authenticated, redirecting');
@@ -42,7 +40,7 @@ const AuthGuard = (props) => {
                 setChecked(true);
             }
         },
-        [router.isReady,isAuthenticated]
+        [router.isReady, isAuthenticated]
     );
 
     if (!checked) {
@@ -51,7 +49,6 @@ const AuthGuard = (props) => {
 
     // If got here, it means that the redirect did not occur, and that tells us that the user is
     // authenticated / authorized.
-
     return children;
 };
 
