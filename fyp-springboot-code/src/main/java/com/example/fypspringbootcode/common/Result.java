@@ -10,6 +10,7 @@ public class Result {
     private static final String SUCCESS_CODE = "200";
     private static final String ERROR_CODE = "-1";
     //返回给前端的属性
+    private Boolean success = true;//前端接口的响应结果
     private String code;//前端接口的响应结果
     private Object data;//将后台数据存到data中给前端所有接口调用
     private String msg;//错误信息
@@ -34,7 +35,7 @@ public class Result {
         return result;
     }
 
-    public static Result success(Object data,String msg) {
+    public static Result success(Object data, String msg) {
         Result result = new Result();
         result.setCode(SUCCESS_CODE);
         result.setData(data);
@@ -44,6 +45,7 @@ public class Result {
 
     public static Result error(String msg) {
         Result result = new Result();
+        result.setSuccess(false);
         result.setCode(ERROR_CODE);
         result.setMsg(msg);
         return result;
@@ -51,6 +53,7 @@ public class Result {
 
     public static Result error(String code, String msg) {
         Result result = new Result();
+        result.setSuccess(false);
         result.setCode(code);
         result.setMsg(msg);
         return result;
