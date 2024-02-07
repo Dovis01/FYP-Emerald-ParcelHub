@@ -18,6 +18,6 @@
     </select>
 
     <update id="updatePassword">
-        update admin set password = #{newPass} where admin_name = #{adminName} and password = #{password}
+        update admin set password = #{newPass} where admin_name = #{userame} and password = #{password}
     </update>
 </mapper>

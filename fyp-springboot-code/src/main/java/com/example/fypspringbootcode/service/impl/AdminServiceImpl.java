@@ -3,10 +3,9 @@ package com.example.fypspringbootcode.service.impl;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.example.fypspringbootcode.controller.dto.LoginDTO;
+import com.example.fypspringbootcode.controller.dto.LoginAdminDTO;
 import com.example.fypspringbootcode.controller.request.BaseRequest;
-import com.example.fypspringbootcode.controller.request.LoginEmailRequest;
-import com.example.fypspringbootcode.controller.request.LoginUsernameRequest;
+import com.example.fypspringbootcode.controller.request.LoginRequest;
 import com.example.fypspringbootcode.controller.request.PasswordRequest;
 import com.example.fypspringbootcode.entity.Admin;
 import com.example.fypspringbootcode.exception.ServiceException;
@@ -23,7 +22,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Slf4j //用于异常错误抛出 下方log.error
+import static com.example.fypspringbootcode.common.ErrorCodeList.ERROR_CODE_401;
+import static com.example.fypspringbootcode.common.ErrorCodeList.ERROR_CODE_500;
+
+@Slf4j
 @Service
 public class AdminServiceImpl implements IAdminService {
 
@@ -31,7 +33,7 @@ public class AdminServiceImpl implements IAdminService {
     AdminMapper adminMapper;
 
     private static final String DEFAULT_PASS = "zsj123456";
-    private static final String PASS_SALT = "Dovis"; //密码盐
+    private static final String PASS_SALT = "Dovis"; //password salt
 
     @Override
     public List<Admin> list() {
@@ -58,8 +60,8 @@ public class AdminServiceImpl implements IAdminService {
             //可能发生数据库加入重复admin用户名值发生的未捕获的异常  save方法可能会失败
             adminMapper.insert(obj);
         } catch (DuplicateKeyException e) {
-            log.error("数据插入失败， username:{}", obj.getAdminName(), e);
-            throw new ServiceException("用户名重复");
+            log.error("Fail to insert the admin, admin name:{}", obj.getAdminName(), e);
+            throw new ServiceException(ERROR_CODE_401, "The username is duplicated, please change another one.");
         }
     }
 
@@ -75,90 +77,62 @@ public class AdminServiceImpl implements IAdminService {
 
     @Override
     //传进来一个封装前端登录请求参数的前端请求参数对象，登陆成功后返回给前端一个登陆成功的管理员对象(使得前端获得这个登陆成功的对象所含信息)
-    public LoginDTO loginByUsername(LoginUsernameRequest request) {
-        Admin admin = null;
+    public LoginAdminDTO login(LoginRequest request) {
+        Admin admin;
         QueryWrapper<Admin> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("admin_name", request.getUsername());
         try {
-    //不通过Username和password进行查询因为这样查出的唯一admin,会出现相同用户名密码不同，一个账号多个密码问题；
-    //通过Username进行查询并且数据库设置username字段唯一，解决了一个账号多个密码问题 用户名变成唯一
-    //try catch保护防止返回的是admin list对像
+            //不通过Username和password进行查询因为这样查出的唯一admin,会出现相同用户名密码不同，一个账号多个密码问题；
+            //通过Username进行查询并且数据库设置username字段唯一，解决了一个账号多个密码问题 用户名变成唯一
             admin = adminMapper.selectOne(queryWrapper);
         } catch (Exception e) {
-            log.error("根据用户名{} 查询出错", request.getUsername());
-            throw new ServiceException("用户名错误");//全局异常处理 自定义业务异常类
+            log.error("The deserialization of mybatis is wrong, the admin name is {}", request.getUsername());
+            throw new ServiceException(ERROR_CODE_500, "The internal system is error. Please try again.");
         }
         if (admin == null) {
-            //查不到admin
-            throw new ServiceException("用户名或密码错误");
+            throw new ServiceException(ERROR_CODE_401, "The username is wrong, no matched admin.");
         }
-        // 根据用户名查到admin之后再判断其密码是否合法
         handleLoginException(request.getPassword(), admin);
-        return generateLoginDTO(admin);
+        return generateLoginAdminDTO(admin);
     }
 
     private void handleLoginException(String password, Admin admin) {
         String securePass = securePass(password);
         if (!securePass.equals(admin.getPassword())) {
-            throw new ServiceException("用户名或密码错误");
+            throw new ServiceException(ERROR_CODE_401,"The password of admin is wrong");
         }
         if (!admin.isStatus()) {
-            throw new ServiceException("当前用户处于禁用状态，请联系管理员");
+            throw new ServiceException(ERROR_CODE_401,"The admin is disabled. Please contact the administrator.");
         }
     }
 
-    @Override
-    //传进来一个封装前端登录请求参数的前端请求参数对象，登陆成功后返回给前端一个登陆成功的管理员对象(使得前端获得这个登陆成功的对象所含信息)
-    public LoginDTO loginByEmail(LoginEmailRequest request) {
-        Admin admin = null;
-        QueryWrapper<Admin> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("admin_email", request.getEmail());
-        try {
-            //不通过Username和password进行查询因为这样查出的唯一admin,会出现相同用户名密码不同，一个账号多个密码问题；
-            //通过Username进行查询并且数据库设置username字段唯一，解决了一个账号多个密码问题 用户名变成唯一
-            //try catch保护防止返回的是admin list对像
-            admin = adminMapper.selectOne(queryWrapper);
-        } catch (Exception e) {
-            log.error("根据邮箱{} 查询出错", request.getEmail());
-            throw new ServiceException("Error admin email");//全局异常处理 自定义业务异常类
-        }
-        if (admin == null) {
-            //查不到admin
-            throw new ServiceException("邮箱或密码错误");
-        }
-        // 根据用户名查到admin之后再判断其密码是否合法
-        handleLoginException(request.getPassword(), admin);
-        return generateLoginDTO(admin);
-    }
-
-    private static LoginDTO generateLoginDTO(Admin admin) {
-        /**
+    private static LoginAdminDTO generateLoginAdminDTO(Admin admin) {
+        /*
          * Admin对象转换成LoginDTO对象
-         *  BeanUtils.copyProperties(源对象，目标对象)只会复制两个对象的共同属性字段值
-         * */
-        LoginDTO loginDTO = new LoginDTO();
-        BeanUtils.copyProperties(admin, loginDTO);
+         * BeanUtils.copyProperties(源对象，目标对象)只会复制两个对象的共同属性字段值
+         */
+        LoginAdminDTO loginAdminDTO = new LoginAdminDTO();
+        BeanUtils.copyProperties(admin, loginAdminDTO);
 
         // 生成token给前端请求凭证 TokenUtils genToken方法(adminId,sign)
-        String token = TokenUtils.genToken(String.valueOf(admin.getId()), admin.getPassword());
-        loginDTO.setToken(token);
-        return loginDTO;
+        String token = TokenUtils.genToken(String.valueOf(admin.getId()));
+        loginAdminDTO.setToken(token);
+        return loginAdminDTO;
     }
 
     @Override
     public void changePass(PasswordRequest request) {
         // 注意 你要对新的密码进行加密
-        request.setNewPass(securePass(request.getNewPass()));
+        request.setNewPassword(securePass(request.getNewPassword()));
         int count = adminMapper.updatePassword(request);
         if (count <= 0) {
-            throw new ServiceException("修改密码失败");
+            throw new ServiceException(ERROR_CODE_401,"Fail to change the password. Please try again.");
         }
     }
 
     /**
-     * 安全通过
+     * encrypt the password
      *
-     * @param password 密码
      * @return {@link String}
      */
     private String securePass(String password) {

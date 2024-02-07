@@ -1,9 +1,8 @@
 package com.example.fypspringbootcode.service;
 
-import com.example.fypspringbootcode.controller.dto.LoginDTO;
+import com.example.fypspringbootcode.controller.dto.LoginAdminDTO;
 import com.example.fypspringbootcode.controller.request.BaseRequest;
-import com.example.fypspringbootcode.controller.request.LoginEmailRequest;
-import com.example.fypspringbootcode.controller.request.LoginUsernameRequest;
+import com.example.fypspringbootcode.controller.request.LoginRequest;
 import com.example.fypspringbootcode.controller.request.PasswordRequest;
 import com.example.fypspringbootcode.entity.Admin;
 import com.github.pagehelper.PageInfo;
@@ -22,9 +21,7 @@ public interface IAdminService {
 
     void deleteById(Integer id);
 
-    LoginDTO loginByUsername(LoginUsernameRequest request);
-
-    LoginDTO loginByEmail(LoginEmailRequest request);
+    LoginAdminDTO login(LoginRequest request);
 
     void changePass(PasswordRequest request);
 

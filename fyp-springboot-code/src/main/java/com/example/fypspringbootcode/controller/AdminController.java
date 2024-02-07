@@ -1,10 +1,9 @@
 package com.example.fypspringbootcode.controller;
 
 import com.example.fypspringbootcode.common.Result;
-import com.example.fypspringbootcode.controller.dto.LoginDTO;
+import com.example.fypspringbootcode.controller.dto.LoginAdminDTO;
 import com.example.fypspringbootcode.controller.request.AdminPageRequest;
-import com.example.fypspringbootcode.controller.request.LoginEmailRequest;
-import com.example.fypspringbootcode.controller.request.LoginUsernameRequest;
+import com.example.fypspringbootcode.controller.request.LoginRequest;
 import com.example.fypspringbootcode.controller.request.PasswordRequest;
 import com.example.fypspringbootcode.entity.Admin;
 import com.example.fypspringbootcode.service.IAdminService;
@@ -21,49 +20,43 @@ public class AdminController {
     @Autowired
     IAdminService adminService;
 
-    @PostMapping("/login/username")
-    public Result loginByUsername(@RequestBody LoginUsernameRequest request) {
-        LoginDTO login = adminService.loginByUsername(request);
-        return Result.success(login, "login by username successfully");
+    @PostMapping("/v1/login")
+    public Result login(@RequestBody LoginRequest request) {
+        LoginAdminDTO login = adminService.login(request);
+        return Result.success(login, "login by admin name successfully");
     }
 
-    @PostMapping("/login/email")
-    public Result loginByEmail(@RequestBody LoginEmailRequest request) {
-        LoginDTO login = adminService.loginByEmail(request);
-        return Result.success(login,"login by email successfully");
-    }
-
-    @PutMapping("/password")
+    @PutMapping("/v1/password")
     public Result password(@RequestBody PasswordRequest request) {
         adminService.changePass(request);
         return Result.success();
     }
 
-    @PostMapping("/save")
+    @PostMapping("/v1/save")
     public Result save(@RequestBody Admin obj) {
         adminService.save(obj);
         return Result.success("register successfully");
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/v1/delete/{id}")
     public Result delete(@PathVariable Integer id) {
         adminService.deleteById(id);
-        return Result.success();
+        return Result.success("The admin has been deleted successfully");
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/v1/{id}")
     public Result getById(@PathVariable Integer id) {
         Admin obj = adminService.getById(id);
-        return Result.success(obj);
+        return Result.success(obj, "The admin has been found successfully");
     }
 
-    @GetMapping("/list")
+    @GetMapping("/v1/list")
     public Result list() {
         List<Admin> list = adminService.list();
-        return Result.success(list);
+        return Result.success(list, "The admin list has been found successfully");
     }
 
-    @GetMapping("/page")
+    @GetMapping("/v1/page")
     public Result page(AdminPageRequest pageRequest) {
         return Result.success(adminService.page(pageRequest));
     }
