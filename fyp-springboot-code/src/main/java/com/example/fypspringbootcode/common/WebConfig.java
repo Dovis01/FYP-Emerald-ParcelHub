@@ -26,7 +26,12 @@ public class WebConfig implements  WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         //在登陆界面时要放开不去拦截，因为还没登陆成功不会有token "/api/admin/login"
-        registry.addInterceptor(jwtInterceptor).addPathPatterns("/api/**").excludePathPatterns("/api/admin/**");
+        registry.addInterceptor(jwtInterceptor).addPathPatterns("/api/**")
+                .excludePathPatterns("/api/admin/v1/login")
+                .excludePathPatterns("/api/courier/**")
+                .excludePathPatterns("/api/customer/**")
+                .excludePathPatterns("/api/registeredAccount/**")
+                .excludePathPatterns("/api/stationManager/**");
     }
 
 

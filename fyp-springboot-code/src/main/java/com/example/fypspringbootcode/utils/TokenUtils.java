@@ -22,6 +22,8 @@ public class TokenUtils {
 
     private static IAdminService staticAdminService;
 
+    private static final String SECRET = "ILoveChenRui";
+
     @Resource
     //默认通过By Name原则进行依赖注入
     private IAdminService adminService;
@@ -33,46 +35,54 @@ public class TokenUtils {
     }
 
     /**
-     * 生成token
+     * generate token
      *
      * @return
      */
-    public static String genToken(String adminId, String sign) {
-        return JWT.create().withAudience(adminId) // 将 user id 保存到 token 里面,作为载荷
-                .withExpiresAt(DateUtil.offsetHour(new Date(), 2)) // 2小时后token过期
-                .sign(Algorithm.HMAC256(sign)); // 以 password 作为 token 的密钥
+    public static String genToken(String idNumber) {
+        String token =JWT.create().withAudience(idNumber)
+                .withExpiresAt(DateUtil.offsetHour(new Date(), 2))
+                .sign(Algorithm.HMAC256(SECRET));
+        return "Bearer " + token;
     }
 
-    public static String genToken(String adminId, String sign, int days) {
-        return JWT.create().withAudience(adminId) // 将 user id 保存到 token 里面,作为载荷
-                .withExpiresAt(DateUtil.offsetDay(new Date(), days)) // n天后token过期
-                .sign(Algorithm.HMAC256(sign)); // 以 password 作为 token 的密钥
+    public static String genToken(String idNumber, int days) {
+        String token = JWT.create().withAudience(idNumber) // 将 user id 保存到 token 里面,作为载荷
+                .withExpiresAt(DateUtil.offsetDay(new Date(), days)) // token is expired after n days
+                .sign(Algorithm.HMAC256(SECRET)); //use fullName as the secret
+        return "Bearer " + token;
     }
 
     /**
-     * 获取当前登录的用户信息
+     * get the current admin object by token
      *
-     * @return admin对象
+     * @return admin object
      *  /admin?token=xxxx
      */
     public static Admin getCurrentAdmin() {
         String token = null;
         try {
             HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-            //从请求头中获取token
-            token = request.getHeader("token");
-            if (StrUtil.isBlank(token)) {  // header没有  那就从参数(/admin?token=xxxx)获取
+            String authHeader = request.getHeader("Authorization");
+            if (StrUtil.isBlank(authHeader)) {
+                log.error("The authorization header is null, authorization header: {}", authHeader);
+                return null;
+            }
+            // get token from request header
+            token =StrUtil.subAfter(authHeader, "Bearer ", false);
+            if (StrUtil.isBlank(token)) {  // header is empty, get from parameter(/admin?token=xxxx)
                 token = request.getParameter("token");
             }
             if (StrUtil.isBlank(token)) {
-                log.error("获取当前登录的token失败， token: {}", token);
+                log.error("Fail to get the token of the current user, the token is null, token: {}", token);
                 return null;
             }
-            //从请求request的token中解码获得当前admin对象的id值查询获取admin对象
-            String adminId = JWT.decode(token).getAudience().get(0);
-            return staticAdminService.getById(Integer.valueOf(adminId));
+
+            // decode token to get the id of the current admin, then get the admin object by id
+            String idNumber = JWT.decode(token).getAudience().get(0);
+            return staticAdminService.getById(Integer.valueOf(idNumber));
         } catch (Exception e) {
-            log.error("获取当前登录的管理员信息失败, token={}", token,  e);
+            log.error("Fail to get the current admin info, token={}", token,  e);
             return null;
         }
     }
