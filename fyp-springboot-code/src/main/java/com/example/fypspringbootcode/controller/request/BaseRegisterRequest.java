@@ -1,16 +1,17 @@
 package com.example.fypspringbootcode.controller.request;
 
+import lombok.Data;
+
 /**
  * @title:FinalYearProjectCode
  * @description:<TODO description class purpose>
  * @author: Shijin Zhang
  * @version:1.0.0
- * @create:22/01/2024 08:06
+ * @create:05/02/2024 08:03
  **/
-import lombok.Data;
-
 @Data
-public class LoginEmailRequest {
+public class BaseRegisterRequest {
+    private String username;
     private String email;
     private String password;
 }
