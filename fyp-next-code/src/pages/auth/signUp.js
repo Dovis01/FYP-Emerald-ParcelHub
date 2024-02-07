@@ -1,166 +1,334 @@
 import Head from 'next/head';
 import NextLink from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useFormik } from 'formik';
+import { useRouter } from 'next/router';
+import {useFormik} from 'formik';
 import * as Yup from 'yup';
-import { Box, Button, Link, Stack, TextField, Typography } from '@mui/material';
-import { AuthLayout } from '@/components/layouts/authLayout';
+import {
+    Box,
+    Button,
+    FormControl, FormControlLabel,
+    FormLabel, Grid,
+    Link,
+    Radio,
+    RadioGroup,
+    Stack,
+    TextField,
+    Typography, useRadioGroup
+} from '@mui/material';
+import {AuthLayout} from '@/components/layouts/authLayout';
 import {useAuthContext} from "@/contexts/auth-context";
+import {styled} from "@mui/system";
+import {useEffect, useState} from "react";
+
+
+const StyledFormControlLabel = styled((props) => <FormControlLabel {...props} />)(
+    ({theme, checked}) => ({
+        '.MuiFormControlLabel-label': checked && {
+            color: theme.palette.primary.main,
+        },
+    }),
+);
 
 const SignUpPage = () => {
-  const router = useRouter();
-  const auth = useAuthContext();
-  const formik = useFormik({
-    initialValues: {
-      email: '',
-      name: '',
-      password: '',
-      submit: null
-    },
-    validationSchema: Yup.object({
-      email: Yup
-        .string()
-        .email('Must be a valid email')
-        .max(255)
-        .required('Email is required'),
-      name: Yup
-        .string()
-        .max(255)
-        .required('Name is required'),
-      password: Yup
-        .string()
-        .max(255)
-        .required('Password is required')
-    }),
-    onSubmit: async (values, helpers) => {
-      try {
-        await auth.signUp(values.email, values.name, values.password);
-        router.push('/');
-      } catch (err) {
-        helpers.setStatus({ success: false });
-        helpers.setErrors({ submit: err.message });
-        helpers.setSubmitting(false);
-      }
-    }
-  });
+    const router = useRouter();
+    const auth = useAuthContext();
+    const [roleType, setRoleType] = useState('');
 
-  return (
-    <>
-      <Head>
-        <title>
-          Sign Up | Emerald-Parcel Hub
-        </title>
-      </Head>
-      <Box
-        sx={{
-          background: 'linear-gradient(169deg, rgba(246,246,246,0.9725140056022409) 67%, rgba(173,230,232,0.64) 100%)',
-          flex: '1 1 auto',
-          alignItems: 'center',
-          display: 'flex',
-          justifyContent: 'center'
-        }}
-      >
-        <Box
-          sx={{
-            mt:-23,
-            maxWidth: 550,
-            px: 3,
-            py: '100px',
-            width: '100%'
-          }}
-        >
-          <div>
-            <Stack
-              spacing={1}
-              sx={{ mb: 3 }}
+    const formik = useFormik({
+        initialValues: {
+            username: '',
+            email: '',
+            employeeCode: '',
+            firstName: '',
+            middleName: '',
+            lastName: '',
+            password: '',
+            confirmPassword: '',
+            submit: null
+        },
+        validationSchema: Yup.object({
+            username: Yup
+                .string()
+                .max(20, 'Username must be 20 characters or less')
+                .matches(/^\S*$/, 'Username cannot contain spaces')
+                .required('User name is required'),
+            email: Yup
+                .string()
+                .email('Must be a valid email')
+                .max(25, 'Email address must be 25 characters or less')
+                .required('Email is required'),
+            employeeCode: roleType === 'Courier' || roleType === 'ParcelStationManager' ? Yup
+                .string()
+                .max(24, 'Employee code must be 24 characters or less')
+                .matches(/^\S*$/, 'Employee code cannot contain spaces')
+                .matches(
+                    /^[A-Z]{2}-\d{8}\d{6}-[A-Z0-9]{6}$/,
+                    'Employee code must match the pattern XX-YYYYMMDDHHMMSS-XXXXX(UpperCase)'
+                ): Yup.string(),
+            firstName: Yup
+                .string()
+                .max(12, 'First name must be 12 characters or less')
+                .matches(/^\S*$/, 'First name cannot contain spaces')
+                .required('First name is required'),
+            middleName: Yup
+                .string()
+                .max(12, 'Middle name must be 12 characters or less')
+                .matches(/^\S*$/, 'Middle name cannot contain spaces'),
+            lastName: Yup
+                .string()
+                .max(12, 'Last name must be 12 characters or less')
+                .matches(/^\S*$/, 'Last name cannot contain spaces')
+                .required('Last name is required'),
+            password: Yup
+                .string()
+                .max(25, 'Password must be 25 characters or less')
+                .min(8, 'Password must be at least 8 characters')
+                .matches(/[A-Z]/, 'Password must contain at least one uppercase letter')
+                .matches(/[0-9]/, 'Password must contain at least one number')
+                .matches(/[\^$*.\[\]{}()?"!@#%&/,><':;|_~`]/, 'Password must contain at least one special character') // 特殊字符集可能需要根据实际需求调整
+                .matches(/^\S*$/, 'Password cannot contain spaces')
+                .required('Password is required'),
+            confirmPassword: Yup
+                .string()
+                .max(25, 'Confirm password must be 25 characters or less')
+                .min(8, 'Confirm password must be at least 8 characters')
+                .oneOf([Yup.ref('password')], 'Passwords must match')
+                .matches(/^\S*$/, 'Confirm password cannot contain spaces')
+                .required('Confirm Password is required')
+        }),
+        onSubmit: async (values, helpers) => {
+            try {
+                const registrationData = {
+                    roleType: roleType,
+                    username: values.username,
+                    email: values.email,
+                    password: values.password,
+                    employeeCode: values.employeeCode,
+                    firstName: values.firstName,
+                    middleName: values.middleName,
+                    lastName: values.lastName
+                };
+                await auth.signUp(registrationData);
+                router.push('/');
+            } catch (err) {
+                helpers.setStatus({success: false});
+                helpers.setErrors({submit: err.message});
+                helpers.setSubmitting(false);
+            }
+        }
+    });
+
+    // console.log("formik.errors: ", formik.errors);
+    const MyFormControlLabel = (props) => {
+        const radioGroup = useRadioGroup();
+        useEffect(() => {
+            if (radioGroup) {
+                setRoleType(radioGroup.value || '');
+            }
+        }, [radioGroup]);
+        const checked = radioGroup ? radioGroup.value === props.value : false;
+        return <StyledFormControlLabel checked={checked} {...props} />;
+    }
+
+    return (
+        <>
+            <Head>
+                <title>
+                    Sign Up | Emerald-Parcel Hub
+                </title>
+            </Head>
+            <Box
+                sx={{
+                    background: 'linear-gradient(169deg, rgba(246,246,246,0.9725140056022409) 67%, rgba(173,230,232,0.64) 100%)',
+                    flex: '1 1 auto',
+                    alignItems: 'center',
+                    display: 'flex',
+                    justifyContent: 'center'
+                }}
             >
-              <Typography variant="h4">
-                Sign Up
-              </Typography>
-              <Typography
-                color="text.secondary"
-                variant="body2"
-              >
-                Already have an account?
-                &nbsp;
-                <Link
-                  component={NextLink}
-                  href="/auth/signIn"
-                  underline="hover"
-                  variant="subtitle2"
+                <Box
+                    sx={{
+                        mt: -10,
+                        maxWidth: 550,
+                        px: 3,
+                        py: '100px',
+                        width: '100%'
+                    }}
                 >
-                  Sign In
-                </Link>
-              </Typography>
-            </Stack>
-            <form
-              noValidate
-              onSubmit={formik.handleSubmit}
-            >
-              <Stack spacing={3}>
-                <TextField
-                  error={!!(formik.touched.name && formik.errors.name)}
-                  fullWidth
-                  helperText={formik.touched.name && formik.errors.name}
-                  label="Name"
-                  name="name"
-                  onBlur={formik.handleBlur}
-                  onChange={formik.handleChange}
-                  value={formik.values.name}
-                />
-                <TextField
-                  error={!!(formik.touched.email && formik.errors.email)}
-                  fullWidth
-                  helperText={formik.touched.email && formik.errors.email}
-                  label="Email Address"
-                  name="email"
-                  onBlur={formik.handleBlur}
-                  onChange={formik.handleChange}
-                  type="email"
-                  value={formik.values.email}
-                />
-                <TextField
-                  error={!!(formik.touched.password && formik.errors.password)}
-                  fullWidth
-                  helperText={formik.touched.password && formik.errors.password}
-                  label="Password"
-                  name="password"
-                  onBlur={formik.handleBlur}
-                  onChange={formik.handleChange}
-                  type="password"
-                  value={formik.values.password}
-                />
-              </Stack>
-              {formik.errors.submit && (
-                <Typography
-                  color="error"
-                  sx={{ mt: 3 }}
-                  variant="body2"
-                >
-                  {formik.errors.submit}
-                </Typography>
-              )}
-              <Button
-                fullWidth
-                size="large"
-                sx={{ mt: 3 }}
-                type="submit"
-                variant="contained"
-              >
-                Continue
-              </Button>
-            </form>
-          </div>
-        </Box>
-      </Box>
-    </>
-  );
+                    <div>
+                        <Stack
+                            spacing={1}
+                            sx={{mb: 3}}
+                        >
+                            <Typography variant="h4">
+                                Sign Up
+                            </Typography>
+                            <Typography
+                                color="text.secondary"
+                                variant="body2"
+                            >
+                                Already have an account?
+                                &nbsp;
+                                <Link
+                                    component={NextLink}
+                                    href="/auth/signIn"
+                                    underline="hover"
+                                    variant="subtitle2"
+                                >
+                                    Sign In
+                                </Link>
+                            </Typography>
+                        </Stack>
+                        <form
+                            noValidate
+                            onSubmit={formik.handleSubmit}
+                        >
+                            <Stack spacing={2}>
+                                <TextField
+                                    error={!!(formik.touched.username && formik.errors.username)}
+                                    fullWidth
+                                    helperText={formik.touched.username && formik.errors.username}
+                                    label="User Name"
+                                    name="username"
+                                    onBlur={formik.handleBlur}
+                                    onChange={formik.handleChange}
+                                    value={formik.values.username}
+                                />
+                                <TextField
+                                    style={{marginBottom: -3}}
+                                    error={!!(formik.touched.email && formik.errors.email)}
+                                    fullWidth
+                                    helperText={formik.touched.email && formik.errors.email}
+                                    label="Email Address"
+                                    name="email"
+                                    onBlur={formik.handleBlur}
+                                    onChange={formik.handleChange}
+                                    type="email"
+                                    value={formik.values.email}
+                                />
+                                <FormControl
+                                    sx={{display: 'flex', alignItems: 'center', flexDirection: 'row', width: 580}}>
+                                    <FormLabel id="role-row-radio-group"
+                                               sx={{ml: 1, mt: -0.2, marginRight: 1.6, fontSize: '18.1px'}}>Role
+                                        :</FormLabel>
+                                    <RadioGroup
+                                        row
+                                        aria-labelledby="role-row-radio-group"
+                                        name="role-radio-group"
+                                    >
+                                        <MyFormControlLabel value="Customer" control={<Radio/>} label="Customer"/>
+                                        <MyFormControlLabel value="Courier" control={<Radio/>} label="Courier"/>
+                                        <MyFormControlLabel value="ParcelStationManager" control={<Radio/>}
+                                                            label="Parcel Station Manager"/>
+                                    </RadioGroup>
+                                </FormControl>
+                                {(roleType === 'Courier' || roleType === 'ParcelStationManager') && (
+                                    <TextField
+                                        style={{marginTop: 12}}
+                                        error={!!(formik.touched.employeeCode && formik.errors.employeeCode)}
+                                        fullWidth
+                                        helperText={formik.touched.employeeCode && formik.errors.employeeCode}
+                                        label="Employee Code"
+                                        name="employeeCode"
+                                        onBlur={formik.handleBlur}
+                                        onChange={formik.handleChange}
+                                        type="text"
+                                        value={formik.values.employeeCode}
+                                    />
+                                )}
+                                {roleType === 'Customer' && (
+                                    <Grid container spacing={1.5} style={{marginLeft: -12, marginTop: 0}}>
+                                        <Grid item xs={4}>
+                                            <TextField
+                                                error={!!(formik.touched.firstName && formik.errors.firstName)}
+                                                helperText={formik.touched.firstName && formik.errors.firstName}
+                                                label="First Name"
+                                                name="firstName"
+                                                onBlur={formik.handleBlur}
+                                                onChange={formik.handleChange}
+                                                type="text"
+                                                value={formik.values.firstName} // Change to the correct value reference
+                                            />
+                                        </Grid>
+                                        <Grid item xs={4}>
+                                            <TextField
+                                                error={!!(formik.touched.middleName && formik.errors.middleName)}
+                                                helperText={formik.touched.middleName && formik.errors.middleName}
+                                                label="Middle Name"
+                                                name="middleName"
+                                                onBlur={formik.handleBlur}
+                                                onChange={formik.handleChange}
+                                                type="text"
+                                                value={formik.values.middleName} // Change to the correct value reference
+                                            />
+                                        </Grid>
+                                        <Grid item xs={4}>
+                                            <TextField
+                                                error={!!(formik.touched.lastName && formik.errors.lastName)}
+                                                helperText={formik.touched.lastName && formik.errors.lastName}
+                                                label="Last Name"
+                                                name="lastName"
+                                                onBlur={formik.handleBlur}
+                                                onChange={formik.handleChange}
+                                                type="text"
+                                                value={formik.values.lastName} // Change to the correct value reference
+                                            />
+                                        </Grid>
+                                    </Grid>
+                                )}
+                                <TextField
+                                    error={!!(formik.touched.password && formik.errors.password)}
+                                    fullWidth
+                                    helperText={formik.touched.password && formik.errors.password}
+                                    label="Password"
+                                    name="password"
+                                    onBlur={formik.handleBlur}
+                                    onChange={formik.handleChange}
+                                    type="password"
+                                    value={formik.values.password}
+                                />
+                                <TextField
+                                    error={!!(formik.touched.confirmPassword && formik.errors.confirmPassword)}
+                                    fullWidth
+                                    helperText={formik.touched.confirmPassword && formik.errors.confirmPassword}
+                                    label="Confirm Password"
+                                    name="confirmPassword"
+                                    onBlur={formik.handleBlur}
+                                    onChange={formik.handleChange}
+                                    type="password"
+                                    value={formik.values.confirmPassword}
+                                />
+                            </Stack>
+                            {formik.errors.submit && (
+                                <Typography
+                                    color="error"
+                                    sx={{mt: 3}}
+                                    variant="body2"
+                                >
+                                    {formik.errors.submit}
+                                </Typography>
+                            )}
+                            <Button
+                                fullWidth
+                                size="large"
+                                sx={{mt: 3}}
+                                type="submit"
+                                variant="contained"
+                            >
+                                Continue
+                            </Button>
+                        </form>
+                    </div>
+                </Box>
+            </Box>
+        </>
+    );
 };
 
 SignUpPage.getLayout = (page) => (
-  <AuthLayout>
-    {page}
-  </AuthLayout>
+    <AuthLayout>
+        {page}
+    </AuthLayout>
 );
 
 export default SignUpPage;

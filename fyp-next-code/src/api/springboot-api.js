@@ -1,8 +1,9 @@
 /**
- * API for admin authentication
+ * API for users authentication
  * */
-export const loginByUsername = async (username, password) => {
-    const response = await fetch('http://localhost:9090/api/admin/login/username', {
+
+export const loginByUsername = async (username, password, roleType) => {
+    const response = await fetch(`http://localhost:9090/api/${roleType}/v1/login?authMethod=username`, {
         headers: {
             'Content-Type': 'application/json'
         },
@@ -12,8 +13,8 @@ export const loginByUsername = async (username, password) => {
     return response.json();
 };
 
-export const loginByEmail = async (email, password) => {
-    const response = await fetch('http://localhost:9090/api/admin/login/email', {
+export const loginByEmail = async (email, password, roleType) => {
+    const response = await fetch(`http://localhost:9090/api/${roleType}/v1/login?authMethod=email`, {
         headers: {
             'Content-Type': 'application/json'
         },
@@ -23,13 +24,13 @@ export const loginByEmail = async (email, password) => {
     return response.json();
 };
 
-export const signup = async (user) => {
-    const response = await fetch('http://localhost:8080/api/users?action=register', {
+export const register = async (registrationData, roleType) => {
+    const response = await fetch(`http://localhost:9090/api/${roleType}/v1/register`, {
         headers: {
             'Content-Type': 'application/json'
         },
         method: 'post',
-        body: JSON.stringify({ username: user.username, email:user.email, password: user.password })
+        body: JSON.stringify(registrationData)
     });
     return response.json();
 };
