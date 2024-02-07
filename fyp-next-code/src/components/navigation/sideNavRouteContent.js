@@ -14,7 +14,7 @@ export const items = [
     title: 'Overview',
     path: '/',
     icon: (
-      <SvgIcon fontSize="small">
+      <SvgIcon fontSize="medium">
         <ChartBarIcon />
       </SvgIcon>
     )
@@ -23,7 +23,7 @@ export const items = [
     title: 'Delivery progress',
     path: '',
     icon: (
-      <SvgIcon fontSize="small">
+      <SvgIcon fontSize="medium">
         <LocalShippingIcon />
       </SvgIcon>
     )
@@ -32,7 +32,7 @@ export const items = [
     title: 'Data Analytics',
     path: '',
     icon: (
-        <SvgIcon fontSize="small">
+        <SvgIcon fontSize="medium">
           <PresentationChartLineIcon />
         </SvgIcon>
     )
@@ -41,7 +41,7 @@ export const items = [
     title: 'Parcel Management',
     path: '',
     icon: (
-      <SvgIcon fontSize="small">
+      <SvgIcon fontSize="medium">
         <ShoppingBagIcon />
       </SvgIcon>
     )
@@ -50,7 +50,7 @@ export const items = [
     title: 'Account',
     path: '/account',
     icon: (
-      <SvgIcon fontSize="small">
+      <SvgIcon fontSize="medium">
         <UserIcon />
       </SvgIcon>
     )
@@ -59,7 +59,7 @@ export const items = [
     title: 'Settings',
     path: '/settings',
     icon: (
-      <SvgIcon fontSize="small">
+      <SvgIcon fontSize="medium">
         <CogIcon />
       </SvgIcon>
     )
@@ -68,7 +68,7 @@ export const items = [
     title: 'SignIn',
     path: '/auth/signIn',
     icon: (
-      <SvgIcon fontSize="small">
+      <SvgIcon fontSize="medium">
         <LockClosedIcon />
       </SvgIcon>
     )
@@ -77,7 +77,7 @@ export const items = [
     title: 'SignUp',
     path: '/auth/signUp',
     icon: (
-      <SvgIcon fontSize="small">
+      <SvgIcon fontSize="medium">
         <UserPlusIcon />
       </SvgIcon>
     )
@@ -86,7 +86,7 @@ export const items = [
     title: 'Error',
     path: '/404',
     icon: (
-      <SvgIcon fontSize="small">
+      <SvgIcon fontSize="medium">
         <XCircleIcon />
       </SvgIcon>
     )

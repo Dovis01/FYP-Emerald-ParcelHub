@@ -28,7 +28,7 @@ export const SideNavItemButton = (props) => {
           justifyContent: 'flex-start',
           pl: '16px',
           pr: '16px',
-          py: '6px',
+          py: '6.8px',
           textAlign: 'left',
           width: '100%',
           ...(active && {
@@ -63,7 +63,7 @@ export const SideNavItemButton = (props) => {
             color: 'neutral.400',
             flexGrow: 1,
             fontFamily: (theme) => theme.typography.fontFamily,
-            fontSize: 14,
+            fontSize: 15.5,
             fontWeight: 600,
             lineHeight: '24px',
             whiteSpace: 'nowrap',
