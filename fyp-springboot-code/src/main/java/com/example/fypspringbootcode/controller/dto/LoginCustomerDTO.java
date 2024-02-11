@@ -11,9 +11,18 @@ import lombok.Data;
  **/
 @Data
 public class LoginCustomerDTO {
+    // customer table
     private Integer customerId;
     private String fullName;
+    private String avatar;
+    private String phoneNumber;
+    private String country;
+    private String city;
+    private String address;
+    // registered account table
+    private Integer accountId;
     private String username;
     private String email;
+    private Boolean status;
     private String token;
 }
