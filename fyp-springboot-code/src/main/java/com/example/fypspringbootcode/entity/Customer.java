@@ -2,6 +2,7 @@ package com.example.fypspringbootcode.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.io.Serial;
@@ -15,6 +16,7 @@ import java.io.Serializable;
  * @create:05/02/2024 03:30
  **/
 @Data
+@TableName("t_63_customer")
 public class Customer implements Serializable {
 
     @Serial

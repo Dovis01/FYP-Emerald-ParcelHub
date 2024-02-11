@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
  * @since 2024-01-28
  */
 @Data
-@TableName("registered_account")
+@TableName("t_11_registered_account")
 public class RegisteredAccount implements Serializable {
 
 //    public RegisteredAccount(String username, String email, String password) {

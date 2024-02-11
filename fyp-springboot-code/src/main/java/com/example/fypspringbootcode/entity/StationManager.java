@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
  * @since 2024-02-05
  */
 @Data
-@TableName("station_manager")
+@TableName("t_31_station_manager")
 public class StationManager implements Serializable {
 
     @Serial

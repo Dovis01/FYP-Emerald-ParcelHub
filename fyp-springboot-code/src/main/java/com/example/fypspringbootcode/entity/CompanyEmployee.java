@@ -13,7 +13,7 @@ import java.io.Serializable;
  * @since 2024-01-28
  */
 @Data
-@TableName("company_employee")
+@TableName("t_72_company_employee")
 public class CompanyEmployee implements Serializable {
 
     public CompanyEmployee(String fullName, String employeeCode) {
@@ -31,11 +31,9 @@ public class CompanyEmployee implements Serializable {
 
     private String employeeCode;
 
-    private String email;
-
     private Integer phoneNumber;
 
-    private String accountAvatar;
+    private String avatar;
 
     private String role;
 
@@ -49,9 +47,8 @@ public class CompanyEmployee implements Serializable {
                 "employeeId = " + employeeId +
                 ", fullName = " + fullName +
                 ", employeeCode = " + employeeCode +
-                ", email = " + email +
                 ", phoneNumber = " + phoneNumber +
-                ", accountAvatar = " + accountAvatar +
+                ", accountAvatar = " + avatar +
                 ", role = " + role +
                 ", companyId = " + companyId +
                 ", accountId = " + accountId +
