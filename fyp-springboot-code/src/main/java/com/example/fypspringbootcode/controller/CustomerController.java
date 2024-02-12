@@ -7,7 +7,10 @@ import com.example.fypspringbootcode.controller.request.RegisterCustomerRequest;
 import com.example.fypspringbootcode.entity.Customer;
 import com.example.fypspringbootcode.service.ICustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import static com.example.fypspringbootcode.common.ErrorCodeList.ERROR_CODE_400;
 
 /**
  *
@@ -23,16 +26,16 @@ public class CustomerController {
     ICustomerService customerService;
 
     @PostMapping("/v1/login")
-    public Result login(@RequestParam(defaultValue = "username") String authMethod ,@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<Result> login(@RequestParam(defaultValue = "username") String authMethod , @RequestBody LoginRequest loginRequest) {
         LoginCustomerDTO login;
         if (authMethod.equals("username")) {
             login = customerService.login(loginRequest);
-            return Result.success(login, "login by username successfully");
+            return ResponseEntity.ok(Result.success(login, "login by username successfully"));
         } else if (authMethod.equals("email")) {
             login = customerService.login(loginRequest);
-            return Result.success(login,"login by email successfully");
+            return ResponseEntity.ok(Result.success(login,"login by email successfully"));
         } else {
-            return Result.error("Invalid authMethod");
+            return ResponseEntity.badRequest().body(Result.error(ERROR_CODE_400,"Invalid authMethod"));
         }
     }
 
