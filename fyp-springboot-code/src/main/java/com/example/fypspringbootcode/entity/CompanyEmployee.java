@@ -16,11 +16,6 @@ import java.io.Serializable;
 @TableName("t_72_company_employee")
 public class CompanyEmployee implements Serializable {
 
-    public CompanyEmployee(String fullName, String employeeCode) {
-        this.fullName = fullName;
-        this.employeeCode = employeeCode;
-    }
-
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -31,11 +26,11 @@ public class CompanyEmployee implements Serializable {
 
     private String employeeCode;
 
-    private Integer phoneNumber;
+    private String phoneNumber;
 
     private String avatar;
 
-    private String role;
+    private String roleType;
 
     private Integer companyId;
 
@@ -49,7 +44,7 @@ public class CompanyEmployee implements Serializable {
                 ", employeeCode = " + employeeCode +
                 ", phoneNumber = " + phoneNumber +
                 ", accountAvatar = " + avatar +
-                ", role = " + role +
+                ", role = " + roleType +
                 ", companyId = " + companyId +
                 ", accountId = " + accountId +
                 "}";

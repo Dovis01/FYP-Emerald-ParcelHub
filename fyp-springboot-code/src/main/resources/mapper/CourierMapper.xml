@@ -2,4 +2,86 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.fypspringbootcode.mapper.CourierMapper">
 
+    <select id="checkCourierLoginAccount" resultType="com.example.fypspringbootcode.controller.dto.LoginCourierDTO">
+        SELECT c.courier_id,
+        c.employee_id,
+        c.daily_delivery_parcels_num,
+        t.trunk_type,
+        t.trunk_plate_number,
+        t.max_weight,
+        t.volume,
+        e.full_name,
+        e.employee_code,
+        e.phone_number,
+        e.avatar,
+        e.role_type,
+        p.company_name,
+        p.company_type,
+        a.account_id,
+        a.username,
+        a.email,
+        a.password,
+        a.status
+        FROM t_41_courier AS c
+        RIGHT JOIN
+        t_72_company_employee AS e
+        ON c.employee_id = e.employee_id
+        LEFT JOIN
+        t_43_trunk AS t
+        ON c.trunk_id = t.trunk_id
+        LEFT JOIN
+        t_71_parcel_hub_company AS p
+        ON e.company_id = p.company_id
+        LEFT JOIN
+        t_11_registered_account AS a
+        ON e.account_id = a.account_id
+        <where>
+            <if test="username != null and username != ''">
+                AND a.username = #{username}
+            </if>
+            <if test="email != null and email != ''">
+                AND a.email = #{email}
+            </if>
+        </where>
+    </select>
+
+    <select id="getCourierById" resultType="com.example.fypspringbootcode.controller.dto.LoginCourierDTO">
+        SELECT c.courier_id,
+        c.employee_id,
+        c.daily_delivery_parcels_num,
+        t.trunk_type,
+        t.trunk_plate_number,
+        t.max_weight,
+        t.volume,
+        e.full_name,
+        e.employee_code,
+        e.phone_number,
+        e.avatar,
+        e.role_type,
+        p.company_name,
+        p.company_type,
+        a.account_id,
+        a.username,
+        a.email,
+        a.password,
+        a.status
+        FROM t_41_courier AS c
+        RIGHT JOIN
+        t_72_company_employee AS e
+        ON c.employee_id = e.employee_id
+        LEFT JOIN
+        t_43_trunk AS t
+        ON c.trunk_id = t.trunk_id
+        LEFT JOIN
+        t_71_parcel_hub_company AS p
+        ON e.company_id = p.company_id
+        LEFT JOIN
+        t_11_registered_account AS a
+        ON e.account_id = a.account_id
+        <where>
+            <if test="courierId != null and courierId > 0">
+                AND c.courier_id = #{courierId}
+            </if>
+        </where>
+    </select>
 </mapper>

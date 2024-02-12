@@ -1,6 +1,7 @@
 package com.example.fypspringbootcode.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -32,6 +33,11 @@ public class Courier implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private LocalDateTime registerTime;
 
+    private Integer trunkId;
+
+    @TableField(exist = false)
+    private Integer accountId;
+
     @Override
     public String toString() {
         return "Courier{" +
@@ -39,6 +45,7 @@ public class Courier implements Serializable {
         ", employeeId = " + employeeId +
         ", dailyDeliveryParcelsNum = " + dailyDeliveryParcelsNum +
         ", registeredDate = " + registerTime +
+        ", trunkId = " + trunkId +
         "}";
     }
 }
