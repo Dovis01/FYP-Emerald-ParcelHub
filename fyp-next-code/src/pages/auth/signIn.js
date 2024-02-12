@@ -46,10 +46,12 @@ const SignInPage = () => {
             username: Yup
                 .string()
                 .max(20, 'Username must be 20 characters or less')
+                .matches(/^\S*$/, 'Username cannot contain spaces')
                 .required('Username is required'),
             password: Yup
                 .string()
                 .max(25,'Password must be 25 characters or less')
+                .matches(/^\S*$/, 'Password cannot contain spaces')
                 .required('Password is required')
         }),
         onSubmit: async (values, helpers) => {
