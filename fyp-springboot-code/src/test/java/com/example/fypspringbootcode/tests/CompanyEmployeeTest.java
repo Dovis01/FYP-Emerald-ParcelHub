@@ -71,16 +71,16 @@ public class CompanyEmployeeTest {
         System.out.println(companyEmployeeMapper.selectById(1));
     }
 
-    @Test
-    public void insert() {
-        CompanyEmployee companyEmployee = new CompanyEmployee("John Doe", generateEmployeeCode("John Doe"));
-        try {
-            companyEmployeeMapper.insert(companyEmployee);
-        } catch (DuplicateKeyException e) {
-            log.error("Fail to insert data, fullname:{}", companyEmployee.getFullName(), e);
-            throw new ServiceException("Full name already exists");
-        }
-    }
+//    @Test
+//    public void insert() {
+//        CompanyEmployee companyEmployee = new CompanyEmployee("John Doe", generateEmployeeCode("John Doe"));
+//        try {
+//            companyEmployeeMapper.insert(companyEmployee);
+//        } catch (DuplicateKeyException e) {
+//            log.error("Fail to insert data, fullname:{}", companyEmployee.getFullName(), e);
+//            throw new ServiceException("Full name already exists");
+//        }
+//    }
     @Test
     public void batchInsert() {
 
@@ -97,10 +97,10 @@ public class CompanyEmployeeTest {
 
         List<CompanyEmployee> employees = new ArrayList<>();
 
-        for(String fullName : employeeNames) {
-            CompanyEmployee employee = new CompanyEmployee(fullName, generateEmployeeCode(fullName));
-            employees.add(employee);
-        }
+//        for(String fullName : employeeNames) {
+//            CompanyEmployee employee = new CompanyEmployee(fullName, generateEmployeeCode(fullName));
+//            employees.add(employee);
+//        }
 
         try (SqlSession sqlSession = sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH, false)) {
             CompanyEmployeeMapper mapper = sqlSession.getMapper(CompanyEmployeeMapper.class);

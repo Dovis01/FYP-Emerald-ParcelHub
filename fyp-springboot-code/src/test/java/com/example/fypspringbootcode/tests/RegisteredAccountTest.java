@@ -20,19 +20,21 @@ import org.springframework.dao.DuplicateKeyException;
 @SpringBootTest
 @Slf4j
 public class RegisteredAccountTest extends ServiceImpl<RegisteredAccountMapper, RegisteredAccount> {
-    private static final String DEFAULT_PASS = "zsj123456";
     private static final String PASS_SALT = "Dovis"; //密码盐
-//    @Test
-//    public void insertData() {
-//        RegisteredAccount registeredAccount = new RegisteredAccount("Brenda", "Brenad123456@gmail.com", "zsj123456");
-//        registeredAccount.setPassword(securePass(registeredAccount.getPassword()));
-//        try {
-//            baseMapper.insert(registeredAccount);
-//        } catch (DuplicateKeyException e) {
-//            log.error("Fail to insert data, username:{}", registeredAccount.getUsername(), e);
-//            throw new ServiceException("User name already exists");
-//        }
-//    }
+    @Test
+    public void insertData() {
+        RegisteredAccount registeredAccount = new RegisteredAccount();
+        registeredAccount.setUsername("JaneXXXDoe");
+        registeredAccount.setEmail("JaneDoe123456@gmail.com");
+        registeredAccount.setPassword("zsj123456");
+        registeredAccount.setPassword(securePass(registeredAccount.getPassword()));
+        try {
+            baseMapper.insert(registeredAccount);
+        } catch (DuplicateKeyException e) {
+            log.error("Fail to insert data, username:{}", registeredAccount.getUsername(), e);
+            throw new ServiceException("User name already exists");
+        }
+    }
 
     private String securePass(String password) {
         return SecureUtil.md5(password + PASS_SALT);
