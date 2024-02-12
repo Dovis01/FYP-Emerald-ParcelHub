@@ -11,7 +11,7 @@ import java.io.Serializable;
 /**
  *
  * @author Shijin Zhang
- * @since 2024-02-11
+ * @since 2024-02-12
  */
 @Data
 @TableName("t_71_parcel_hub_company")
@@ -27,6 +27,10 @@ public class ParcelHubCompany implements Serializable {
 
     private String companyType;
 
+    private String country;
+
+    private String city;
+
     private String address;
 
     @Override
@@ -35,6 +39,8 @@ public class ParcelHubCompany implements Serializable {
         "companyId = " + companyId +
         ", companyName = " + companyName +
         ", companyType = " + companyType +
+        ", country = " + country +
+        ", city = " + city +
         ", address = " + address +
         "}";
     }

@@ -17,12 +17,6 @@ import java.time.LocalDateTime;
 @TableName("t_11_registered_account")
 public class RegisteredAccount implements Serializable {
 
-//    public RegisteredAccount(String username, String email, String password) {
-//        this.username = username;
-//        this.email = email;
-//        this.password = password;
-//    }
-
     @Serial
     private static final long serialVersionUID = 1L;
 

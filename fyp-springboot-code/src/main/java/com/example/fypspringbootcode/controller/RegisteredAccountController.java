@@ -26,7 +26,7 @@ public class RegisteredAccountController {
     }
 
     @PutMapping("/v1/update/{accountId}")
-    public Result updatePassword(@RequestBody RegisteredAccount registeredAccount, @PathVariable Integer accountId) {
+    public Result updateAccountInfo(@RequestBody RegisteredAccount registeredAccount, @PathVariable Integer accountId) {
         RegisteredAccount updatedRegisteredAccount = registeredAccountService.updateAccountInfo(registeredAccount, accountId);
         return Result.success(updatedRegisteredAccount, "The registered account has been updated successfully");
     }

@@ -106,7 +106,7 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerMapper, Customer> i
             isUpdated = updateById(customer);
         } catch (Exception e) {
             log.error("The mybatis has failed to update the customer {}", customerId,e);
-            throw new ServiceException(ERROR_CODE_401, "The personal info provided to update is empty or wrong, please check it again");
+            throw new ServiceException(ERROR_CODE_400, "The customer personal info provided to update is null, please check it again");
         }
         if (!isUpdated) {
             throw new ServiceException(ERROR_CODE_404, "The customer id is wrong, find no matched one to update personal info");
@@ -134,7 +134,7 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerMapper, Customer> i
         BeanUtils.copyProperties(customer, loginCustomerDTO);
         BeanUtils.copyProperties(customerAccount, loginCustomerDTO);
         // 生成token给前端请求凭证 TokenUtils genToken方法(customerId,sign)
-        String token = TokenUtils.genToken(String.valueOf(customer.getAccountId()));
+        String token = TokenUtils.genToken("customer",String.valueOf(customer.getAccountId()));
         loginCustomerDTO.setToken(token);
         return loginCustomerDTO;
     }
