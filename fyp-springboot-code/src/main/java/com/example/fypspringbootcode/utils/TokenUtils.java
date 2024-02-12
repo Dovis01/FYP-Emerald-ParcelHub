@@ -39,15 +39,22 @@ public class TokenUtils {
      *
      * @return
      */
-    public static String genToken(String idNumber) {
-        String token =JWT.create().withAudience(idNumber)
+    public static String genToken(String role, String idNumber) {
+        String token =JWT.create().withAudience(role,idNumber)
                 .withExpiresAt(DateUtil.offsetHour(new Date(), 2))
                 .sign(Algorithm.HMAC256(SECRET));
         return "Bearer " + token;
     }
 
-    public static String genToken(String idNumber, int days) {
-        String token = JWT.create().withAudience(idNumber) // 将 user id 保存到 token 里面,作为载荷
+    public static String genToken(String role, String idNumber1,String idNumber2) {
+        String token =JWT.create().withAudience(role, idNumber1, idNumber2)
+                .withExpiresAt(DateUtil.offsetHour(new Date(), 2))
+                .sign(Algorithm.HMAC256(SECRET));
+        return "Bearer " + token;
+    }
+
+    public static String genToken(String role, String idNumber, int days) {
+        String token = JWT.create().withAudience(role, idNumber) // 将 user id 保存到 token 里面,作为载荷
                 .withExpiresAt(DateUtil.offsetDay(new Date(), days)) // token is expired after n days
                 .sign(Algorithm.HMAC256(SECRET)); //use fullName as the secret
         return "Bearer " + token;
