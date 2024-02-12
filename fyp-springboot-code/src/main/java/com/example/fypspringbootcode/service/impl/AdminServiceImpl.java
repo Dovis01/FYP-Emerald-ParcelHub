@@ -67,7 +67,9 @@ public class AdminServiceImpl implements IAdminService {
 
     @Override
     public Admin getById(Integer id) {
-        return adminMapper.selectById(id);
+        Admin admin = adminMapper.selectById(id);
+        admin.setPassword(null);
+        return admin;
     }
 
     @Override
@@ -115,7 +117,7 @@ public class AdminServiceImpl implements IAdminService {
         BeanUtils.copyProperties(admin, loginAdminDTO);
 
         // 生成token给前端请求凭证 TokenUtils genToken方法(adminId,sign)
-        String token = TokenUtils.genToken(String.valueOf(admin.getId()));
+        String token = TokenUtils.genToken("admin",String.valueOf(admin.getId()));
         loginAdminDTO.setToken(token);
         return loginAdminDTO;
     }

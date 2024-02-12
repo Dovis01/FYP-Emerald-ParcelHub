@@ -4,11 +4,11 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.fypspringbootcode.mapper.AdminMapper">
     <select id="getByAdminNameAndPassword" resultType="com.example.fypspringbootcode.entity.Admin">
-        select * from admin where admin_name = #{adminName} and password = #{password}
+        select * from t_00_admin where admin_name = #{adminName} and password = #{password}
     </select>
 
     <select id="listByCondition" resultType="com.example.fypspringbootcode.entity.Admin">
-        select * from admin
+        select * from t_00_admin
         <where>
             <if test="adminName != null and adminName != ''">
                 admin_name like concat('%', #{adminName}, '%')
@@ -18,6 +18,6 @@
     </select>
 
     <update id="updatePassword">
-        update admin set password = #{newPass} where admin_name = #{userame} and password = #{password}
+        update t_00_admin set password = #{newPass} where admin_name = #{userame} and password = #{password}
     </update>
 </mapper>
