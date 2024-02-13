@@ -2,4 +2,90 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.fypspringbootcode.mapper.StationManagerMapper">
 
+    <select id="checkStationManagerLoginAccount" resultType="com.example.fypspringbootcode.controller.dto.LoginStationManagerDTO">
+        SELECT sm.station_manager_id,
+        sm.employee_id,
+        sm.start_date,
+        sm.end_date,
+        sm.station_id,
+        ps.community_name,
+        ps.address,
+        ps.shelves_total_number,
+        ps.parcel_total_number,
+        e.full_name,
+        e.employee_code,
+        e.phone_number,
+        e.avatar,
+        e.role_type,
+        phc.company_name,
+        phc.company_type,
+        a.account_id,
+        a.username,
+        a.email,
+        a.password,
+        a.status
+        FROM t_31_station_manager AS sm
+        RIGHT JOIN
+        t_72_company_employee AS e
+        ON sm.employee_id = e.employee_id
+        LEFT JOIN
+        t_32_parcel_station AS ps
+        ON sm.station_id = ps.station_id
+        LEFT JOIN
+        t_71_parcel_hub_company AS phc
+        ON e.company_id = phc.company_id
+        LEFT JOIN
+        t_11_registered_account AS a
+        ON e.account_id = a.account_id
+        <where>
+            <if test="username != null and username != ''">
+                AND a.username = #{username}
+            </if>
+            <if test="email != null and email != ''">
+                AND a.email = #{email}
+            </if>
+        </where>
+    </select>
+
+    <select id="getStationManagerById" resultType="com.example.fypspringbootcode.controller.dto.LoginStationManagerDTO">
+        SELECT sm.station_manager_id,
+        sm.employee_id,
+        sm.start_date,
+        sm.end_date,
+        sm.station_id,
+        ps.community_name,
+        ps.address,
+        ps.shelves_total_number,
+        ps.parcel_total_number,
+        e.full_name,
+        e.employee_code,
+        e.phone_number,
+        e.avatar,
+        e.role_type,
+        phc.company_name,
+        phc.company_type,
+        a.account_id,
+        a.username,
+        a.email,
+        a.password,
+        a.status
+        FROM t_31_station_manager AS sm
+        RIGHT JOIN
+        t_72_company_employee AS e
+        ON sm.employee_id = e.employee_id
+        LEFT JOIN
+        t_32_parcel_station AS ps
+        ON sm.station_id = ps.station_id
+        LEFT JOIN
+        t_71_parcel_hub_company AS phc
+        ON e.company_id = phc.company_id
+        LEFT JOIN
+        t_11_registered_account AS a
+        ON e.account_id = a.account_id
+        <where>
+            <if test="stationManagerId != null and stationManagerId > 0">
+                AND sm.station_manager_id = #{stationManagerId}
+            </if>
+        </where>
+    </select>
 </mapper>

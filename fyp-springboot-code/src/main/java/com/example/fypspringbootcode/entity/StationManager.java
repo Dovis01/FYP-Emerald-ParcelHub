@@ -1,6 +1,7 @@
 package com.example.fypspringbootcode.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -36,6 +37,9 @@ public class StationManager implements Serializable {
     private LocalDateTime registerTime;
 
     private Integer stationId;
+
+    @TableField(exist = false)
+    private Integer accountId;
 
     @Override
     public String toString() {
