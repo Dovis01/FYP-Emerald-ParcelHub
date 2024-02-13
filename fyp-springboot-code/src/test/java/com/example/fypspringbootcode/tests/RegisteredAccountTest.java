@@ -24,8 +24,8 @@ public class RegisteredAccountTest extends ServiceImpl<RegisteredAccountMapper, 
     @Test
     public void insertData() {
         RegisteredAccount registeredAccount = new RegisteredAccount();
-        registeredAccount.setUsername("JaneXXXDoe");
-        registeredAccount.setEmail("JaneDoe123456@gmail.com");
+        registeredAccount.setUsername("JohnLDoe");
+        registeredAccount.setEmail("JohnDoe123456@gmail.com");
         registeredAccount.setPassword("zsj123456");
         registeredAccount.setPassword(securePass(registeredAccount.getPassword()));
         try {
