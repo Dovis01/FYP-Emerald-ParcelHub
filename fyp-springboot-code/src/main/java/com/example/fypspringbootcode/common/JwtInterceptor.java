@@ -94,7 +94,7 @@ public class JwtInterceptor implements HandlerInterceptor {
                 String accountId = JWT.decode(token).getAudience().get(2);
                 stationManager = stationManagerService.getStationManagerByToken(Integer.parseInt(employeeId), Integer.parseInt(accountId));
                 if (stationManager == null) {
-                    throw new ServiceException(ERROR_CODE_401, "The stationManager does not exist. Please login again.");
+                    throw new ServiceException(ERROR_CODE_401, "The station manager does not exist. Please login again.");
                 }
             }else {
                 throw new ServiceException(ERROR_CODE_401, "The role of token is abnormal, please login again.");
