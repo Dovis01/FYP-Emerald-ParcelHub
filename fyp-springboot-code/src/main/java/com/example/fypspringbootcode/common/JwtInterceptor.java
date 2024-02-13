@@ -60,27 +60,43 @@ public class JwtInterceptor implements HandlerInterceptor {
         }
         // get role from token
         String role;
-        // get idNumber from token
-        String adminId;
-        String customerId;
-        String courierId;
-        String stationManagerId;
+
         // get entity object by idNumber
         Admin admin;
-        Customer customer = null;
-        Courier courier=null;
-        StationManager stationManager=null;
+        Customer customer;
+        Courier courier;
+        StationManager stationManager;
         try {
             role = JWT.decode(token).getAudience().get(0);
             // get admin object by idNumber
             if ("admin".equals(role)) {
-                adminId = JWT.decode(token).getAudience().get(1);
+                String adminId = JWT.decode(token).getAudience().get(1);
                 admin = adminService.getById(Integer.parseInt(adminId));
                 //Token decoding has passed, but the admin does not exist
                 if (admin == null) {
                     throw new ServiceException(ERROR_CODE_401, "The admin does not exist. Please login again.");
                 }
-            } else {
+            } else if ("customer".equals(role)) {
+                String customerId = JWT.decode(token).getAudience().get(1);
+                customer = customerService.getCustomerByToken(Integer.parseInt(customerId));
+                if (customer == null) {
+                    throw new ServiceException(ERROR_CODE_401, "The customer does not exist. Please login again.");
+                }
+            } else if ("courier".equals(role)) {
+                String employeeId = JWT.decode(token).getAudience().get(1);
+                String accountId = JWT.decode(token).getAudience().get(2);
+                courier = courierService.getCourierByToken(Integer.parseInt(employeeId), Integer.parseInt(accountId));
+                if (courier == null) {
+                    throw new ServiceException(ERROR_CODE_401, "The courier does not exist. Please login again.");
+                }
+            } else if ("stationManager".equals(role)) {
+                String employeeId = JWT.decode(token).getAudience().get(1);
+                String accountId = JWT.decode(token).getAudience().get(2);
+                stationManager = stationManagerService.getStationManagerByToken(Integer.parseInt(employeeId), Integer.parseInt(accountId));
+                if (stationManager == null) {
+                    throw new ServiceException(ERROR_CODE_401, "The stationManager does not exist. Please login again.");
+                }
+            }else {
                 throw new ServiceException(ERROR_CODE_401, "The role of token is abnormal, please login again.");
             }
         } catch (Exception e) {
@@ -89,15 +105,6 @@ public class JwtInterceptor implements HandlerInterceptor {
             throw new ServiceException(ERROR_CODE_401, errMsg);
         }
 
-//        if (customer == null) {
-//            throw new ServiceException(ERROR_CODE_401, "The customer does not exist. Please login again.");
-//        }
-//        if (courier == null) {
-//            throw new ServiceException(ERROR_CODE_401, "The courier does not exist. Please login again.");
-//        }
-//        if (stationManager == null) {
-//            throw new ServiceException(ERROR_CODE_401, "The admin does not exist. Please login again.");
-//        }
 
         try {
             // verify the signature of token, regenerate the signature, compared with the original token

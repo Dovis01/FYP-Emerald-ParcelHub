@@ -83,6 +83,18 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerMapper, Customer> i
     }
 
     @Override
+    public Customer getCustomerByToken(Integer accountId) {
+        Customer customer;
+        try {
+            customer = getOne(new QueryWrapper<Customer>().eq("account_id", accountId));
+        } catch (Exception e) {
+            log.error("The deserialization of mybatis has failed for the customer by account id {}",accountId, e);
+            throw new ServiceException(ERROR_CODE_500, "The internal system is error");
+        }
+        return customer;
+    }
+
+    @Override
     public void deleteByCustomerId(Integer customerId, Integer accountId) {
         boolean isDeleted;
         try {

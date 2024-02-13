@@ -14,6 +14,8 @@ public interface ICompanyEmployeeService extends IService<CompanyEmployee> {
 
     void initializeCourierInfo(CompanyEmployee companyEmployee, Integer accountId);
 
+    CompanyEmployee getByEmployeeId(Integer employeeId);
+
     CompanyEmployee updateEmployeeInfo(CompanyEmployee companyEmployee, Integer employeeId);
 
     void clearEmployeeSomeInfo(Integer employeeId);

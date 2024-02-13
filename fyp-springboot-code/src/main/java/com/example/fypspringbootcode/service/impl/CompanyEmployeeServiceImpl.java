@@ -59,6 +59,21 @@ public class CompanyEmployeeServiceImpl extends ServiceImpl<CompanyEmployeeMappe
     }
 
     @Override
+    public CompanyEmployee getByEmployeeId(Integer employeeId) {
+        CompanyEmployee companyEmployee;
+        try {
+            companyEmployee = getById(employeeId);
+        } catch (Exception e) {
+            log.error("The deserialization of mybatis has failed for the employee {}", employeeId, e);
+            throw new ServiceException(ERROR_CODE_500, "The internal system is error");
+        }
+        if (companyEmployee == null) {
+            throw new ServiceException(ERROR_CODE_404, "The employee id provided is wrong, find no matched one to get");
+        }
+        return companyEmployee;
+    }
+
+    @Override
     public CompanyEmployee updateEmployeeInfo(CompanyEmployee companyEmployee, Integer employeeId) {
         companyEmployee.setEmployeeId(employeeId);
 

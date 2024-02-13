@@ -18,6 +18,8 @@ public interface ICourierService extends IService<Courier> {
 
     LoginCourierDTO getByCourierId(Integer courierId);
 
+    Courier getCourierByToken(Integer employeeId, Integer accountId);
+
     void deleteOneCourier(Integer courierId, Courier courier);
 
     Courier updatePersonalInfo(Courier courier, Integer customerId);

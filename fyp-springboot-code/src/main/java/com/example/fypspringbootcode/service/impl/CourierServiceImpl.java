@@ -1,6 +1,7 @@
 package com.example.fypspringbootcode.service.impl;
 
 import cn.hutool.crypto.SecureUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.fypspringbootcode.controller.dto.LoginCourierDTO;
 import com.example.fypspringbootcode.controller.request.LoginRequest;
 import com.example.fypspringbootcode.controller.request.RegisterCourierRequest;
@@ -100,6 +101,23 @@ public class CourierServiceImpl extends ServiceImpl<CourierMapper, Courier> impl
         }
         if (courier == null) {
             throw new ServiceException(ERROR_CODE_404, "The courier id provided is wrong, find no matched one in couriers");
+        }
+        return courier;
+    }
+
+    @Override
+    public Courier getCourierByToken(Integer employeeId, Integer accountId) {
+        CompanyEmployee companyEmployee = companyEmployeeService.getByEmployeeId(employeeId);
+        if(!companyEmployee.getAccountId().equals(accountId)){
+            throw new ServiceException(ERROR_CODE_401, "The account id of token is changed, please check the token");
+        }
+
+        Courier courier;
+        try {
+            courier = getOne(new QueryWrapper<Courier>().eq("employee_id", employeeId));
+        } catch (Exception e) {
+            log.error("The deserialization of mybatis has failed for the courier by employee id {}",employeeId, e);
+            throw new ServiceException(ERROR_CODE_500, "The internal system is error");
         }
         return courier;
     }

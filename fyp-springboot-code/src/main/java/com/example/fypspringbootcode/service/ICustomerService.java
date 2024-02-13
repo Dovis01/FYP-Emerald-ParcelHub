@@ -18,6 +18,8 @@ public interface ICustomerService extends IService<Customer> {
 
     Customer getByCustomerId(Integer customerId);
 
+    Customer getCustomerByToken(Integer accountId);
+
     void deleteByCustomerId(Integer customerId, Integer accountId);
 
     Customer updatePersonalInfo(Customer customer, Integer customerId);

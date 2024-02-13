@@ -12,5 +12,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2024-02-05
  */
 public interface IStationManagerService extends IService<StationManager> {
-
+    StationManager getStationManagerByToken(Integer employeeId, Integer accountId);
 }
