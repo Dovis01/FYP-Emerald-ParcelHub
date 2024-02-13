@@ -4,7 +4,7 @@ import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.fypspringbootcode.controller.dto.LoginCourierDTO;
 import com.example.fypspringbootcode.controller.request.LoginRequest;
-import com.example.fypspringbootcode.controller.request.RegisterCourierRequest;
+import com.example.fypspringbootcode.controller.request.RegisterEmployeeRoleRequest;
 import com.example.fypspringbootcode.entity.CompanyEmployee;
 import com.example.fypspringbootcode.entity.Courier;
 import com.example.fypspringbootcode.exception.ServiceException;
@@ -75,7 +75,7 @@ public class CourierServiceImpl extends ServiceImpl<CourierMapper, Courier> impl
     }
 
     @Override
-    public void register(RegisterCourierRequest registerRequest) {
+    public void register(RegisterEmployeeRoleRequest registerRequest) {
         Integer accountId = registeredAccountService.createRegisteredAccount(registerRequest);
         CompanyEmployee companyEmployee = companyEmployeeService.checkCompanyEmployee(registerRequest);
         companyEmployeeService.initializeCourierInfo(companyEmployee,accountId);
@@ -102,6 +102,7 @@ public class CourierServiceImpl extends ServiceImpl<CourierMapper, Courier> impl
         if (courier == null) {
             throw new ServiceException(ERROR_CODE_404, "The courier id provided is wrong, find no matched one in couriers");
         }
+        courier.setPassword(null);
         return courier;
     }
 

@@ -12,7 +12,7 @@ import lombok.EqualsAndHashCode;
  **/
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class RegisterCourierRequest extends BaseRegisterRequest{
+public class RegisterEmployeeRoleRequest extends BaseRegisterRequest{
     private String employeeCode;
 }
 

@@ -1,6 +1,6 @@
 package com.example.fypspringbootcode.service;
 
-import com.example.fypspringbootcode.controller.request.RegisterCourierRequest;
+import com.example.fypspringbootcode.controller.request.RegisterEmployeeRoleRequest;
 import com.example.fypspringbootcode.entity.CompanyEmployee;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -10,9 +10,11 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ICompanyEmployeeService extends IService<CompanyEmployee> {
 
-    CompanyEmployee checkCompanyEmployee(RegisterCourierRequest registerRequest);
+    CompanyEmployee checkCompanyEmployee(RegisterEmployeeRoleRequest registerRequest);
 
     void initializeCourierInfo(CompanyEmployee companyEmployee, Integer accountId);
+
+    void initializeStationManagerInfo(CompanyEmployee companyEmployee, Integer accountId);
 
     CompanyEmployee getByEmployeeId(Integer employeeId);
 

@@ -13,6 +13,7 @@ import org.apache.ibatis.annotations.Param;
  */
 public interface CourierMapper extends BaseMapper<Courier> {
     LoginCourierDTO checkCourierLoginAccount(LoginRequest loginRequest);
+
     LoginCourierDTO getCourierById(@Param("courierId") Integer courierId);
 
 }

@@ -2,7 +2,7 @@ package com.example.fypspringbootcode.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.example.fypspringbootcode.controller.request.RegisterCourierRequest;
+import com.example.fypspringbootcode.controller.request.RegisterEmployeeRoleRequest;
 import com.example.fypspringbootcode.entity.CompanyEmployee;
 import com.example.fypspringbootcode.exception.ServiceException;
 import com.example.fypspringbootcode.mapper.CompanyEmployeeMapper;
@@ -26,7 +26,7 @@ import static com.example.fypspringbootcode.common.ErrorCodeList.*;
 public class CompanyEmployeeServiceImpl extends ServiceImpl<CompanyEmployeeMapper, CompanyEmployee> implements ICompanyEmployeeService {
 
     @Override
-    public CompanyEmployee checkCompanyEmployee(RegisterCourierRequest registerRequest) {
+    public CompanyEmployee checkCompanyEmployee(RegisterEmployeeRoleRequest registerRequest) {
         QueryWrapper<CompanyEmployee> queryWrapper = new QueryWrapper<>();
         if (registerRequest.getEmployeeCode() != null && !registerRequest.getEmployeeCode().isEmpty()) {
             queryWrapper.eq("employee_code", registerRequest.getEmployeeCode());
@@ -55,6 +55,16 @@ public class CompanyEmployeeServiceImpl extends ServiceImpl<CompanyEmployeeMappe
         boolean isUpdated = updateById(companyEmployee);
         if(!isUpdated) {
             throw new ServiceException(ERROR_CODE_500, "Fail to update the initial employee info of the new courier");
+        }
+    }
+
+    @Override
+    public void initializeStationManagerInfo(CompanyEmployee companyEmployee, Integer accountId) {
+        companyEmployee.setRoleType("StationManager");
+        companyEmployee.setAccountId(accountId);
+        boolean isUpdated = updateById(companyEmployee);
+        if(!isUpdated) {
+            throw new ServiceException(ERROR_CODE_500, "Fail to update the initial employee info of the new station manager");
         }
     }
 

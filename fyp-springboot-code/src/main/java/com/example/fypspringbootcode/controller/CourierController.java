@@ -3,7 +3,7 @@ package com.example.fypspringbootcode.controller;
 import com.example.fypspringbootcode.common.Result;
 import com.example.fypspringbootcode.controller.dto.LoginCourierDTO;
 import com.example.fypspringbootcode.controller.request.LoginRequest;
-import com.example.fypspringbootcode.controller.request.RegisterCourierRequest;
+import com.example.fypspringbootcode.controller.request.RegisterEmployeeRoleRequest;
 import com.example.fypspringbootcode.entity.Courier;
 import com.example.fypspringbootcode.service.ICourierService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +40,7 @@ public class CourierController {
     }
 
     @PostMapping("/v1/register")
-    public Result register(@RequestBody RegisterCourierRequest registerRequest) {
+    public Result register(@RequestBody RegisterEmployeeRoleRequest registerRequest) {
         courierService.register(registerRequest);
         return Result.success("The courier has registered successfully");
     }

@@ -2,7 +2,7 @@ package com.example.fypspringbootcode.service;
 
 import com.example.fypspringbootcode.controller.dto.LoginCourierDTO;
 import com.example.fypspringbootcode.controller.request.LoginRequest;
-import com.example.fypspringbootcode.controller.request.RegisterCourierRequest;
+import com.example.fypspringbootcode.controller.request.RegisterEmployeeRoleRequest;
 import com.example.fypspringbootcode.entity.Courier;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -14,7 +14,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface ICourierService extends IService<Courier> {
     LoginCourierDTO login(LoginRequest loginRequest);
 
-    void register(RegisterCourierRequest registerRequest);
+    void register(RegisterEmployeeRoleRequest registerRequest);
 
     LoginCourierDTO getByCourierId(Integer courierId);
 
