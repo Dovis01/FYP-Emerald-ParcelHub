@@ -39,8 +39,6 @@ public class JwtInterceptor implements HandlerInterceptor {
     @Autowired
     private IStationManagerService stationManagerService;
 
-    private static final String SECRET = "ILoveChenRui";
-
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         // get token from request header
@@ -48,6 +46,7 @@ public class JwtInterceptor implements HandlerInterceptor {
         if (StrUtil.isBlank(authHeader)) {
             throw new ServiceException(ERROR_CODE_401, "There is no authorization header, please check that.");
         }
+
         String token = StrUtil.subAfter(authHeader, "Bearer ", false);
         if (StrUtil.isBlank(token)) {
             // get token from request parameter
@@ -58,60 +57,53 @@ public class JwtInterceptor implements HandlerInterceptor {
         if (StrUtil.isBlank(token)) {
             throw new ServiceException(ERROR_CODE_401, "There is no token, please login first.");
         }
-        // get role from token
-        String role;
 
-        // get entity object by idNumber
-        Admin admin;
-        Customer customer;
-        Courier courier;
-        StationManager stationManager;
-        try {
-            role = JWT.decode(token).getAudience().get(0);
-            // get admin object by idNumber
-            if ("admin".equals(role)) {
-                String adminId = JWT.decode(token).getAudience().get(1);
-                admin = adminService.getById(Integer.parseInt(adminId));
-                //Token decoding has passed, but the admin does not exist
-                if (admin == null) {
-                    throw new ServiceException(ERROR_CODE_401, "The admin does not exist. Please login again.");
-                }
-            } else if ("customer".equals(role)) {
-                String customerId = JWT.decode(token).getAudience().get(1);
-                customer = customerService.getCustomerByToken(Integer.parseInt(customerId));
-                if (customer == null) {
-                    throw new ServiceException(ERROR_CODE_401, "The customer does not exist. Please login again.");
-                }
-            } else if ("courier".equals(role)) {
-                String employeeId = JWT.decode(token).getAudience().get(1);
-                String accountId = JWT.decode(token).getAudience().get(2);
-                courier = courierService.getCourierByToken(Integer.parseInt(employeeId), Integer.parseInt(accountId));
-                if (courier == null) {
-                    throw new ServiceException(ERROR_CODE_401, "The courier does not exist. Please login again.");
-                }
-            } else if ("stationManager".equals(role)) {
-                String employeeId = JWT.decode(token).getAudience().get(1);
-                String accountId = JWT.decode(token).getAudience().get(2);
-                stationManager = stationManagerService.getStationManagerByToken(Integer.parseInt(employeeId), Integer.parseInt(accountId));
-                if (stationManager == null) {
-                    throw new ServiceException(ERROR_CODE_401, "The station manager does not exist. Please login again.");
-                }
-            }else {
-                throw new ServiceException(ERROR_CODE_401, "The role of token is abnormal, please login again.");
+        // get the role of token and compare with the role of the API
+        String role = JWT.decode(token).getAudience().get(0);
+        String roleAPI = request.getRequestURI().split("/")[2];
+        if (!role.equals(roleAPI)) {
+            throw new ServiceException(ERROR_CODE_401, "The role of token is abnormal, there is no permission to access this API.");
+        }
+
+        // get object by idNumber
+        if ("admin".equals(role)) {
+            String adminId = JWT.decode(token).getAudience().get(1);
+            Admin admin = adminService.getById(Integer.parseInt(adminId));
+            //Token decoding has passed, but the admin does not exist
+            if (admin == null) {
+                throw new ServiceException(ERROR_CODE_401, "The admin does not exist. Please login again.");
             }
-        } catch (Exception e) {
-            String errMsg = "The payload of token is abnormal, please login again.";
-            log.error(errMsg + ", token=" + token, e);
-            throw new ServiceException(ERROR_CODE_401, errMsg);
+        } else if ("customer".equals(role)) {
+            String customerId = JWT.decode(token).getAudience().get(1);
+            Customer customer = customerService.getCustomerByToken(Integer.parseInt(customerId));
+            if (customer == null) {
+                throw new ServiceException(ERROR_CODE_401, "The customer does not exist. Please login again.");
+            }
+        } else if ("courier".equals(role)) {
+            String employeeId = JWT.decode(token).getAudience().get(1);
+            String accountId = JWT.decode(token).getAudience().get(2);
+            Courier courier = courierService.getCourierByToken(Integer.parseInt(employeeId), Integer.parseInt(accountId));
+            if (courier == null) {
+                throw new ServiceException(ERROR_CODE_401, "The courier does not exist. Please login again.");
+            }
+        } else if ("stationManager".equals(role)) {
+            String employeeId = JWT.decode(token).getAudience().get(1);
+            String accountId = JWT.decode(token).getAudience().get(2);
+            StationManager stationManager = stationManagerService.getStationManagerByToken(Integer.parseInt(employeeId), Integer.parseInt(accountId));
+            if (stationManager == null) {
+                throw new ServiceException(ERROR_CODE_401, "The station manager does not exist. Please login again.");
+            }
+        } else {
+            throw new ServiceException(ERROR_CODE_401, "The role of token does not exist, please login again.");
         }
 
 
         try {
             // verify the signature of token, regenerate the signature, compared with the original token
-            JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(SECRET)).build();
+            JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(AppConfig.SECRET_KEY)).build();
             jwtVerifier.verify(token); // changed or expired token will throw an exception
         } catch (JWTVerificationException e) {
-            if(e instanceof TokenExpiredException){
+            if (e instanceof TokenExpiredException) {
                 throw new ServiceException(ERROR_CODE_401, "The token has expired, please login again.");
             }
             throw new ServiceException(ERROR_CODE_401, "token verification has failed, please login again.");
