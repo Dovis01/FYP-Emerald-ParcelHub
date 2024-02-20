@@ -2,6 +2,7 @@ package com.example.fypspringbootcode.service.impl;
 
 import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.example.fypspringbootcode.common.AppConfig;
 import com.example.fypspringbootcode.controller.dto.LoginCourierDTO;
 import com.example.fypspringbootcode.controller.request.LoginRequest;
 import com.example.fypspringbootcode.controller.request.RegisterEmployeeRoleRequest;
@@ -36,7 +37,6 @@ public class CourierServiceImpl extends ServiceImpl<CourierMapper, Courier> impl
     @Autowired
     private CourierDeliveryRecordServiceImpl courierDeliveryRecordService;
 
-    private static final String PASS_SALT = "Dovis";
 
     @Override
     public LoginCourierDTO login(LoginRequest loginRequest) {
@@ -50,6 +50,11 @@ public class CourierServiceImpl extends ServiceImpl<CourierMapper, Courier> impl
         }
         if (loginCourierDTO == null) {
             throw new ServiceException(ERROR_CODE_404, "The username or email provided is wrong, find no matched one in couriers");
+        }
+
+        // check the role type
+        if(!loginCourierDTO.getRoleType().equals("Courier")){
+            throw new ServiceException(ERROR_CODE_401, "The role type of the login account is wrong, please check it again");
         }
 
         // check the status
@@ -173,7 +178,7 @@ public class CourierServiceImpl extends ServiceImpl<CourierMapper, Courier> impl
     }
 
     private String securePass(String password) {
-        return SecureUtil.md5(password + PASS_SALT);
+        return SecureUtil.md5(password + AppConfig.PASS_SALT);
     }
 
 }

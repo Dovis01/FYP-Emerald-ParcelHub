@@ -2,6 +2,7 @@ package com.example.fypspringbootcode.tests;
 
 import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.example.fypspringbootcode.common.AppConfig;
 import com.example.fypspringbootcode.entity.Admin;
 import com.example.fypspringbootcode.mapper.AdminMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -19,9 +20,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 @Slf4j //用于异常错误抛出 下方log.error
 public class AdminTest {
-
-    private static final String DEFAULT_PASS = "zsj123456";
-    private static final String PASS_SALT = "Dovis"; //密码盐
 
     @Autowired
     AdminMapper adminMapper;
@@ -60,6 +58,6 @@ public class AdminTest {
     }
 
     private String securePass(String password) {
-        return SecureUtil.md5(password + PASS_SALT);
+        return SecureUtil.md5(password + AppConfig.PASS_SALT);
     }
 }

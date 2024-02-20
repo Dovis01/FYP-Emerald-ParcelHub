@@ -2,6 +2,7 @@ package com.example.fypspringbootcode.service.impl;
 
 import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.example.fypspringbootcode.common.AppConfig;
 import com.example.fypspringbootcode.controller.dto.LoginStationManagerDTO;
 import com.example.fypspringbootcode.controller.request.LoginRequest;
 import com.example.fypspringbootcode.controller.request.RegisterEmployeeRoleRequest;
@@ -34,8 +35,6 @@ public class StationManagerServiceImpl extends ServiceImpl<StationManagerMapper,
     @Autowired
     private CompanyEmployeeServiceImpl companyEmployeeService;
 
-    private static final String PASS_SALT = "Dovis";
-
     @Override
     public LoginStationManagerDTO login(LoginRequest loginRequest) {
         // get the station manager by username or email
@@ -48,6 +47,11 @@ public class StationManagerServiceImpl extends ServiceImpl<StationManagerMapper,
         }
         if (loginStationManagerDTO == null) {
             throw new ServiceException(ERROR_CODE_404, "The username or email provided is wrong, find no matched one in station managers");
+        }
+
+        // check the role type
+        if(!loginStationManagerDTO.getRoleType().equals("StationManager")){
+            throw new ServiceException(ERROR_CODE_401, "The role type of the login account is wrong, please check it again");
         }
 
         // check the status
@@ -168,6 +172,6 @@ public class StationManagerServiceImpl extends ServiceImpl<StationManagerMapper,
     }
 
     private String securePass(String password) {
-        return SecureUtil.md5(password + PASS_SALT);
+        return SecureUtil.md5(password + AppConfig.PASS_SALT);
     }
 }

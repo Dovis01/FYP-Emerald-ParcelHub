@@ -2,6 +2,7 @@ package com.example.fypspringbootcode.tests;
 
 import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.fypspringbootcode.common.AppConfig;
 import com.example.fypspringbootcode.entity.RegisteredAccount;
 import com.example.fypspringbootcode.exception.ServiceException;
 import com.example.fypspringbootcode.mapper.RegisteredAccountMapper;
@@ -20,7 +21,6 @@ import org.springframework.dao.DuplicateKeyException;
 @SpringBootTest
 @Slf4j
 public class RegisteredAccountTest extends ServiceImpl<RegisteredAccountMapper, RegisteredAccount> {
-    private static final String PASS_SALT = "Dovis"; //密码盐
     @Test
     public void insertData() {
         RegisteredAccount registeredAccount = new RegisteredAccount();
@@ -37,6 +37,6 @@ public class RegisteredAccountTest extends ServiceImpl<RegisteredAccountMapper, 
     }
 
     private String securePass(String password) {
-        return SecureUtil.md5(password + PASS_SALT);
+        return SecureUtil.md5(password + AppConfig.PASS_SALT);
     }
 }

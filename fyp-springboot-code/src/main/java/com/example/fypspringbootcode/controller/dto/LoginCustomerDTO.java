@@ -13,6 +13,7 @@ import lombok.Data;
 public class LoginCustomerDTO {
     // customer table
     private Integer customerId;
+    private String roleType;
     private String fullName;
     private String avatar;
     private String phoneNumber;

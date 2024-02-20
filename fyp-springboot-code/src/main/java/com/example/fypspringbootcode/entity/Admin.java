@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 public class Admin {
 
     @TableId(value = "admin_id", type = IdType.AUTO)
-    private Integer id;
+    private Integer adminId;
 
     private String adminName;
 
@@ -28,7 +28,7 @@ public class Admin {
     @Override
     public String toString() {
         return "Admin{" +
-                "adminId = " + id +
+                "adminId = " + adminId +
                 ", adminName = " + adminName +
                 ", password = " + password +
                 ", createTime = " + createTime +

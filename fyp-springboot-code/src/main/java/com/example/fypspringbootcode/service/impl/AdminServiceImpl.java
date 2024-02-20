@@ -3,6 +3,7 @@ package com.example.fypspringbootcode.service.impl;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.example.fypspringbootcode.common.AppConfig;
 import com.example.fypspringbootcode.controller.dto.LoginAdminDTO;
 import com.example.fypspringbootcode.controller.request.BaseRequest;
 import com.example.fypspringbootcode.controller.request.LoginRequest;
@@ -32,9 +33,6 @@ public class AdminServiceImpl implements IAdminService {
     @Autowired
     AdminMapper adminMapper;
 
-    private static final String DEFAULT_PASS = "zsj123456";
-    private static final String PASS_SALT = "Dovis"; //password salt
-
     @Override
     public List<Admin> list() {
         return adminMapper.selectList(null);
@@ -52,7 +50,7 @@ public class AdminServiceImpl implements IAdminService {
         //如果admin对象的密码属性为空 则设置默认密码 123
         //hutool包下的工具类StrUtil
         if (StrUtil.isBlank(obj.getPassword())) {
-            obj.setPassword(DEFAULT_PASS);
+            obj.setPassword(AppConfig.DEFAULT_PASS);
         }
         //hutool包下的工具类SecureUtil
         obj.setPassword(securePass(obj.getPassword()));  // 设置md5加密，加盐
@@ -115,9 +113,9 @@ public class AdminServiceImpl implements IAdminService {
          */
         LoginAdminDTO loginAdminDTO = new LoginAdminDTO();
         BeanUtils.copyProperties(admin, loginAdminDTO);
-
+        loginAdminDTO.setRoleType("Admin");
         // 生成token给前端请求凭证 TokenUtils genToken方法(adminId,sign)
-        String token = TokenUtils.genToken("admin",String.valueOf(admin.getId()));
+        String token = TokenUtils.genToken("admin",String.valueOf(admin.getAdminId()));
         loginAdminDTO.setToken(token);
         return loginAdminDTO;
     }
@@ -138,7 +136,7 @@ public class AdminServiceImpl implements IAdminService {
      * @return {@link String}
      */
     private String securePass(String password) {
-        return SecureUtil.md5(password + PASS_SALT);
+        return SecureUtil.md5(password + AppConfig.PASS_SALT);
     }
 
 }

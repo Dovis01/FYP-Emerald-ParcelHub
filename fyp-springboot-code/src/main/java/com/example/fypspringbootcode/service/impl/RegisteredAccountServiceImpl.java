@@ -3,6 +3,7 @@ package com.example.fypspringbootcode.service.impl;
 import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.example.fypspringbootcode.common.AppConfig;
 import com.example.fypspringbootcode.controller.request.BaseRegisterRequest;
 import com.example.fypspringbootcode.controller.request.LoginRequest;
 import com.example.fypspringbootcode.entity.RegisteredAccount;
@@ -24,7 +25,6 @@ import static com.example.fypspringbootcode.common.ErrorCodeList.*;
 @Service
 @Slf4j
 public class RegisteredAccountServiceImpl extends ServiceImpl<RegisteredAccountMapper, RegisteredAccount> implements IRegisteredAccountService {
-    private static final String PASS_SALT = "Dovis";
 
     @Override
     public void deleteByAccountId(Integer accountId) {
@@ -172,6 +172,6 @@ public class RegisteredAccountServiceImpl extends ServiceImpl<RegisteredAccountM
     }
 
     private String securePass(String password) {
-        return SecureUtil.md5(password + PASS_SALT);
+        return SecureUtil.md5(password + AppConfig.PASS_SALT);
     }
 }

@@ -145,6 +145,7 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerMapper, Customer> i
         LoginCustomerDTO loginCustomerDTO = new LoginCustomerDTO();
         BeanUtils.copyProperties(customer, loginCustomerDTO);
         BeanUtils.copyProperties(customerAccount, loginCustomerDTO);
+        loginCustomerDTO.setRoleType("Customer");
         // 生成token给前端请求凭证 TokenUtils genToken方法(customerId,sign)
         String token = TokenUtils.genToken("customer",String.valueOf(customer.getAccountId()));
         loginCustomerDTO.setToken(token);

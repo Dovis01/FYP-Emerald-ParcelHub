@@ -4,6 +4,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.example.fypspringbootcode.common.AppConfig;
 import com.example.fypspringbootcode.entity.Admin;
 import com.example.fypspringbootcode.service.IAdminService;
 import lombok.extern.slf4j.Slf4j;
@@ -21,8 +22,6 @@ import java.util.Date;
 public class TokenUtils {
 
     private static IAdminService staticAdminService;
-
-    private static final String SECRET = "ILoveChenRui";
 
     @Resource
     //默认通过By Name原则进行依赖注入
@@ -42,21 +41,21 @@ public class TokenUtils {
     public static String genToken(String role, String idNumber) {
         String token =JWT.create().withAudience(role,idNumber)
                 .withExpiresAt(DateUtil.offsetHour(new Date(), 2))
-                .sign(Algorithm.HMAC256(SECRET));
+                .sign(Algorithm.HMAC256(AppConfig.SECRET_KEY));
         return "Bearer " + token;
     }
 
     public static String genToken(String role, String idNumber1,String idNumber2) {
         String token =JWT.create().withAudience(role, idNumber1, idNumber2)
                 .withExpiresAt(DateUtil.offsetHour(new Date(), 2))
-                .sign(Algorithm.HMAC256(SECRET));
+                .sign(Algorithm.HMAC256(AppConfig.SECRET_KEY));
         return "Bearer " + token;
     }
 
     public static String genToken(String role, String idNumber, int days) {
         String token = JWT.create().withAudience(role, idNumber) // 将 user id 保存到 token 里面,作为载荷
                 .withExpiresAt(DateUtil.offsetDay(new Date(), days)) // token is expired after n days
-                .sign(Algorithm.HMAC256(SECRET)); //use fullName as the secret
+                .sign(Algorithm.HMAC256(AppConfig.SECRET_KEY)); //use fullName as the secret
         return "Bearer " + token;
     }
 

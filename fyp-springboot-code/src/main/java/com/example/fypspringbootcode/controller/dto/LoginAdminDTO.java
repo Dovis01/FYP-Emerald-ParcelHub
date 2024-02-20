@@ -9,7 +9,8 @@ import lombok.Data;
  */
 @Data
 public class LoginAdminDTO {
-    private Integer id;
+    private Integer adminId;
     private String adminName;
+    private String roleType;
     private String token;
 }
