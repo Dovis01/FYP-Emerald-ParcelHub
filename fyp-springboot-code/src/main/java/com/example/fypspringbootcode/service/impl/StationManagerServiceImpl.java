@@ -2,7 +2,7 @@ package com.example.fypspringbootcode.service.impl;
 
 import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.example.fypspringbootcode.common.AppConfig;
+import com.example.fypspringbootcode.common.config.AppConfig;
 import com.example.fypspringbootcode.controller.dto.LoginStationManagerDTO;
 import com.example.fypspringbootcode.controller.request.LoginRequest;
 import com.example.fypspringbootcode.controller.request.RegisterEmployeeRoleRequest;
@@ -80,7 +80,7 @@ public class StationManagerServiceImpl extends ServiceImpl<StationManagerMapper,
     public void register(RegisterEmployeeRoleRequest registerRequest) {
         Integer accountId = registeredAccountService.createRegisteredAccount(registerRequest);
         CompanyEmployee companyEmployee = companyEmployeeService.checkCompanyEmployee(registerRequest);
-        companyEmployeeService.initializeStationManagerInfo(companyEmployee,accountId);
+        companyEmployeeService.initializeRoleInfo(companyEmployee,accountId, "StationManager");
         StationManager newStationManager = new StationManager();
         newStationManager.setEmployeeId(companyEmployee.getEmployeeId());
         try {

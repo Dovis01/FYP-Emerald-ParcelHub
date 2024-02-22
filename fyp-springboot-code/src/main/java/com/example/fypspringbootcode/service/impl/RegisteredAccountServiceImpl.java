@@ -3,7 +3,7 @@ package com.example.fypspringbootcode.service.impl;
 import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.example.fypspringbootcode.common.AppConfig;
+import com.example.fypspringbootcode.common.config.AppConfig;
 import com.example.fypspringbootcode.controller.request.BaseRegisterRequest;
 import com.example.fypspringbootcode.controller.request.LoginRequest;
 import com.example.fypspringbootcode.entity.RegisteredAccount;

@@ -4,7 +4,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.example.fypspringbootcode.common.AppConfig;
+import com.example.fypspringbootcode.common.config.AppConfig;
 import com.example.fypspringbootcode.entity.Admin;
 import com.example.fypspringbootcode.service.IAdminService;
 import lombok.extern.slf4j.Slf4j;

@@ -1,7 +1,7 @@
 package com.example.fypspringbootcode;
 
 import cn.hutool.crypto.SecureUtil;
-import com.example.fypspringbootcode.common.AppConfig;
+import com.example.fypspringbootcode.common.config.AppConfig;
 import com.example.fypspringbootcode.entity.Admin;
 import com.example.fypspringbootcode.mapper.AdminMapper;
 import lombok.extern.slf4j.Slf4j;

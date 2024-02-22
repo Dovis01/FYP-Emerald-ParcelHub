@@ -1,4 +1,4 @@
-package com.example.fypspringbootcode.common;
+package com.example.fypspringbootcode.common.config;
 
 import io.github.cdimascio.dotenv.Dotenv;
 

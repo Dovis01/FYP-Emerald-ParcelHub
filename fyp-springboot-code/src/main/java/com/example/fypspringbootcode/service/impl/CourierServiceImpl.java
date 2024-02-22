@@ -2,7 +2,7 @@ package com.example.fypspringbootcode.service.impl;
 
 import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.example.fypspringbootcode.common.AppConfig;
+import com.example.fypspringbootcode.common.config.AppConfig;
 import com.example.fypspringbootcode.controller.dto.LoginCourierDTO;
 import com.example.fypspringbootcode.controller.request.LoginRequest;
 import com.example.fypspringbootcode.controller.request.RegisterEmployeeRoleRequest;
@@ -83,7 +83,7 @@ public class CourierServiceImpl extends ServiceImpl<CourierMapper, Courier> impl
     public void register(RegisterEmployeeRoleRequest registerRequest) {
         Integer accountId = registeredAccountService.createRegisteredAccount(registerRequest);
         CompanyEmployee companyEmployee = companyEmployeeService.checkCompanyEmployee(registerRequest);
-        companyEmployeeService.initializeCourierInfo(companyEmployee,accountId);
+        companyEmployeeService.initializeRoleInfo(companyEmployee,accountId, "Courier");
         Courier newCourier = new Courier();
         newCourier.setEmployeeId(companyEmployee.getEmployeeId());
         try {

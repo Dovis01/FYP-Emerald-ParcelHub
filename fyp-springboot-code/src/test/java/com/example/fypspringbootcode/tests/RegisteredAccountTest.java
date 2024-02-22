@@ -2,7 +2,7 @@ package com.example.fypspringbootcode.tests;
 
 import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.example.fypspringbootcode.common.AppConfig;
+import com.example.fypspringbootcode.common.config.AppConfig;
 import com.example.fypspringbootcode.entity.RegisteredAccount;
 import com.example.fypspringbootcode.exception.ServiceException;
 import com.example.fypspringbootcode.mapper.RegisteredAccountMapper;

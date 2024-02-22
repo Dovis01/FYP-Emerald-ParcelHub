@@ -1,4 +1,4 @@
-package com.example.fypspringbootcode.common;
+package com.example.fypspringbootcode.common.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

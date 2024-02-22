@@ -1,5 +1,6 @@
-package com.example.fypspringbootcode.common;
+package com.example.fypspringbootcode.common.config;
 
+import com.example.fypspringbootcode.common.JwtInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.bind.annotation.RestController;
