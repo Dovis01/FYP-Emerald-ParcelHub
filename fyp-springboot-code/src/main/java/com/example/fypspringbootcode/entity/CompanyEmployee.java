@@ -30,7 +30,7 @@ public class CompanyEmployee implements Serializable {
 
     private String avatar;
 
-    private String roleType;
+    private Integer roleId;
 
     private Integer companyId;
 
@@ -44,7 +44,7 @@ public class CompanyEmployee implements Serializable {
                 ", employeeCode = " + employeeCode +
                 ", phoneNumber = " + phoneNumber +
                 ", accountAvatar = " + avatar +
-                ", role = " + roleType +
+                ", role = " + roleId +
                 ", companyId = " + companyId +
                 ", accountId = " + accountId +
                 "}";

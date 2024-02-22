@@ -12,9 +12,7 @@ public interface ICompanyEmployeeService extends IService<CompanyEmployee> {
 
     CompanyEmployee checkCompanyEmployee(RegisterEmployeeRoleRequest registerRequest);
 
-    void initializeCourierInfo(CompanyEmployee companyEmployee, Integer accountId);
-
-    void initializeStationManagerInfo(CompanyEmployee companyEmployee, Integer accountId);
+    void initializeRoleInfo(CompanyEmployee companyEmployee, Integer accountId, String roleType);
 
     CompanyEmployee getByEmployeeId(Integer employeeId);
 

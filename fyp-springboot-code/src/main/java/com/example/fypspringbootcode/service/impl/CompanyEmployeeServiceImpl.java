@@ -9,6 +9,7 @@ import com.example.fypspringbootcode.mapper.CompanyEmployeeMapper;
 import com.example.fypspringbootcode.service.ICompanyEmployeeService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
@@ -24,6 +25,9 @@ import static com.example.fypspringbootcode.common.ErrorCodeList.*;
 @Service
 @Slf4j
 public class CompanyEmployeeServiceImpl extends ServiceImpl<CompanyEmployeeMapper, CompanyEmployee> implements ICompanyEmployeeService {
+
+    @Autowired
+    private RoleTypeServiceImpl roleTypeService;
 
     @Override
     public CompanyEmployee checkCompanyEmployee(RegisterEmployeeRoleRequest registerRequest) {
@@ -49,22 +53,13 @@ public class CompanyEmployeeServiceImpl extends ServiceImpl<CompanyEmployeeMappe
     }
 
     @Override
-    public void initializeCourierInfo(CompanyEmployee companyEmployee, Integer accountId) {
-        companyEmployee.setRoleType("Courier");
+    public void initializeRoleInfo(CompanyEmployee companyEmployee, Integer accountId, String roleType) {
+        Integer roleId = roleTypeService.getRoleIdByRoleType(roleType);
+        companyEmployee.setRoleId(roleId);
         companyEmployee.setAccountId(accountId);
         boolean isUpdated = updateById(companyEmployee);
-        if(!isUpdated) {
-            throw new ServiceException(ERROR_CODE_500, "Fail to update the initial employee info of the new courier");
-        }
-    }
-
-    @Override
-    public void initializeStationManagerInfo(CompanyEmployee companyEmployee, Integer accountId) {
-        companyEmployee.setRoleType("StationManager");
-        companyEmployee.setAccountId(accountId);
-        boolean isUpdated = updateById(companyEmployee);
-        if(!isUpdated) {
-            throw new ServiceException(ERROR_CODE_500, "Fail to update the initial employee info of the new station manager");
+        if (!isUpdated) {
+            throw new ServiceException(ERROR_CODE_500, "Fail to update the initial employee info of the new " + roleType + " employee");
         }
     }
 
