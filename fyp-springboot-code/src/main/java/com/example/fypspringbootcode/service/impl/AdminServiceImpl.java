@@ -3,7 +3,9 @@ package com.example.fypspringbootcode.service.impl;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.example.fypspringbootcode.common.AppConfig;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.fypspringbootcode.common.config.AppConfig;
 import com.example.fypspringbootcode.controller.dto.LoginAdminDTO;
 import com.example.fypspringbootcode.controller.request.BaseRequest;
 import com.example.fypspringbootcode.controller.request.LoginRequest;
@@ -13,8 +15,7 @@ import com.example.fypspringbootcode.exception.ServiceException;
 import com.example.fypspringbootcode.mapper.AdminMapper;
 import com.example.fypspringbootcode.service.IAdminService;
 import com.example.fypspringbootcode.utils.TokenUtils;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ import static com.example.fypspringbootcode.common.ErrorCodeList.ERROR_CODE_500;
 
 @Slf4j
 @Service
-public class AdminServiceImpl implements IAdminService {
+public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements IAdminService {
 
     @Autowired
     AdminMapper adminMapper;
@@ -39,14 +40,15 @@ public class AdminServiceImpl implements IAdminService {
     }
 
     @Override
-    public PageInfo<Admin> page(BaseRequest baseRequest) {
-        PageHelper.startPage(baseRequest.getPageNum(), baseRequest.getPageSize());
-        List<Admin> users = adminMapper.listByCondition(baseRequest);
-        return new PageInfo<>(users);
+    public IPage<Admin> pageAdmin(BaseRequest baseRequest) {
+        Page<Admin> page = new Page<>(baseRequest.getPageNum(), baseRequest.getPageSize());
+        QueryWrapper<Admin> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("status", 1);
+        return baseMapper.selectPage(page, queryWrapper);
     }
 
     @Override
-    public void save(Admin obj) {
+    public void addAdmin(Admin obj) {
         //如果admin对象的密码属性为空 则设置默认密码 123
         //hutool包下的工具类StrUtil
         if (StrUtil.isBlank(obj.getPassword())) {

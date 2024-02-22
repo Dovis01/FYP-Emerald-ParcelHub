@@ -7,16 +7,6 @@
         select * from t_00_admin where admin_name = #{adminName} and password = #{password}
     </select>
 
-    <select id="listByCondition" resultType="com.example.fypspringbootcode.entity.Admin">
-        select * from t_00_admin
-        <where>
-            <if test="adminName != null and adminName != ''">
-                admin_name like concat('%', #{adminName}, '%')
-            </if>
-        </where>
-        order by admin_id desc
-    </select>
-
     <update id="updatePassword">
         update t_00_admin set password = #{newPass} where admin_name = #{userame} and password = #{password}
     </update>

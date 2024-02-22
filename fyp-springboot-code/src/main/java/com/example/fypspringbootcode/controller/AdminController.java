@@ -34,7 +34,7 @@ public class AdminController {
 
     @PostMapping("/v1/save")
     public Result save(@RequestBody Admin obj) {
-        adminService.save(obj);
+        adminService.addAdmin(obj);
         return Result.success("register successfully");
     }
 
@@ -58,7 +58,7 @@ public class AdminController {
 
     @GetMapping("/v1/page")
     public Result page(AdminPageRequest pageRequest) {
-        return Result.success(adminService.page(pageRequest));
+        return Result.success(adminService.pageAdmin(pageRequest));
     }
 
 }
