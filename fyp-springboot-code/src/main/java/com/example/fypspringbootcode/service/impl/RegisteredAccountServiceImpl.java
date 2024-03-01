@@ -33,10 +33,10 @@ public class RegisteredAccountServiceImpl extends ServiceImpl<RegisteredAccountM
             isDeleted = removeById(accountId);
         } catch (Exception e) {
             log.error("The mybatis has failed to delete the registered account {}", accountId, e);
-            throw new ServiceException(ERROR_CODE_500, "The internal system is error");
+            throw new ServiceException(ERROR_CODE_500, "The internal system is error.");
         }
         if (!isDeleted) {
-            throw new ServiceException(ERROR_CODE_404, "The registered account id is wrong, find no matched one to delete");
+            throw new ServiceException(ERROR_CODE_404, "The registered account id is wrong, find no matched one to delete.");
         }
     }
 
@@ -47,10 +47,10 @@ public class RegisteredAccountServiceImpl extends ServiceImpl<RegisteredAccountM
             registeredAccount = getById(accountId);
         } catch (Exception e) {
             log.error("The deserialization of mybatis has failed", e);
-            throw new ServiceException(ERROR_CODE_500, "The internal system is error");
+            throw new ServiceException(ERROR_CODE_500, "The internal system is error.");
         }
         if (registeredAccount == null) {
-            throw new ServiceException(ERROR_CODE_404, "The account id is wrong, find no matched one");
+            throw new ServiceException(ERROR_CODE_404, "The account id is wrong, find no matched one.");
         }
         registeredAccount.setPassword(null);
         return registeredAccount;
@@ -62,12 +62,12 @@ public class RegisteredAccountServiceImpl extends ServiceImpl<RegisteredAccountM
         QueryWrapper<RegisteredAccount> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("username", registerRequest.getUsername());
         if (getOne(queryWrapper) != null) {
-            throw new ServiceException(ERROR_CODE_401, "The username already exists");
+            throw new ServiceException(ERROR_CODE_401, "The username already exists.");
         }
         queryWrapper.clear();
         queryWrapper.eq("email", registerRequest.getEmail());
         if (getOne(queryWrapper) != null) {
-            throw new ServiceException(ERROR_CODE_401, "The email already exists");
+            throw new ServiceException(ERROR_CODE_401, "The email already exists.");
         }
 
         // Insert the new record
@@ -82,30 +82,39 @@ public class RegisteredAccountServiceImpl extends ServiceImpl<RegisteredAccountM
     @Override
     public RegisteredAccount checkRegisteredAccount(LoginRequest loginRequest) {
         QueryWrapper<RegisteredAccount> queryWrapper = new QueryWrapper<>();
+        RegisteredAccount result = null;
 
         // Check which field (username or email) is provided and set the condition accordingly
         if (loginRequest.getUsername() != null && !loginRequest.getUsername().isEmpty()) {
             queryWrapper.eq("username", loginRequest.getUsername());
-        } else if (loginRequest.getEmail() != null && !loginRequest.getEmail().isEmpty()) {
+            result = getRegisteredAccountByQueryWrapper(queryWrapper);
+            if (result == null) {
+                throw new ServiceException(ERROR_CODE_404, "The username is wrong, find no matched one.");
+            }
+        }
+        if (loginRequest.getEmail() != null && !loginRequest.getEmail().isEmpty()) {
             queryWrapper.eq("email", loginRequest.getEmail());
-        } else {
-            // Neither username nor email provided, or both are empty
-            throw new ServiceException(ERROR_CODE_403, "Neither username nor email provided, or both are empty");
+            result = getRegisteredAccountByQueryWrapper(queryWrapper);
+            if (result == null) {
+                throw new ServiceException(ERROR_CODE_404, "The email is wrong, find no matched one.");
+            }
         }
 
+        assert result != null;
+        handleLoginException(loginRequest.getPassword(), result);
+        // Return the account_id if a matching record is found
+        return result;
+    }
+
+    private RegisteredAccount getRegisteredAccountByQueryWrapper(QueryWrapper<RegisteredAccount> queryWrapper) {
         // Execute the query
         RegisteredAccount result;
         try {
             result = getOne(queryWrapper);
         } catch (Exception e) {
             log.error("The deserialization of mybatis has failed", e);
-            throw new ServiceException(ERROR_CODE_500, "The internal system is error");
+            throw new ServiceException(ERROR_CODE_500, "The internal system is error.");
         }
-        if (result == null) {
-            throw new ServiceException(ERROR_CODE_404, "The username or email is wrong, find no matched one");
-        }
-        handleLoginException(loginRequest.getPassword(), result);
-        // Return the account_id if a matching record is found
         return result;
     }
 
@@ -116,7 +125,7 @@ public class RegisteredAccountServiceImpl extends ServiceImpl<RegisteredAccountM
         if (registeredAccount.getNewPassword().isEmpty() &&
                 registeredAccount.getUsername().isEmpty() &&
                 registeredAccount.getEmail().isEmpty()) {
-            throw new ServiceException(ERROR_CODE_400, "No new account info is provided to update the account");
+            throw new ServiceException(ERROR_CODE_400, "No new account info is provided to update the account.");
         }
         // Set the new account info to null if it is empty
         if(registeredAccount.getUsername().isEmpty()){
@@ -139,10 +148,10 @@ public class RegisteredAccountServiceImpl extends ServiceImpl<RegisteredAccountM
             isUpdated = update(registeredAccount, updateWrapper);
         } catch (Exception e) {
             log.error("The mybatis has failed to update the registered account {}", accountId, e);
-            throw new ServiceException(ERROR_CODE_500, "The internal system is error");
+            throw new ServiceException(ERROR_CODE_500, "The internal system is error.");
         }
         if (!isUpdated) {
-            throw new ServiceException(ERROR_CODE_404, "The account id provided is wrong, find no matched one to update account info");
+            throw new ServiceException(ERROR_CODE_404, "The account id provided is wrong, find no matched one to update account info.");
         }
 
         // Return the updated record
@@ -151,10 +160,10 @@ public class RegisteredAccountServiceImpl extends ServiceImpl<RegisteredAccountM
             updatedRegisteredAccount = getById(accountId);
         } catch (Exception e) {
             log.error("The deserialization of mybatis has failed for the updated account {}", accountId, e);
-            throw new ServiceException(ERROR_CODE_500, "The internal system is error");
+            throw new ServiceException(ERROR_CODE_500, "The internal system is error.");
         }
         if (updatedRegisteredAccount == null) {
-            throw new ServiceException(ERROR_CODE_404, "The account id provided is wrong, find no matched updated account to get");
+            throw new ServiceException(ERROR_CODE_404, "The account id provided is wrong, find no matched updated account to get.");
         }
         updatedRegisteredAccount.setPassword(null);
         return updatedRegisteredAccount;
@@ -164,10 +173,10 @@ public class RegisteredAccountServiceImpl extends ServiceImpl<RegisteredAccountM
     private void handleLoginException(String password, RegisteredAccount result) {
         String securePass = securePass(password);
         if (!securePass.equals(result.getPassword())) {
-            throw new ServiceException(ERROR_CODE_401, "The password provided is wrong");
+            throw new ServiceException(ERROR_CODE_401, "The password provided is wrong.");
         }
         if (!result.getStatus()) {
-            throw new ServiceException(ERROR_CODE_401, "The account is disabled");
+            throw new ServiceException(ERROR_CODE_401, "The account is disabled.");
         }
     }
 

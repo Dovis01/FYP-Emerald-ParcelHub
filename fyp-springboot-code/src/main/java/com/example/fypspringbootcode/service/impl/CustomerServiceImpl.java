@@ -10,11 +10,13 @@ import com.example.fypspringbootcode.exception.ServiceException;
 import com.example.fypspringbootcode.mapper.CustomerMapper;
 import com.example.fypspringbootcode.service.ICustomerService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.fypspringbootcode.utils.FypProjectUtils;
 import com.example.fypspringbootcode.utils.TokenUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.example.fypspringbootcode.common.ErrorCodeList.*;
 
@@ -39,31 +41,39 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerMapper, Customer> i
             customer = getOne(queryWrapper);
         } catch (Exception e) {
             log.error("The deserialization of mybatis has failed for the {} account id entity", customerAccount.getAccountId());
-            throw new ServiceException(ERROR_CODE_500, "The internal system is error");
+            throw new ServiceException(ERROR_CODE_500, "The internal system is error.");
         }
         if (customer == null) {
-            throw new ServiceException(ERROR_CODE_404, "The account id is wrong, find no matched one in customers");
+            throw new ServiceException(ERROR_CODE_404, "The account is not a customer, please check it again.");
         }
         return generateLoginCustomerDTO(customer, customerAccount);
     }
 
+    @Transactional
     @Override
     public void register(RegisterCustomerRequest registerRequest) {
         Integer accountId = registeredAccountService.createRegisteredAccount(registerRequest);
         Customer newCustomer = new Customer();
+
         String fullName;
         if (registerRequest.getMiddleName().isEmpty()) {
             fullName = registerRequest.getFirstName() + " " + registerRequest.getLastName();
         } else {
             fullName = registerRequest.getFirstName() + " " + registerRequest.getMiddleName() + " " + registerRequest.getLastName();
         }
+
+        Customer matchedCustomer = FypProjectUtils.getEntityByCondition(Customer::getFullName, fullName, baseMapper);
+        if(matchedCustomer != null){
+            throw new ServiceException(ERROR_CODE_401, "The full name has been used by another customer.");
+        }
+
         newCustomer.setFullName(fullName);
         newCustomer.setAccountId(accountId);
         try {
             save(newCustomer);
         } catch (Exception e) {
             log.error("The mybatis has failed to insert the new customer and its full name is {}", fullName,e);
-            throw new ServiceException(ERROR_CODE_500, "The internal system is error");
+            throw new ServiceException(ERROR_CODE_500, "The internal system is error.");
         }
     }
 
@@ -74,10 +84,10 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerMapper, Customer> i
             customer = getById(customerId);
         } catch (Exception e) {
             log.error("The deserialization of mybatis has failed for the customer {}",customerId, e);
-            throw new ServiceException(ERROR_CODE_500, "The internal system is error");
+            throw new ServiceException(ERROR_CODE_500, "The internal system is error.");
         }
         if (customer == null) {
-            throw new ServiceException(ERROR_CODE_404, "The customer id is wrong, find no matched one");
+            throw new ServiceException(ERROR_CODE_404, "The customer id is wrong, find no matched one.");
         }
         return customer;
     }
@@ -89,11 +99,12 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerMapper, Customer> i
             customer = getOne(new QueryWrapper<Customer>().eq("account_id", accountId));
         } catch (Exception e) {
             log.error("The deserialization of mybatis has failed for the customer by account id {}",accountId, e);
-            throw new ServiceException(ERROR_CODE_500, "The internal system is error");
+            throw new ServiceException(ERROR_CODE_500, "The internal system is error.");
         }
         return customer;
     }
 
+    @Transactional
     @Override
     public void deleteByCustomerId(Integer customerId, Integer accountId) {
         boolean isDeleted;
@@ -101,10 +112,10 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerMapper, Customer> i
             isDeleted = removeById(customerId);
         } catch (Exception e) {
             log.error("The mybatis has failed to delete the customer {}", customerId,e);
-            throw new ServiceException(ERROR_CODE_500, "The internal system is error");
+            throw new ServiceException(ERROR_CODE_500, "The internal system is error.");
         }
         if (!isDeleted) {
-            throw new ServiceException(ERROR_CODE_404, "The customer id is wrong, find no matched one to delete");
+            throw new ServiceException(ERROR_CODE_404, "The customer id is wrong, find no matched one to delete.");
         }
         registeredAccountService.deleteByAccountId(accountId);
     }
@@ -112,16 +123,35 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerMapper, Customer> i
     @Override
     public Customer updatePersonalInfo(Customer customer, Integer customerId) {
         customer.setCustomerId(customerId);
+        FypProjectUtils.setEntityEmptyStringsToNull(customer);
+        if (customer.getPhoneNumber() != null){
+            Customer matchedCustomer = FypProjectUtils.getEntityByCondition(Customer::getPhoneNumber, customer.getPhoneNumber(), baseMapper);
+            if (matchedCustomer != null && !matchedCustomer.getCustomerId().equals(customerId)){
+                throw new ServiceException(ERROR_CODE_401, "The phone number has been used by another customer.");
+            }
+        }
+        if (customer.getOrderEmail() != null){
+            Customer matchedCustomer = FypProjectUtils.getEntityByCondition(Customer::getOrderEmail, customer.getOrderEmail(), baseMapper);
+            if (matchedCustomer != null && !matchedCustomer.getCustomerId().equals(customerId)){
+                throw new ServiceException(ERROR_CODE_401, "The email used in orders has been used by another customer.");
+            }
+        }
+        if (customer.getFullName() != null){
+            Customer matchedCustomer = FypProjectUtils.getEntityByCondition(Customer::getFullName, customer.getFullName(), baseMapper);
+            if (matchedCustomer != null && !matchedCustomer.getCustomerId().equals(customerId)){
+                throw new ServiceException(ERROR_CODE_401, "The full name has been used by another customer.");
+            }
+        }
 
         boolean isUpdated;
         try {
             isUpdated = updateById(customer);
         } catch (Exception e) {
             log.error("The mybatis has failed to update the customer {}", customerId,e);
-            throw new ServiceException(ERROR_CODE_400, "The customer personal info provided to update is null, please check it again");
+            throw new ServiceException(ERROR_CODE_400, "The customer personal info provided to update is null, please check it again.");
         }
         if (!isUpdated) {
-            throw new ServiceException(ERROR_CODE_404, "The customer id is wrong, find no matched one to update personal info");
+            throw new ServiceException(ERROR_CODE_404, "The customer id is wrong, find no matched one to update personal info.");
         }
 
         Customer updatedCustomer;
@@ -129,10 +159,10 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerMapper, Customer> i
             updatedCustomer = getById(customerId);
         } catch (Exception e) {
             log.error("The deserialization of mybatis has failed for the updated customer {}",customerId, e);
-            throw new ServiceException(ERROR_CODE_500, "The internal system is error");
+            throw new ServiceException(ERROR_CODE_500, "The internal system is error.");
         }
         if (updatedCustomer == null) {
-            throw new ServiceException(ERROR_CODE_404, "The customer id is wrong, find no matched one to updated customer");
+            throw new ServiceException(ERROR_CODE_404, "The customer id is wrong, find no matched one to updated customer.");
         }
         return updatedCustomer;
     }

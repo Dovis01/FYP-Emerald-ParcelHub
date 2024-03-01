@@ -31,6 +31,8 @@ public class Customer implements Serializable {
 
     private String phoneNumber;
 
+    private String orderEmail;
+
     private String country;
 
     private String city;
@@ -46,6 +48,7 @@ public class Customer implements Serializable {
                 ", fullName = " + fullName +
                 ", avatar = " + avatar +
                 ", phoneNumber = " + phoneNumber +
+                ", orderEmail = " + orderEmail +
                 ", country = " + country +
                 ", city = " + city +
                 ", address = " + address +
