@@ -11,6 +11,8 @@ import {useNProgressBar} from '@/components/customized/nProgressBar';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/react';
 import 'simplebar-react/dist/simplebar.min.css';
+import {ToastContainer, Bounce} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const clientSideEmotionCache = createEmotionCache();
 const App = (props) => {
@@ -37,6 +39,21 @@ const App = (props) => {
                         {getLayout(<Component {...pageProps} />)}
                         <SpeedInsights />
                         <Analytics />
+                        <ToastContainer
+                            style={{ width: "550px" }}
+                            position="top-center"
+                            autoClose={6000}
+                            limit={3}
+                            hideProgressBar={false}
+                            newestOnTop={false}
+                            closeOnClick
+                            rtl={false}
+                            pauseOnFocusLoss
+                            draggable
+                            pauseOnHover
+                            theme="dark"
+                            transition={Bounce}
+                        />
                     </ThemeProvider>
                 </AuthContextProvider>
             </LocalizationProvider>

@@ -65,7 +65,7 @@ export const AuthLayout = (props) => {
                                 }}
                             >
                                 <Image
-                                    src="/Emeral-ParcelHub-Logo2.png"
+                                    src="/assets/logos/Emeral-ParcelHub-Logo2.png"
                                     alt="Logo"
                                     width={42}
                                     height={42}
@@ -145,7 +145,7 @@ export const AuthLayout = (props) => {
                                     justifyContent: 'center'
                                 }}>
                                     <Image
-                                        src="/Emerald-ParcelHub-FullLogo.png"
+                                        src="/assets/logos/Emerald-ParcelHub-FullLogo.png"
                                         alt="Full Logo"
                                         width={556}
                                         height={556}

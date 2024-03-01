@@ -7,25 +7,25 @@ const Favicon = () => (
     <>
         <link
             rel="icon"
-            href="/Emeral-ParcelHub-Logo2.png"
+            href="/assets/logos/Emeral-ParcelHub-Logo2.png"
         />
         <link
             rel="icon"
             type="image/png"
             sizes="16x16"
-            href="/Emeral-ParcelHub-Logo2.png"
+            href="/assets/logos/Emeral-ParcelHub-Logo2.png"
         />
         <link
             rel="icon"
             type="image/png"
             sizes="32x32"
-            href="/Emeral-ParcelHub-Logo2.png"
+            href="/assets/logos/Emeral-ParcelHub-Logo2.png"
         />
         <link
             rel="icon"
             type="image/png"
             sizes="64x64"
-            href="/Emeral-ParcelHub-Logo2.png"
+            href="/assets/logos/Emeral-ParcelHub-Logo2.png"
         />
     </>
 );
