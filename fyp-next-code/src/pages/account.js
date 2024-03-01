@@ -14,23 +14,21 @@ const AccountPage = () => (
         <Box
             component="main"
             sx={{
-                ml: -27,
-                mt: -5,
-                flexGrow: 1,
-                pt: 8,
+                pt: 2,
+                width: '100vh',
                 height: '100vh'
             }}
         >
-            <Container maxWidth="lg">
+            <Container>
                 <Stack spacing={3}>
                     <Typography variant="h4">
                         Account
                     </Typography>
                     <Grid
                         container
-                        spacing={3}
                     >
                         <Grid
+                            item
                             xs={12}
                             md={6}
                             lg={4}
@@ -38,6 +36,7 @@ const AccountPage = () => (
                             <AccountProfile/>
                         </Grid>
                         <Grid
+                            item
                             xs={12}
                             md={6}
                             lg={8}

@@ -107,12 +107,12 @@ export const AccountProfileDetails = () => {
             noValidate
             onSubmit={handleSubmit}
         >
-            <Paper elevation={10} sx={{width: '106%', height: '100%', ml: 22}}>
+            <Paper elevation={10} sx={{width: '195%', height: '100%', ml: 20.4}}>
                 <Card>
                     <CardHeader
                         subheader="The information can be edited"
                         title="Profile"
-                        sx={{ml: 4, mt: 2}}
+                        sx={{ml: 4, mt: 6}}
                     />
                     <CardContent sx={{pt: 0, ml: 4, mr: 3.5, mt: 1}}>
                         <Box sx={{m: -1.5}}>
@@ -288,7 +288,7 @@ export const AccountProfileDetails = () => {
                     </CardContent>
                     <Divider/>
                     <CardActions sx={{justifyContent: 'flex-end'}}>
-                        <Button variant="contained" sx={{mr: 3.5, mb: 4}}>
+                        <Button variant="contained" sx={{mr: 3.5, mb: 8}}>
                             Save details
                         </Button>
                     </CardActions>

@@ -19,9 +19,9 @@ const user = {
 };
 
 export const AccountProfile = () => (
-    <Paper elevation={10} sx={{width: '100%', height: '100%', ml: 22}}>
+    <Paper elevation={10} sx={{width: '150%', height: '100%'}}>
         <Card>
-            <CardContent sx={{mt:2}}>
+            <CardContent sx={{mt:6}}>
                 <Box
                     sx={{
                         alignItems: 'center',
