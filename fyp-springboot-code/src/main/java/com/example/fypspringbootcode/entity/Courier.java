@@ -12,7 +12,6 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- *
  * @author Shijin Zhang
  * @since 2024-02-05
  */
@@ -38,14 +37,17 @@ public class Courier implements Serializable {
     @TableField(exist = false)
     private Integer accountId;
 
+    private boolean courierStatus;
+
     @Override
     public String toString() {
         return "Courier{" +
-        "courierId = " + courierId +
-        ", employeeId = " + employeeId +
-        ", dailyDeliveryParcelsNum = " + dailyDeliveryParcelsNum +
-        ", registeredDate = " + registerTime +
-        ", trunkId = " + trunkId +
-        "}";
+                "courierId = " + courierId +
+                ", employeeId = " + employeeId +
+                ", dailyDeliveryParcelsNum = " + dailyDeliveryParcelsNum +
+                ", registeredDate = " + registerTime +
+                ", trunkId = " + trunkId +
+                ", status = " + courierStatus +
+                "}";
     }
 }

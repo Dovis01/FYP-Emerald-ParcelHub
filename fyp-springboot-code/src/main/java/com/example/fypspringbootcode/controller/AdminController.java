@@ -32,8 +32,8 @@ public class AdminController {
         return Result.success();
     }
 
-    @PostMapping("/v1/save")
-    public Result save(@RequestBody Admin obj) {
+    @PostMapping("/v1/register")
+    public Result register(@RequestBody Admin obj) {
         adminService.addAdmin(obj);
         return Result.success("register successfully");
     }

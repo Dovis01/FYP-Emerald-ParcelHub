@@ -8,6 +8,7 @@ import com.example.fypspringbootcode.exception.ServiceException;
 import com.example.fypspringbootcode.mapper.CompanyEmployeeMapper;
 import com.example.fypspringbootcode.service.ICompanyEmployeeService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.fypspringbootcode.utils.FypProjectUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -81,6 +82,19 @@ public class CompanyEmployeeServiceImpl extends ServiceImpl<CompanyEmployeeMappe
     @Override
     public CompanyEmployee updateEmployeeInfo(CompanyEmployee companyEmployee, Integer employeeId) {
         companyEmployee.setEmployeeId(employeeId);
+        FypProjectUtils.setEntityEmptyStringsToNull(companyEmployee);
+        if (companyEmployee.getPhoneNumber() != null){
+            CompanyEmployee matchedCompanyEmployee = FypProjectUtils.getEntityByCondition(CompanyEmployee::getPhoneNumber, companyEmployee.getPhoneNumber(), baseMapper);
+            if (matchedCompanyEmployee != null && !matchedCompanyEmployee.getEmployeeId().equals(employeeId)){
+                throw new ServiceException(ERROR_CODE_401, "The phone number has been used by another company employee.");
+            }
+        }
+        if (companyEmployee.getFullName() != null){
+            CompanyEmployee matchedCompanyEmployee = FypProjectUtils.getEntityByCondition(CompanyEmployee::getFullName, companyEmployee.getFullName(), baseMapper);
+            if (matchedCompanyEmployee != null && !matchedCompanyEmployee.getEmployeeId().equals(employeeId)){
+                throw new ServiceException(ERROR_CODE_401, "The full name has been used by another company employee.");
+            }
+        }
 
         // Update the record
         boolean isUpdated;
@@ -129,7 +143,8 @@ public class CompanyEmployeeServiceImpl extends ServiceImpl<CompanyEmployeeMappe
 
 
     // The following method is used to generate the employee code
-    private static String generateEmployeeCode(String fullName) {
+    @Override
+    public String generateEmployeeCode(String fullName) {
         String initials = getInitials(fullName);
 
         String dateTimeString = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
@@ -160,8 +175,8 @@ public class CompanyEmployeeServiceImpl extends ServiceImpl<CompanyEmployeeMappe
                 .toString();
     }
 
-    public static void main(String[] args) {
-        String employeeCode = generateEmployeeCode("John Doe");
-        System.out.println(employeeCode);
-    }
+//    public static void main(String[] args) {
+//        String employeeCode = generateEmployeeCode("John Doe");
+//        System.out.println(employeeCode);
+//    }
 }

@@ -16,7 +16,7 @@
         e.employee_code,
         e.phone_number,
         e.avatar,
-        e.role_type,
+        r.role_type,
         phc.company_name,
         phc.company_type,
         a.account_id,
@@ -28,6 +28,9 @@
         RIGHT JOIN
         t_72_company_employee AS e
         ON sm.employee_id = e.employee_id
+        LEFT JOIN
+        t_81_role_type AS r
+        ON e.role_id = r.role_id
         LEFT JOIN
         t_32_parcel_station AS ps
         ON sm.station_id = ps.station_id
@@ -61,7 +64,7 @@
         e.employee_code,
         e.phone_number,
         e.avatar,
-        e.role_type,
+        r.role_type,
         phc.company_name,
         phc.company_type,
         a.account_id,
@@ -73,6 +76,9 @@
         RIGHT JOIN
         t_72_company_employee AS e
         ON sm.employee_id = e.employee_id
+        LEFT JOIN
+        t_81_role_type AS r
+        ON e.role_id = r.role_id
         LEFT JOIN
         t_32_parcel_station AS ps
         ON sm.station_id = ps.station_id

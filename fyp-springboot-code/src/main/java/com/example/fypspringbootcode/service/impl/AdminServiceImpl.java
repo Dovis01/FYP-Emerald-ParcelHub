@@ -101,7 +101,7 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
     private void handleLoginException(String password, Admin admin) {
         String securePass = securePass(password);
         if (!securePass.equals(admin.getPassword())) {
-            throw new ServiceException(ERROR_CODE_401,"The password of admin is wrong");
+            throw new ServiceException(ERROR_CODE_401,"The password of admin is wrong.");
         }
         if (!admin.isStatus()) {
             throw new ServiceException(ERROR_CODE_401,"The admin is disabled. Please contact the administrator.");

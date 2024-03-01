@@ -12,10 +12,12 @@ import com.example.fypspringbootcode.exception.ServiceException;
 import com.example.fypspringbootcode.mapper.StationManagerMapper;
 import com.example.fypspringbootcode.service.IStationManagerService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.fypspringbootcode.utils.FypProjectUtils;
 import com.example.fypspringbootcode.utils.TokenUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.example.fypspringbootcode.common.ErrorCodeList.*;
 import static com.example.fypspringbootcode.common.ErrorCodeList.ERROR_CODE_400;
@@ -43,30 +45,34 @@ public class StationManagerServiceImpl extends ServiceImpl<StationManagerMapper,
             loginStationManagerDTO = baseMapper.checkStationManagerLoginAccount(loginRequest);
         } catch (Exception e) {
             log.error("The deserialization of mybatis has failed for the station manager. ", e);
-            throw new ServiceException(ERROR_CODE_500, "The internal system is error");
+            throw new ServiceException(ERROR_CODE_500, "The internal system is error.");
         }
         if (loginStationManagerDTO == null) {
-            throw new ServiceException(ERROR_CODE_404, "The username or email provided is wrong, find no matched one in station managers");
+            if (loginRequest.getUsername() != null && !loginRequest.getUsername().isEmpty()) {
+                throw new ServiceException(ERROR_CODE_404, "The username provided is wrong, find no matched one in station managers.");
+            } else {
+                throw new ServiceException(ERROR_CODE_404, "The email provided is wrong, find no matched one in station managers.");
+            }
         }
 
         // check the role type
         if(!loginStationManagerDTO.getRoleType().equals("StationManager")){
-            throw new ServiceException(ERROR_CODE_401, "The role type of the login account is wrong, please check it again");
+            throw new ServiceException(ERROR_CODE_401, "The account is not a station manager, please check it again.");
         }
 
         // check the status
         if (!loginStationManagerDTO.getStatus()) {
-            throw new ServiceException(ERROR_CODE_401, "The account is disabled");
+            throw new ServiceException(ERROR_CODE_401, "The account is disabled.");
         }
 
         // check the password
         if(loginRequest.getPassword() == null || loginRequest.getPassword().isEmpty()){
-            throw new ServiceException(ERROR_CODE_400, "The password provided is empty, please check it again");
+            throw new ServiceException(ERROR_CODE_400, "The password provided is empty, please check it again.");
         }
         String securePasswordDatabase = loginStationManagerDTO.getPassword();
         String securePassword = securePass(loginRequest.getPassword());
         if (!securePassword.equals(securePasswordDatabase)) {
-            throw new ServiceException(ERROR_CODE_401, "The password provided is wrong, please check it again");
+            throw new ServiceException(ERROR_CODE_401, "The password provided is wrong, please check it again.");
         }
         loginStationManagerDTO.setPassword(null);
 
@@ -76,6 +82,7 @@ public class StationManagerServiceImpl extends ServiceImpl<StationManagerMapper,
         return loginStationManagerDTO;
     }
 
+    @Transactional
     @Override
     public void register(RegisterEmployeeRoleRequest registerRequest) {
         Integer accountId = registeredAccountService.createRegisteredAccount(registerRequest);
@@ -87,7 +94,7 @@ public class StationManagerServiceImpl extends ServiceImpl<StationManagerMapper,
             save(newStationManager);
         } catch (Exception e) {
             log.error("The mybatis has failed to insert the new station manager and its employeeId is {}", companyEmployee.getEmployeeId(),e);
-            throw new ServiceException(ERROR_CODE_500, "The internal system is error");
+            throw new ServiceException(ERROR_CODE_500, "The internal system is error.");
         }
     }
 
@@ -95,7 +102,7 @@ public class StationManagerServiceImpl extends ServiceImpl<StationManagerMapper,
     public StationManager getStationManagerByToken(Integer employeeId, Integer accountId) {
         CompanyEmployee companyEmployee = companyEmployeeService.getByEmployeeId(employeeId);
         if(!companyEmployee.getAccountId().equals(accountId)){
-            throw new ServiceException(ERROR_CODE_401, "The account id of token is changed, please check the token");
+            throw new ServiceException(ERROR_CODE_401, "The account id of token is changed, please check the token.");
         }
 
         StationManager stationManager;
@@ -103,7 +110,7 @@ public class StationManagerServiceImpl extends ServiceImpl<StationManagerMapper,
             stationManager = getOne(new QueryWrapper<StationManager>().eq("employee_id", employeeId));
         } catch (Exception e) {
             log.error("The deserialization of mybatis has failed for the station manager by employee id {}",employeeId, e);
-            throw new ServiceException(ERROR_CODE_500, "The internal system is error");
+            throw new ServiceException(ERROR_CODE_500, "The internal system is error.");
         }
         return stationManager;
     }
@@ -116,15 +123,16 @@ public class StationManagerServiceImpl extends ServiceImpl<StationManagerMapper,
             stationManager = baseMapper.getStationManagerById(stationManagerId);
         } catch (Exception e) {
             log.error("The deserialization of mybatis has failed for the station manager. ", e);
-            throw new ServiceException(ERROR_CODE_500, "The internal system is error");
+            throw new ServiceException(ERROR_CODE_500, "The internal system is error.");
         }
         if (stationManager == null) {
-            throw new ServiceException(ERROR_CODE_404, "The station manager id provided is wrong, find no matched one in station managers");
+            throw new ServiceException(ERROR_CODE_404, "The station manager id provided is wrong, find no matched one in station managers.");
         }
         stationManager.setPassword(null);
         return stationManager;
     }
 
+    @Transactional
     @Override
     public void deleteOneStationManager(Integer stationManagerId, StationManager stationManager) {
         boolean isDeleted;
@@ -132,10 +140,10 @@ public class StationManagerServiceImpl extends ServiceImpl<StationManagerMapper,
             isDeleted = removeById(stationManagerId);
         } catch (Exception e) {
             log.error("The mybatis has failed to delete the station manager {}", stationManagerId,e);
-            throw new ServiceException(ERROR_CODE_500, "The internal system is error");
+            throw new ServiceException(ERROR_CODE_500, "The internal system is error.");
         }
         if (!isDeleted) {
-            throw new ServiceException(ERROR_CODE_404, "The station manager id is wrong, find no matched one to delete");
+            throw new ServiceException(ERROR_CODE_404, "The station manager id is wrong, find no matched one to delete.");
         }
         // delete the corresponding employee info
         companyEmployeeService.clearEmployeeSomeInfo(stationManager.getEmployeeId());
@@ -144,31 +152,48 @@ public class StationManagerServiceImpl extends ServiceImpl<StationManagerMapper,
     }
 
     @Override
-    public StationManager updatePersonalInfo(StationManager stationManager, Integer stationManagerId) {
+    public StationManager updateInfoByAdmin(StationManager stationManager, Integer stationManagerId) {
         stationManager.setStationManagerId(stationManagerId);
+        if(stationManager.getStationId() != null){
+            StationManager matchedStationManager = FypProjectUtils.getEntityByCondition(StationManager::getStationId, stationManager.getStationId(), baseMapper);
+            if (matchedStationManager != null && !matchedStationManager.getStationManagerId().equals(stationManagerId)){
+                throw new ServiceException(ERROR_CODE_401, "The station id has been used by another station manager.");
+            }
+        }
 
         boolean isUpdated;
         try {
             isUpdated = updateById(stationManager);
         } catch (Exception e) {
             log.error("The mybatis has failed to update the station manager {}", stationManagerId,e);
-            throw new ServiceException(ERROR_CODE_400, "The station manager info provided to update is null, please check it again");
+            throw new ServiceException(ERROR_CODE_400, "The station manager info provided to update is null, please check it again.");
         }
         if (!isUpdated) {
-            throw new ServiceException(ERROR_CODE_404, "The station manager id is wrong, find no matched one to update personal info");
+            throw new ServiceException(ERROR_CODE_404, "The station manager id is wrong, find no matched one to update personal info.");
         }
 
-        StationManager updatedStationManager;
+        return getOneStationManagerByIdForUpdating(stationManagerId);
+    }
+
+    @Override
+    public LoginStationManagerDTO updatePersonalInfo(CompanyEmployee companyEmployee, Integer stationManagerId) {
+        StationManager stationManager = getOneStationManagerByIdForUpdating(stationManagerId);
+        companyEmployeeService.updateEmployeeInfo(companyEmployee, stationManager.getEmployeeId());
+        return getByStationManagerId(stationManagerId);
+    }
+
+    private StationManager getOneStationManagerByIdForUpdating(Integer stationManagerId) {
+        StationManager stationManager;
         try {
-            updatedStationManager = getById(stationManagerId);
+            stationManager = getById(stationManagerId);
         } catch (Exception e) {
-            log.error("The deserialization of mybatis has failed for the updated station manager {}",stationManagerId, e);
-            throw new ServiceException(ERROR_CODE_500, "The internal system is error");
+            log.error("The deserialization of mybatis has failed for the updated station manager {}", stationManagerId, e);
+            throw new ServiceException(ERROR_CODE_500, "The internal system is error.");
         }
-        if (updatedStationManager == null) {
-            throw new ServiceException(ERROR_CODE_404, "The station manager id is wrong, find no matched one for updated station manager to get");
+        if (stationManager == null) {
+            throw new ServiceException(ERROR_CODE_404, "The station manager id is wrong, find no matched one for updated station manager to get.");
         }
-        return updatedStationManager;
+        return stationManager;
     }
 
     private String securePass(String password) {

@@ -3,6 +3,7 @@ package com.example.fypspringbootcode.service;
 import com.example.fypspringbootcode.controller.dto.LoginCourierDTO;
 import com.example.fypspringbootcode.controller.request.LoginRequest;
 import com.example.fypspringbootcode.controller.request.RegisterEmployeeRoleRequest;
+import com.example.fypspringbootcode.entity.CompanyEmployee;
 import com.example.fypspringbootcode.entity.Courier;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -22,5 +23,7 @@ public interface ICourierService extends IService<Courier> {
 
     void deleteOneCourier(Integer courierId, Courier courier);
 
-    Courier updatePersonalInfo(Courier courier, Integer customerId);
+    Courier updateInfoByAdmin(Courier courier, Integer customerId);
+
+    LoginCourierDTO updatePersonalInfo(CompanyEmployee companyEmployee, Integer courierId);
 }

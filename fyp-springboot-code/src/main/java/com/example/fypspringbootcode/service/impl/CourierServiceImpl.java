@@ -12,10 +12,12 @@ import com.example.fypspringbootcode.exception.ServiceException;
 import com.example.fypspringbootcode.mapper.CourierMapper;
 import com.example.fypspringbootcode.service.ICourierService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.fypspringbootcode.utils.FypProjectUtils;
 import com.example.fypspringbootcode.utils.TokenUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.example.fypspringbootcode.common.ErrorCodeList.*;
 
@@ -46,30 +48,34 @@ public class CourierServiceImpl extends ServiceImpl<CourierMapper, Courier> impl
             loginCourierDTO = baseMapper.checkCourierLoginAccount(loginRequest);
         } catch (Exception e) {
             log.error("The deserialization of mybatis has failed for the courier. ", e);
-            throw new ServiceException(ERROR_CODE_500, "The internal system is error");
+            throw new ServiceException(ERROR_CODE_500, "The internal system is error.");
         }
         if (loginCourierDTO == null) {
-            throw new ServiceException(ERROR_CODE_404, "The username or email provided is wrong, find no matched one in couriers");
+            if (loginRequest.getUsername() != null && !loginRequest.getUsername().isEmpty()) {
+                throw new ServiceException(ERROR_CODE_404, "The username provided is wrong, find no matched one in couriers.");
+            } else {
+                throw new ServiceException(ERROR_CODE_404, "The email provided is wrong, find no matched one in couriers.");
+            }
         }
 
         // check the role type
         if(!loginCourierDTO.getRoleType().equals("Courier")){
-            throw new ServiceException(ERROR_CODE_401, "The role type of the login account is wrong, please check it again");
+            throw new ServiceException(ERROR_CODE_401, "The account is not a courier, please check it again.");
         }
 
         // check the status
         if (!loginCourierDTO.getStatus()) {
-            throw new ServiceException(ERROR_CODE_401, "The account is disabled");
+            throw new ServiceException(ERROR_CODE_401, "The account is disabled.");
         }
 
         // check the password
         if(loginRequest.getPassword() == null || loginRequest.getPassword().isEmpty()){
-            throw new ServiceException(ERROR_CODE_400, "The password provided is empty, please check it again");
+            throw new ServiceException(ERROR_CODE_400, "The password provided is empty, please check it again.");
         }
         String securePasswordDatabase = loginCourierDTO.getPassword();
         String securePassword = securePass(loginRequest.getPassword());
         if (!securePassword.equals(securePasswordDatabase)) {
-            throw new ServiceException(ERROR_CODE_401, "The password provided is wrong, please check it again");
+            throw new ServiceException(ERROR_CODE_401, "The password provided is wrong, please check it again.");
         }
         loginCourierDTO.setPassword(null);
 
@@ -79,6 +85,7 @@ public class CourierServiceImpl extends ServiceImpl<CourierMapper, Courier> impl
         return loginCourierDTO;
     }
 
+    @Transactional
     @Override
     public void register(RegisterEmployeeRoleRequest registerRequest) {
         Integer accountId = registeredAccountService.createRegisteredAccount(registerRequest);
@@ -90,7 +97,7 @@ public class CourierServiceImpl extends ServiceImpl<CourierMapper, Courier> impl
             save(newCourier);
         } catch (Exception e) {
             log.error("The mybatis has failed to insert the new courier and its employeeId is {}", companyEmployee.getEmployeeId(),e);
-            throw new ServiceException(ERROR_CODE_500, "The internal system is error");
+            throw new ServiceException(ERROR_CODE_500, "The internal system is error.");
         }
     }
 
@@ -102,10 +109,10 @@ public class CourierServiceImpl extends ServiceImpl<CourierMapper, Courier> impl
             courier = baseMapper.getCourierById(courierId);
         } catch (Exception e) {
             log.error("The deserialization of mybatis has failed for the courier. ", e);
-            throw new ServiceException(ERROR_CODE_500, "The internal system is error");
+            throw new ServiceException(ERROR_CODE_500, "The internal system is error.");
         }
         if (courier == null) {
-            throw new ServiceException(ERROR_CODE_404, "The courier id provided is wrong, find no matched one in couriers");
+            throw new ServiceException(ERROR_CODE_404, "The courier id provided is wrong, find no matched one in couriers.");
         }
         courier.setPassword(null);
         return courier;
@@ -115,7 +122,7 @@ public class CourierServiceImpl extends ServiceImpl<CourierMapper, Courier> impl
     public Courier getCourierByToken(Integer employeeId, Integer accountId) {
         CompanyEmployee companyEmployee = companyEmployeeService.getByEmployeeId(employeeId);
         if(!companyEmployee.getAccountId().equals(accountId)){
-            throw new ServiceException(ERROR_CODE_401, "The account id of token is changed, please check the token");
+            throw new ServiceException(ERROR_CODE_401, "The account id of token is changed, please check the token.");
         }
 
         Courier courier;
@@ -123,11 +130,12 @@ public class CourierServiceImpl extends ServiceImpl<CourierMapper, Courier> impl
             courier = getOne(new QueryWrapper<Courier>().eq("employee_id", employeeId));
         } catch (Exception e) {
             log.error("The deserialization of mybatis has failed for the courier by employee id {}",employeeId, e);
-            throw new ServiceException(ERROR_CODE_500, "The internal system is error");
+            throw new ServiceException(ERROR_CODE_500, "The internal system is error.");
         }
         return courier;
     }
 
+    @Transactional
     @Override
     public void deleteOneCourier(Integer courierId, Courier courier) {
         // delete the corresponding delivery records firstly
@@ -138,10 +146,10 @@ public class CourierServiceImpl extends ServiceImpl<CourierMapper, Courier> impl
             isDeleted = removeById(courierId);
         } catch (Exception e) {
             log.error("The mybatis has failed to delete the courier {}", courierId,e);
-            throw new ServiceException(ERROR_CODE_500, "The internal system is error");
+            throw new ServiceException(ERROR_CODE_500, "The internal system is error.");
         }
         if (!isDeleted) {
-            throw new ServiceException(ERROR_CODE_404, "The courier id is wrong, find no matched one to delete");
+            throw new ServiceException(ERROR_CODE_404, "The courier id is wrong, find no matched one to delete.");
         }
         // delete the corresponding employee info
         companyEmployeeService.clearEmployeeSomeInfo(courier.getEmployeeId());
@@ -150,31 +158,48 @@ public class CourierServiceImpl extends ServiceImpl<CourierMapper, Courier> impl
     }
 
     @Override
-    public Courier updatePersonalInfo(Courier courier, Integer courierId) {
+    public Courier updateInfoByAdmin(Courier courier, Integer courierId) {
         courier.setCourierId(courierId);
+        if(courier.getTrunkId() != null){
+            Courier matchedCourier = FypProjectUtils.getEntityByCondition(Courier::getTrunkId, courier.getTrunkId(), baseMapper);
+            if (matchedCourier != null && !matchedCourier.getCourierId().equals(courierId)){
+                throw new ServiceException(ERROR_CODE_401, "The trunk id has been used by another courier.");
+            }
+        }
 
         boolean isUpdated;
         try {
             isUpdated = updateById(courier);
         } catch (Exception e) {
             log.error("The mybatis has failed to update the courier {}", courierId,e);
-            throw new ServiceException(ERROR_CODE_400, "The courier info provided to update is null, please check it again");
+            throw new ServiceException(ERROR_CODE_400, "The courier info provided to update is null, please check it again.");
         }
         if (!isUpdated) {
-            throw new ServiceException(ERROR_CODE_404, "The courier id is wrong, find no matched one to update personal info");
+            throw new ServiceException(ERROR_CODE_404, "The courier id is wrong, find no matched one to update personal info.");
         }
 
-        Courier updatedCourier;
+        return getOneCourierByIdForUpdating(courierId);
+    }
+
+    @Override
+    public LoginCourierDTO updatePersonalInfo(CompanyEmployee companyEmployee, Integer courierId) {
+        Courier courier = getOneCourierByIdForUpdating(courierId);
+        companyEmployeeService.updateEmployeeInfo(companyEmployee, courier.getEmployeeId());
+        return getByCourierId(courierId);
+    }
+
+    private Courier getOneCourierByIdForUpdating(Integer courierId) {
+        Courier courier;
         try {
-            updatedCourier = getById(courierId);
+            courier = getById(courierId);
         } catch (Exception e) {
-            log.error("The deserialization of mybatis has failed for the updated courier {}",courierId, e);
-            throw new ServiceException(ERROR_CODE_500, "The internal system is error");
+            log.error("The deserialization of mybatis has failed for the updated courier {}", courierId, e);
+            throw new ServiceException(ERROR_CODE_500, "The internal system is error.");
         }
-        if (updatedCourier == null) {
-            throw new ServiceException(ERROR_CODE_404, "The courier id is wrong, find no matched one for updated courier to get");
+        if (courier == null) {
+            throw new ServiceException(ERROR_CODE_404, "The courier id is wrong, find no matched one for updated courier to get.");
         }
-        return updatedCourier;
+        return courier;
     }
 
     private String securePass(String password) {

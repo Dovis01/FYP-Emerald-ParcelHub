@@ -4,6 +4,7 @@ import com.example.fypspringbootcode.common.Result;
 import com.example.fypspringbootcode.controller.dto.LoginStationManagerDTO;
 import com.example.fypspringbootcode.controller.request.LoginRequest;
 import com.example.fypspringbootcode.controller.request.RegisterEmployeeRoleRequest;
+import com.example.fypspringbootcode.entity.CompanyEmployee;
 import com.example.fypspringbootcode.entity.StationManager;
 import com.example.fypspringbootcode.service.IStationManagerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,9 +58,15 @@ public class StationManagerController {
         return Result.success("The station manager has been deleted successfully");
     }
 
-    @PutMapping("/v1/update/{stationManagerId}")
-    public Result updatePersonalInfo(@RequestBody StationManager stationManager, @PathVariable Integer stationManagerId) {
-        StationManager updatedStationManager = stationManagerService.updatePersonalInfo(stationManager, stationManagerId);
-        return Result.success(updatedStationManager,"The info of station manager has been updated successfully");
+    @PutMapping("/v1/admin/update/{stationManagerId}")
+    public Result updateInfoByAdmin(@RequestBody StationManager stationManager, @PathVariable Integer stationManagerId) {
+        StationManager updatedStationManager = stationManagerService.updateInfoByAdmin(stationManager, stationManagerId);
+        return Result.success(updatedStationManager,"The position info of station manager has been updated successfully");
+    }
+
+    @PutMapping("/v1/personal/update/{stationManagerId}")
+    public Result updatePersonalInfo(@RequestBody CompanyEmployee companyEmployee, @PathVariable Integer stationManagerId) {
+        LoginStationManagerDTO updatedStationManager = stationManagerService.updatePersonalInfo(companyEmployee, stationManagerId);
+        return Result.success(updatedStationManager,"The personal info of station manager has been updated successfully");
     }
 }

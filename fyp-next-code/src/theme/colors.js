@@ -15,6 +15,7 @@ export const neutral = {
   50: '#F8F9FA',
   100: '#F3F4F6',
   200: '#E5E7EB',
+  250: '#dee1e6',
   300: '#D2D6DB',
   400: '#9DA4AE',
   500: '#6C737F',
@@ -36,6 +37,9 @@ export const indigo = withAlphas({
 
 export const customized = withAlphas({
   main: '#b2e9dd',
+  purple: '#cfd1ff',
+  grey: '#eeeeee',
+  blueLight: 'rgba(232,245,253,0.96)',
   light: 'rgba(198,229,252,0.94)',
   dark: 'rgba(165,231,231,0.99)',
   contrastText: '#000',

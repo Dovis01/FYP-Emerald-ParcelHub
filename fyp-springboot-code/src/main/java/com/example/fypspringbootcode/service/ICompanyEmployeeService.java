@@ -19,4 +19,6 @@ public interface ICompanyEmployeeService extends IService<CompanyEmployee> {
     CompanyEmployee updateEmployeeInfo(CompanyEmployee companyEmployee, Integer employeeId);
 
     void clearEmployeeSomeInfo(Integer employeeId);
+
+    String generateEmployeeCode(String fullName);
 }
