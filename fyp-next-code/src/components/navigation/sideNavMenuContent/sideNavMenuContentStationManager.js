@@ -15,7 +15,7 @@ export const itemsStationManager = () => {
     return [
         {
             title: 'Overview',
-            path: '/',
+            path: '/station-manager/overview',
             icon: (
                 <SvgIcon fontSize="medium">
                     <ChartBarIcon/>
@@ -51,7 +51,7 @@ export const itemsStationManager = () => {
         },
         {
             title: 'Account',
-            path: `/stationManger/${stationManagerName}/account`,
+            path: `/station-manager/${stationManagerName}/account`,
             icon: (
                 <SvgIcon fontSize="medium">
                     <UserIcon/>
@@ -60,7 +60,7 @@ export const itemsStationManager = () => {
         },
         {
             title: 'Settings',
-            path: `/stationManger/${stationManagerName}/settings`,
+            path: `/station-manager/${stationManagerName}/settings`,
             icon: (
                 <SvgIcon fontSize="medium">
                     <CogIcon/>

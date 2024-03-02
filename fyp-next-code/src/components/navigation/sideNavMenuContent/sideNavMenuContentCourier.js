@@ -15,7 +15,7 @@ export const itemsCourier = () => {
     return [
         {
             title: 'Overview',
-            path: '/',
+            path: '/courier/overview',
             icon: (
                 <SvgIcon fontSize="medium">
                     <ChartBarIcon/>

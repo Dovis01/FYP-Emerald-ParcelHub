@@ -1,33 +1,33 @@
-import MainPageLayout from "@/components/layouts/mainPageLayout";
-import ECommerceOrderOverviewPage from "@/pages/admin/e-commerce-order/overview";
-import CustomerOverviewPage from "@/pages/customer/overview";
-import CourierOverviewPage from "@/pages/courier/overview";
-import StationManagerOverviewPage from "@/pages/stationManager/overview";
 import {useAuthContext} from "@/contexts/auth-context";
+import {useEffect} from "react";
+import {useRouter} from "next/router";
 
-const getComponentForRole = (roleType) => {
-    switch (roleType) {
-        case 'Admin':
-            return <ECommerceOrderOverviewPage />;
-        case 'Courier':
-            return <CourierOverviewPage />;
-        case 'Customer':
-            return <CustomerOverviewPage />;
-        case 'StationManager':
-            return <StationManagerOverviewPage />;
-        default:
-            return <CustomerOverviewPage />;
-    }
-};
 
-const HomeOverviewPage = () => {
+const DefaultOverviewPage = () => {
+    const router = useRouter();
     const authContext = useAuthContext();
-    return getComponentForRole(authContext.user.roleType);
+
+    useEffect(() => {
+        const roleType = authContext.user?.roleType;
+
+        switch (roleType) {
+            case 'Admin':
+                router.push('/admin/e-commerce-order/overview');
+                break;
+            case 'Courier':
+                router.push('/courier/overview');
+                break;
+            case 'Customer':
+                router.push('/customer/overview');
+                break;
+            case 'StationManager':
+                router.push('/station-manager/overview');
+                break;
+            default:
+                router.push('/customer/overview');
+                break;
+        }
+    }, [authContext.user, router]);
 };
 
-HomeOverviewPage.getLayout = (page) => (
-    <MainPageLayout>
-        {page}
-    </MainPageLayout>
-);
-export default HomeOverviewPage;
+export default DefaultOverviewPage;
