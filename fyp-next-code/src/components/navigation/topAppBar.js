@@ -13,8 +13,10 @@ import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import {Avatar, Divider, Tooltip} from "@mui/material";
+import {Avatar, Divider, ListItemIcon, Tooltip} from "@mui/material";
 import {useAuthContext} from "@/contexts/auth-context";
+import {Logout} from "@mui/icons-material";
+import BadgeOutlinedIcon from '@mui/icons-material/BadgeOutlined';
 
 const SIDE_NAV_WIDTH = 285;
 
@@ -122,10 +124,19 @@ const TopAppBar = () => {
             onClose={handleMenuClose}
         >
             <MenuItem onClick={handleMenuClose}>
-                <Avatar/> My Profile
+                <Avatar /> My Profile
             </MenuItem>
-            <Divider/>
+            <MenuItem>
+                <ListItemIcon>
+                    <BadgeOutlinedIcon sx={{ fontSize: '1.85rem' ,ml:-0.3}}/>
+                </ListItemIcon>
+                {auth.user.roleType === 'Admin' ? auth.user.adminName : auth.user.username}
+            </MenuItem>
+            <Divider sx={{borderColor: 'neutral.250',mb:2}}/>
             <MenuItem onClick={handleSignOut}>
+                <ListItemIcon>
+                    <Logout fontSize="medium" sx={{ml:0.2}}/>
+                </ListItemIcon>
                 Sign Out
             </MenuItem>
         </Menu>
@@ -148,7 +159,7 @@ const TopAppBar = () => {
                 }}>
                 <Toolbar>
                     <Image
-                        src="/Emeral-ParcelHub-Logo2.png"
+                        src="/assets/logos/Emeral-ParcelHub-Logo2.png"
                         alt="Logo"
                         width={42}
                         height={42}
