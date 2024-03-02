@@ -19,6 +19,7 @@ import {AuthLayout} from '@/components/layouts/authLayout';
 import {useAuthContext} from "@/contexts/auth-context";
 import {styled} from "@mui/system";
 import {useEffect, useState} from "react";
+import {toast} from "react-toastify";
 
 
 const StyledFormControlLabel = styled((props) => <FormControlLabel {...props} />)(
@@ -61,24 +62,28 @@ const SignUpPage = () => {
                 .string()
                 .max(24, 'Employee code must be 24 characters or less')
                 .matches(/^\S*$/, 'Employee code cannot contain spaces')
+                .required('The employee code is required')
                 .matches(
                     /^[A-Z]{2}-\d{8}\d{6}-[A-Z0-9]{6}$/,
                     'Employee code must match the pattern XX-YYYYMMDDHHMMSS-XXXXX(UpperCase)'
                 ): Yup.string(),
-            firstName: Yup
+            firstName: roleType === 'Customer' ? Yup
                 .string()
                 .max(12, 'First name must be 12 characters or less')
                 .matches(/^\S*$/, 'First name cannot contain spaces')
-                .required('First name is required'),
-            middleName: Yup
+                .required('First name is required')
+                : Yup.string(),
+            middleName: roleType === 'Customer' ? Yup
                 .string()
                 .max(12, 'Middle name must be 12 characters or less')
-                .matches(/^\S*$/, 'Middle name cannot contain spaces'),
-            lastName: Yup
+                .matches(/^\S*$/, 'Middle name cannot contain spaces')
+                : Yup.string(),
+            lastName: roleType === 'Customer' ? Yup
                 .string()
                 .max(12, 'Last name must be 12 characters or less')
                 .matches(/^\S*$/, 'Last name cannot contain spaces')
-                .required('Last name is required'),
+                .required('Last name is required')
+                : Yup.string(),
             password: Yup
                 .string()
                 .max(25, 'Password must be 25 characters or less')
@@ -97,6 +102,10 @@ const SignUpPage = () => {
                 .required('Confirm Password is required')
         }),
         onSubmit: async (values, helpers) => {
+            if (!roleType) {
+                toast.error('Sorry, you must choose your role type!');
+                return;
+            }
             try {
                 const registrationData = {
                     roleType: roleType,
@@ -109,11 +118,13 @@ const SignUpPage = () => {
                     lastName: values.lastName
                 };
                 await auth.signUp(registrationData);
+                toast.success('Sign Up successfully.  Welcome to Emerald-Parcel Hub!');
                 router.push('/');
             } catch (err) {
                 helpers.setStatus({success: false});
                 helpers.setErrors({submit: err.message});
                 helpers.setSubmitting(false);
+                toast.error("Ooops! "+err.message);
             }
         }
     });
@@ -193,6 +204,7 @@ const SignUpPage = () => {
                                     onBlur={formik.handleBlur}
                                     onChange={formik.handleChange}
                                     value={formik.values.username}
+                                    autoComplete="sign-up-username"
                                 />
                                 <TextField
                                     style={{marginBottom: -3}}
@@ -205,6 +217,7 @@ const SignUpPage = () => {
                                     onChange={formik.handleChange}
                                     type="email"
                                     value={formik.values.email}
+                                    autoComplete="sign-up-email"
                                 />
                                 <FormControl
                                     sx={{display: 'flex', alignItems: 'center', flexDirection: 'row', width: 580}}>
@@ -286,6 +299,7 @@ const SignUpPage = () => {
                                     onChange={formik.handleChange}
                                     type="password"
                                     value={formik.values.password}
+                                    autoComplete="new-password"
                                 />
                                 <TextField
                                     error={!!(formik.touched.confirmPassword && formik.errors.confirmPassword)}
@@ -297,17 +311,9 @@ const SignUpPage = () => {
                                     onChange={formik.handleChange}
                                     type="password"
                                     value={formik.values.confirmPassword}
+                                    autoComplete="confirm-password"
                                 />
                             </Stack>
-                            {formik.errors.submit && (
-                                <Typography
-                                    color="error"
-                                    sx={{mt: 3}}
-                                    variant="body2"
-                                >
-                                    {formik.errors.submit}
-                                </Typography>
-                            )}
                             <Button
                                 fullWidth
                                 size="large"

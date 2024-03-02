@@ -19,6 +19,7 @@ import {
 import { AuthLayout } from '@/components/layouts/authLayout';
 import {useAuthContext} from "@/contexts/auth-context";
 import {styled} from "@mui/system";
+import {toast} from "react-toastify";
 
 
 const StyledFormControlLabel = styled((props) => <FormControlLabel {...props} />)(
@@ -55,13 +56,19 @@ const SignInPage = () => {
                 .required('Password is required')
         }),
         onSubmit: async (values, helpers) => {
+            if (!roleType) {
+                toast.error('Sorry, you must choose your role type!');
+                return;
+            }
             try {
                 await auth.signInByUsername(values.username, values.password,roleType);
+                toast.success('Sign In by username successfully.  Welcome, '+values.username+'!');
                 await router.push(continueUrl);
             } catch (err) {
                 helpers.setStatus({ success: false });
                 helpers.setErrors({ submit: err.message });
                 helpers.setSubmitting(false);
+                toast.error("Ooops! "+err.message);
             }
         }
     });
@@ -84,13 +91,19 @@ const SignInPage = () => {
                 .required('Password is required')
         }),
         onSubmit: async (values, helpers) => {
+            if (!roleType) {
+                toast.error('Sorry, you must choose your role type!');
+                return;
+            }
             try {
                 await auth.signInByEmail(values.email, values.password,roleType);
+                toast.success('Sign In by email successfully.  Welcome, '+values.email+'!');
                 await router.push(continueUrl);
             } catch (err) {
                 helpers.setStatus({ success: false });
                 helpers.setErrors({ submit: err.message });
                 helpers.setSubmitting(false);
+                toast.error("Ooops! "+err.message);
             }
         }
     });
@@ -114,11 +127,13 @@ const SignInPage = () => {
         onSubmit: async (values, helpers) => {
             try {
                 await auth.signInByUsername(values.adminName, values.password,"Admin");
+                toast.success('Sign In as admin account successfully.  Welcome, '+values.adminName+'!');
                 await router.push(continueUrl);
             } catch (err) {
                 helpers.setStatus({ success: false });
                 helpers.setErrors({ submit: err.message });
                 helpers.setSubmitting(false);
+                toast.error("Ooops! "+err.message);
             }
         }
     });
@@ -131,7 +146,7 @@ const SignInPage = () => {
             }
         }, [radioGroup]);
         const checked = radioGroup ? radioGroup.value === props.value : false;
-        return <StyledFormControlLabel checked={checked} {...props} />;
+        return <StyledFormControlLabel checked={checked} {...props}/>;
     }
 
     const handleMethodChange = useCallback(
@@ -207,9 +222,9 @@ const SignInPage = () => {
                                 aria-labelledby="role-row-radio-group"
                                 name="role-radio-group"
                             >
-                                <MyFormControlLabel value="Customer" control={<Radio/>} label="Customer"/>
-                                <MyFormControlLabel value="Courier" control={<Radio/>} label="Courier"/>
-                                <MyFormControlLabel value="ParcelStationManager" control={<Radio/>} label="Parcel Station Manager"/>
+                                <MyFormControlLabel value="Customer" control={<Radio/>} label="Customer" disabled={method === 'admin'}/>
+                                <MyFormControlLabel value="Courier" control={<Radio/>} label="Courier" disabled={method === 'admin'}/>
+                                <MyFormControlLabel value="ParcelStationManager" control={<Radio/>} label="Parcel Station Manager" disabled={method === 'admin'}/>
                             </RadioGroup>
                         </FormControl>
                         <Tabs
@@ -245,6 +260,7 @@ const SignInPage = () => {
                                         onBlur={formikUsername.handleBlur}
                                         onChange={formikUsername.handleChange}
                                         value={formikUsername.values.username}
+                                        autoComplete="username"
                                     />
                                     <TextField
                                         error={!!(formikUsername.touched.password && formikUsername.errors.password)}
@@ -256,20 +272,12 @@ const SignInPage = () => {
                                         onChange={formikUsername.handleChange}
                                         type="password"
                                         value={formikUsername.values.password}
+                                        autoComplete="usernamepassword"
                                     />
                                 </Stack>
                                 <FormHelperText sx={{ mt: 1 }}>
                                     Optionally you can skip.
                                 </FormHelperText>
-                                {formikUsername.errors.submit && (
-                                    <Typography
-                                        color="error"
-                                        sx={{ mt: 3 }}
-                                        variant="body2"
-                                    >
-                                        {formikUsername.errors.submit}
-                                    </Typography>
-                                )}
                                 <Button
                                     fullWidth
                                     size="large"
@@ -293,7 +301,7 @@ const SignInPage = () => {
                                     sx={{mt:-0.6,width: '100%' , display: 'flex', justifyContent: 'center',backgroundColor: 'transparent'}}
                                 >
                                     <div>
-                                        You can use <b>admin</b> and password <b>zsj123456</b>
+                                        You can use <b>adminRoot</b> and password <b>zsj123456</b>
                                     </div>
                                 </Alert>
                             </form>
@@ -314,6 +322,7 @@ const SignInPage = () => {
                                         onChange={formikEmail.handleChange}
                                         type="email"
                                         value={formikEmail.values.email}
+                                        autoComplete="email"
                                     />
                                     <TextField
                                         error={!!(formikEmail.touched.password && formikEmail.errors.password)}
@@ -325,20 +334,12 @@ const SignInPage = () => {
                                         onChange={formikEmail.handleChange}
                                         type="password"
                                         value={formikEmail.values.password}
+                                        autoComplete="emailpassword"
                                     />
                                 </Stack>
                                 <FormHelperText sx={{ mt: 1 }}>
                                     Optionally you can skip.
                                 </FormHelperText>
-                                {formikEmail.errors.submit && (
-                                    <Typography
-                                        color="error"
-                                        sx={{ mt: 3 }}
-                                        variant="body2"
-                                    >
-                                        {formikEmail.errors.submit}
-                                    </Typography>
-                                )}
                                 <Button
                                     fullWidth
                                     size="large"
@@ -362,7 +363,7 @@ const SignInPage = () => {
                                     sx={{mt:-0.6,width: '101%', display: 'flex', justifyContent: 'center' ,backgroundColor: 'transparent'}}
                                 >
                                     <div>
-                                        You can use <b>20104636@mail.wit.ie</b> and password <b>Password123!</b>
+                                        You can use <b>adminRoot</b> and password <b>zsj123456</b>
                                     </div>
                                 </Alert>
                             </form>
@@ -382,6 +383,7 @@ const SignInPage = () => {
                                         onBlur={formikAdmin.handleBlur}
                                         onChange={formikAdmin.handleChange}
                                         value={formikAdmin.values.adminName}
+                                        autoComplete="adminName"
                                     />
                                     <TextField
                                         error={!!(formikAdmin.touched.password && formikAdmin.errors.password)}
@@ -393,20 +395,12 @@ const SignInPage = () => {
                                         onChange={formikAdmin.handleChange}
                                         type="password"
                                         value={formikAdmin.values.password}
+                                        autoComplete="adminPassword"
                                     />
                                 </Stack>
                                 <FormHelperText sx={{ mt: 1 }}>
                                     Optionally you can skip.
                                 </FormHelperText>
-                                {formikAdmin.errors.submit && (
-                                    <Typography
-                                        color="error"
-                                        sx={{ mt: 3 }}
-                                        variant="body2"
-                                    >
-                                        {formikAdmin.errors.submit}
-                                    </Typography>
-                                )}
                                 <Button
                                     fullWidth
                                     size="large"
@@ -430,7 +424,7 @@ const SignInPage = () => {
                                     sx={{mt:-0.6,width: '100%' , display: 'flex', justifyContent: 'center',backgroundColor: 'transparent'}}
                                 >
                                     <div>
-                                        You can use <b>admin</b> and password <b>zsj123456</b>
+                                        You can use <b>adminRoot</b> and password <b>zsj123456</b>
                                     </div>
                                 </Alert>
                             </form>

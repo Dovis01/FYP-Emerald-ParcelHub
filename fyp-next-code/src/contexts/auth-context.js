@@ -1,7 +1,7 @@
-import {createContext, useContext, useReducer, useState} from 'react';
+import {createContext, useContext, useEffect, useReducer, useState} from 'react';
 import PropTypes from 'prop-types';
 import {useRouter} from 'next/router';
-import {loginByEmail, loginByUsername,register} from "@/api/springboot-api";
+import {loginByEmail, loginByUsername, register} from "@/api/springboot-api";
 
 const HANDLERS = {
     INITIALIZE: 'INITIALIZE',
@@ -63,6 +63,7 @@ export const AuthContextProvider = (props) => {
     const {children} = props;
     const [state, dispatch] = useReducer(reducer, initialState);
     const [authToken, setAuthToken] = useState(null);
+    const currentUsername = state.user?.roleType === 'Admin' ? state.user.adminName : state.user?.username
     const router = useRouter();
     const roleMappings = {
         'Customer': 'customer',
@@ -70,6 +71,19 @@ export const AuthContextProvider = (props) => {
         'ParcelStationManager': 'stationManager',
         'Admin': 'admin'
     };
+
+    useEffect(() => {
+        // 尝试从sessionStorage获取用户信息
+        const sessionUser = sessionStorage.getItem('userInfo');
+        if (sessionUser) {
+            const user = JSON.parse(sessionUser);
+            // 如果有用户信息，则使用INITIALIZE动作初始化状态
+            dispatch({
+                type: HANDLERS.INITIALIZE,
+                payload: user
+            });
+        }
+    }, []);
 
     const skip = () => {
         try {
@@ -81,9 +95,14 @@ export const AuthContextProvider = (props) => {
         const user = {
             id: '5e86809283e28b96d2d38537',
             avatar: '/assets/avatars/avatar-anika-visser.png',
-            name: 'Anika Visser',
+            roleType: 'Customer',
+            username: 'Anika Visser',
+            fullName: 'Anika Visser',
             email: 'anika.visser@devias.io'
         };
+
+        window.sessionStorage.setItem('authenticated', 'true');
+        window.sessionStorage.setItem('userInfo', JSON.stringify(user));
 
         dispatch({
             type: HANDLERS.SIGN_IN,
@@ -96,23 +115,25 @@ export const AuthContextProvider = (props) => {
         setAuthToken(data);
     }
 
-    const signInByEmail = async (email, password,roleType) => {
+    const signInByEmail = async (email, password, roleType) => {
         const result = await loginByEmail(email, password, roleMappings[roleType]);
 
-        if (result.data.token) {
+        if (result.data?.token) {
             setToken(result.data.token);
         } else {
             throw new Error(result.msg);
         }
 
         window.sessionStorage.setItem('authenticated', 'true');
+        window.sessionStorage.setItem('userInfo', JSON.stringify({
+            adminName: result.data?.adminName,
+            fullName: result.data?.fullName,
+            username: result.data?.username,
+            roleType: result.data?.roleType
+        }));
 
         const user = {
-            id: '5e86809283e28b96d2d38537',
-            avatar: '/assets/avatars/avatar-anika-visser.png',
-            name: 'Anika Visser',
-            email: 'anika.visser@devias.io',
-            role: roleType
+            ...result.data
         };
 
         dispatch({
@@ -124,19 +145,22 @@ export const AuthContextProvider = (props) => {
     const signInByUsername = async (username, password, roleType) => {
         const result = await loginByUsername(username, password, roleMappings[roleType]);
 
-        if (result.data.token) {
+        if (result.data?.token) {
             setToken(result.data.token);
         } else {
             throw new Error(result.msg);
         }
 
         window.sessionStorage.setItem('authenticated', 'true');
+        window.sessionStorage.setItem('userInfo', JSON.stringify({
+            adminName: result.data?.adminName,
+            fullName: result.data?.fullName,
+            username: result.data?.username,
+            roleType: result.data?.roleType
+        }));
 
         const user = {
-            id: '5e86809283e28b96d2d38537',
-            avatar: '/assets/avatars/avatar-anika-visser.png',
-            name: 'Anika Visser',
-            email: 'anika.visser@devias.io'
+            ...result.data,
         };
 
         dispatch({
@@ -146,14 +170,7 @@ export const AuthContextProvider = (props) => {
     };
 
     const signUp = async (registrationData) => {
-        let result = null;
-
-        if (registrationData.roleType === '') {
-            throw new Error('Role type is not implemented');
-        }else {
-            result = await register(registrationData, roleMappings[registrationData.roleType]);
-        }
-
+        const result = await register(registrationData, roleMappings[registrationData.roleType]);
         if (!result.success) {
             throw new Error(result.msg);
         }
@@ -161,6 +178,7 @@ export const AuthContextProvider = (props) => {
 
     const signOut = () => {
         window.sessionStorage.removeItem('authenticated');
+        window.sessionStorage.removeItem('userInfo');
         router.reload();
         dispatch({
             type: HANDLERS.SIGN_OUT
@@ -172,6 +190,7 @@ export const AuthContextProvider = (props) => {
             value={{
                 ...state,
                 authToken,
+                currentUsername,
                 skip,
                 signInByEmail,
                 signInByUsername,
