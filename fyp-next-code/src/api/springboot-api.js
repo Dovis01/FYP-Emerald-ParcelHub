@@ -34,3 +34,46 @@ export const register = async (registrationData, roleType) => {
     });
     return response.json();
 };
+
+export const uploadEcommerceSimulationData = async (simulationData) => {
+    const response = await fetch(`http://localhost:9090/api/ecommerceJsonData/v1/insert`, {
+        headers: {
+            'Content-Type': 'application/json',
+            //'Authorization': window.localStorage.getItem('token')
+        },
+        method: 'post',
+        body: JSON.stringify({ jsonData: simulationData})
+    });
+    return response.json();
+};
+
+export const clearAllEcommerceSimulationData = async () => {
+    const response = await fetch(`http://localhost:9090/api/ecommerceJsonData/v1/delete-all`, {
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        method: 'delete'
+    });
+    return response.json();
+};
+
+export const clearSelectedEcommerceSimulationData = async (selectedIds) => {
+    const response = await fetch(`http://localhost:9090/api/ecommerceJsonData/v1/delete-multiple`, {
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        method: 'delete',
+        body: JSON.stringify({ ecommerceJsonDataIdsToDelete: selectedIds})
+    });
+    return response.json();
+};
+
+export const getAllEcommerceSimulationData = async () => {
+    const response = await fetch(`http://localhost:9090/api/ecommerceJsonData/v1/all-data`, {
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        method: 'get'
+    });
+    return response.json();
+};

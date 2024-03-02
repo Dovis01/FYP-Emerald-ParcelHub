@@ -1,5 +1,6 @@
 package com.example.fypspringbootcode.common;
 
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
@@ -61,13 +62,11 @@ public class JwtInterceptor implements HandlerInterceptor {
 
         // get the role of token and compare with the role of the API
         String role = JWT.decode(token).getAudience().get(0);
-        String roleAPI = request.getRequestURI().split("/")[2];
-        if (!role.equals(roleAPI)) {
-            throw new ServiceException(ERROR_CODE_401, "The role of token is abnormal, there is no permission to access this API.");
-        }
+        String pathAPI = request.getRequestURI().split("/")[2];
 
         // get object by idNumber
         if ("admin".equals(role)) {
+            // get admin by token
             String adminId = JWT.decode(token).getAudience().get(1);
             Admin admin = adminService.getById(Integer.parseInt(adminId));
             //Token decoding has passed, but the admin does not exist
@@ -75,12 +74,26 @@ public class JwtInterceptor implements HandlerInterceptor {
                 throw new ServiceException(ERROR_CODE_401, "The admin does not exist. Please login again.");
             }
         } else if ("customer".equals(role)) {
+            // permission check
+            String[] cusPermission = {"admin", "companyEmployee", "roleType","parcelHubCompany","ecommerceWebsite","ecommerceJsonData"};
+            if(ArrayUtil.contains(cusPermission, pathAPI)){
+                throw new ServiceException(ERROR_CODE_401, "The customer does not have permission to access this API.");
+            }
+
+            // get customer by token
             String customerId = JWT.decode(token).getAudience().get(1);
             Customer customer = customerService.getCustomerByToken(Integer.parseInt(customerId));
             if (customer == null) {
                 throw new ServiceException(ERROR_CODE_401, "The customer does not exist. Please login again.");
             }
         } else if ("courier".equals(role)) {
+            // permission check
+            String[] courPermission = {"admin", "customer","ecommerceWebsite","ecommerceJsonData"};
+            if(ArrayUtil.contains(courPermission, pathAPI)){
+                throw new ServiceException(ERROR_CODE_401, "The courier does not have permission to access this API.");
+            }
+
+            // get courier by token
             String employeeId = JWT.decode(token).getAudience().get(1);
             String accountId = JWT.decode(token).getAudience().get(2);
             Courier courier = courierService.getCourierByToken(Integer.parseInt(employeeId), Integer.parseInt(accountId));
@@ -88,6 +101,13 @@ public class JwtInterceptor implements HandlerInterceptor {
                 throw new ServiceException(ERROR_CODE_401, "The courier does not exist. Please login again.");
             }
         } else if ("stationManager".equals(role)) {
+            // permission check
+            String[] staPermission = {"admin", "customer","ecommerceWebsite","ecommerceJsonData"};
+            if(ArrayUtil.contains(staPermission, pathAPI)){
+                throw new ServiceException(ERROR_CODE_401, "The station manager does not have permission to access this API.");
+            }
+
+            // get station manager by token
             String employeeId = JWT.decode(token).getAudience().get(1);
             String accountId = JWT.decode(token).getAudience().get(2);
             StationManager stationManager = stationManagerService.getStationManagerByToken(Integer.parseInt(employeeId), Integer.parseInt(accountId));
