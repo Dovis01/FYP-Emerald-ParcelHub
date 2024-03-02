@@ -34,7 +34,7 @@ function MainPageLayout({children}) {
                         <SideNavBar/>
                     </Drawer>
                 )}
-                <Box component="main" sx={{flexGrow: 1, ml: -21}}>
+                <Box component="main">
                     <Toolbar/>
                     <Container maxWidth="xl">
                         {children}

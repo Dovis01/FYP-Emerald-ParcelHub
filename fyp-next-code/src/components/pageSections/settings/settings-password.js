@@ -35,7 +35,7 @@ export const SettingsPassword = () => {
 
     return (
         <form onSubmit={handleSubmit}>
-            <Paper elevation={10} sx={{width: '100%', height: '100%', ml: 23.5}}>
+            <Paper elevation={10} sx={{width: '183%', height: '100%'}}>
                 <Card>
                     <CardHeader
                         subheader="Update password"

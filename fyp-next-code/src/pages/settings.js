@@ -14,13 +14,11 @@ const SettingPage = () => (
         <Box
             component="main"
             sx={{
-                ml:-25,
-                mt: -5,
-                flexGrow: 1,
-                py: 8
+                width: '100vh',
+                py:2
             }}
         >
-            <Container maxWidth="lg">
+            <Container>
                 <Stack spacing={3}>
                     <Typography variant="h4">
                         Settings
