@@ -12,15 +12,45 @@ import {
     Typography,
     useMediaQuery
 } from '@mui/material';
-import {items} from './sideNavRouteContent';
+import {itemsAdmin} from './sideNavMenuContent/sideNavMenuContentAdmin';
+import {itemsCourier} from './sideNavMenuContent/sideNavMenuContentCourier';
+import {itemsCustomer} from './sideNavMenuContent/sideNavMenuContentCustomer';
+import {itemsStationManager} from './sideNavMenuContent/sideNavMenuContentStationManager';
 import {SideNavItemButton} from './sideNavItemButton';
 import {Scrollbar} from '@/components/customized/scrollbar';
 import * as React from "react";
+import {useAuthContext} from "@/contexts/auth-context";
 
 export const SideNavBar = (props) => {
     const {open, onClose} = props;
+    const authContext = useAuthContext();
     const pathname = usePathname();
     const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'));
+    const roleMappings = {
+        'Customer': 'Welcome, Customer',
+        'Courier': 'Parcel Hub Courier',
+        'StationManager': 'Parcel Hub Station Manager',
+        'Admin': 'Parcel Hub Admin'
+    };
+
+    let items;
+    switch (authContext.user.roleType) {
+        case 'Admin':
+            items = itemsAdmin();
+            break;
+        case 'Courier':
+            items = itemsCourier();
+            break;
+        case 'Customer':
+            items = itemsCustomer();
+            break;
+        case 'StationManager':
+            items = itemsStationManager();
+            break;
+        default:
+            items = itemsCustomer();
+            break;
+    }
 
     const content = (
         <Scrollbar
@@ -53,7 +83,7 @@ export const SideNavBar = (props) => {
                         }}
                     >
                         <Image
-                            src="/Emeral-ParcelHub-Logo2.png"
+                            src="/assets/logos/Emeral-ParcelHub-Logo2.png"
                             alt="Logo"
                             width={42}
                             height={42}
@@ -96,14 +126,14 @@ export const SideNavBar = (props) => {
                                 variant="subtitle1"
                                 sx={{ml: 0.7}}
                             >
-                                Shijin Zhang
+                                {authContext.user.roleType === 'Admin' ? authContext.user.adminName : authContext.user.fullName}
                             </Typography>
                             <Typography
                                 color="neutral.400"
                                 variant="body2"
                                 sx={{mb: 0.5, ml: 0.7}}
                             >
-                                Parcel Hub Station Manager
+                                {roleMappings[authContext.user.roleType]}
                             </Typography>
                         </div>
                         <SvgIcon
@@ -120,7 +150,7 @@ export const SideNavBar = (props) => {
                     sx={{
                         flexGrow: 1,
                         px: 2,
-                        py: 3
+                        py: 1.2
                     }}
                 >
                     <Stack
@@ -143,12 +173,27 @@ export const SideNavBar = (props) => {
                                     key={item.title}
                                     path={item.path}
                                     title={item.title}
+                                    {...(item.children && { children: item.children })}
                                 />
                             );
                         })}
                     </Stack>
                 </Box>
-                <Divider sx={{borderColor: 'neutral.700'}}/>
+                <Divider sx={{borderColor: 'neutral.700',mb:2}}/>
+                <Box sx={{
+                    mb:10,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                }}>
+                    <Image
+                        src="/assets/logos/DisplayPoster.jpg"
+                        alt="Full Logo"
+                        width={230}
+                        height={395}
+                        priority
+                    />
+                </Box>
             </Box>
         </Scrollbar>
     );
