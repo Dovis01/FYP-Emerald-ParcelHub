@@ -5,10 +5,15 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.example.fypspringbootcode.exception.ServiceException;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.example.fypspringbootcode.common.ErrorCodeList.ERROR_CODE_500;
@@ -57,5 +62,11 @@ public class FypProjectUtils {
                 throw new ServiceException(ERROR_CODE_500, "The internal system is error.");
             }
         }
+    }
+
+    public static Map<String, Object> convertToMap(JsonObject jsonObject) {
+        Gson gson = new Gson();
+        Type type = new TypeToken<Map<String, Object>>() {}.getType();
+        return gson.fromJson(jsonObject, type);
     }
 }

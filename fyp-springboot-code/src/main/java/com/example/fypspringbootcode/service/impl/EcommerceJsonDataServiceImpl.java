@@ -5,17 +5,15 @@ import com.example.fypspringbootcode.entity.EcommerceJsonData;
 import com.example.fypspringbootcode.entity.EcommerceWebsite;
 import com.example.fypspringbootcode.exception.ServiceException;
 import com.example.fypspringbootcode.mapper.EcommerceJsonDataMapper;
-import com.example.fypspringbootcode.service.IEcommerceJsonDataService;
+import com.example.fypspringbootcode.service.*;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.example.fypspringbootcode.service.IEcommerceWebsiteService;
+import com.example.fypspringbootcode.utils.FypProjectUtils;
 import com.google.gson.*;
-import com.google.gson.reflect.TypeToken;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +30,18 @@ public class EcommerceJsonDataServiceImpl extends ServiceImpl<EcommerceJsonDataM
 
     @Autowired
     IEcommerceWebsiteService ecommerceWebsiteService;
+
+    @Autowired
+    ICustomerService customerService;
+
+    @Autowired
+    ISenderService senderService;
+
+    @Autowired
+    IOrderService orderService;
+
+    @Autowired
+    IParcelService parcelService;
 
     @Transactional
     @Override
@@ -53,6 +63,10 @@ public class EcommerceJsonDataServiceImpl extends ServiceImpl<EcommerceJsonDataM
                 log.error("Fail to insert json simulation data in batch", e);
                 throw new ServiceException(ERROR_CODE_500, "The internal system is error. Please try again.");
             }
+            customerService.addOrderCustomersInfoInBatch(jsonArray);
+            senderService.addOrderSendersInfoInBatch(jsonArray);
+            orderService.addOrdersInfoInBatch(jsonArray);
+            parcelService.addParcelsInfoInBatch(jsonArray);
         } else {
             throw new ServiceException(ERROR_CODE_400, "The json data is not a json array, please check it again");
         }
@@ -65,7 +79,7 @@ public class EcommerceJsonDataServiceImpl extends ServiceImpl<EcommerceJsonDataM
             JsonObject jsonObject = JsonParser.parseString(data.getJsonData()).getAsJsonObject();
             JsonElement idElement = new JsonPrimitive(data.getEcommerceJsonDataId());
             jsonObject.add("ecommerce_json_data_id", idElement);
-            Map<String, Object> map = convertToMap(jsonObject);
+            Map<String, Object> map = FypProjectUtils.convertToMap(jsonObject);
             jsonMapArray.add(map);
         }
         return jsonMapArray;
@@ -89,6 +103,10 @@ public class EcommerceJsonDataServiceImpl extends ServiceImpl<EcommerceJsonDataM
     @Transactional
     @Override
     public void deleteAllEcommerceJsonData() {
+        parcelService.deleteAllParcelsData();
+        orderService.deleteAllOrdersData();
+        customerService.deleteOrderCustomerRecordsFromJsonDataInBatch();
+        senderService.deleteAllSendersData();
         try {
             remove(null);
         } catch (Exception e) {
@@ -130,7 +148,7 @@ public class EcommerceJsonDataServiceImpl extends ServiceImpl<EcommerceJsonDataM
     @Transactional
     @Override
     public void deleteMultipleEcommerceJsonDataById(Integer[] ecommerceJsonDataIds) {
-        if(ecommerceJsonDataIds.length == 0) {
+        if (ecommerceJsonDataIds.length == 0) {
             throw new ServiceException(ERROR_CODE_400, "The ecommerce json data ids to delete is empty, please check it again");
         }
         for (Integer ecommerceJsonDataId : ecommerceJsonDataIds) {
@@ -138,22 +156,16 @@ public class EcommerceJsonDataServiceImpl extends ServiceImpl<EcommerceJsonDataM
         }
     }
 
-    private Integer handleEcommerceWebsiteInData (JsonElement jsonElement) {
+    private Integer handleEcommerceWebsiteInData(JsonElement jsonElement) {
         JsonObject ecommercePlatform = jsonElement.getAsJsonObject().get("e_commerce_platform").getAsJsonObject();
         String website_url = ecommercePlatform.get("website_url").getAsString();
         String name = ecommercePlatform.get("name").getAsString();
-        if(!ecommerceWebsiteService.isEcommerceWebsiteExist(name)) {
+        if (!ecommerceWebsiteService.isEcommerceWebsiteExist(name)) {
             EcommerceWebsite ecommerceWebsite = new EcommerceWebsite();
             ecommerceWebsite.setWebsiteName(name);
             ecommerceWebsite.setUrl(website_url);
             ecommerceWebsiteService.addEcommerceWebsite(ecommerceWebsite);
         }
         return ecommerceWebsiteService.getEcommerceWebsiteByName(name).getEcommerceWebsiteId();
-    }
-
-    private Map<String, Object> convertToMap(JsonObject jsonObject) {
-        Gson gson = new Gson();
-        Type type = new TypeToken<Map<String, Object>>() {}.getType();
-        return gson.fromJson(jsonObject, type);
     }
 }
