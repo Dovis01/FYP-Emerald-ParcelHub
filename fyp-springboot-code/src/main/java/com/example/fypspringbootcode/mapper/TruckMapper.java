@@ -1,6 +1,6 @@
 package com.example.fypspringbootcode.mapper;
 
-import com.example.fypspringbootcode.entity.Trunk;
+import com.example.fypspringbootcode.entity.Truck;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
@@ -8,6 +8,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author Shijin Zhang
  * @since 2024-02-13
  */
-public interface TrunkMapper extends BaseMapper<Trunk> {
+public interface TruckMapper extends BaseMapper<Truck> {
 
 }
