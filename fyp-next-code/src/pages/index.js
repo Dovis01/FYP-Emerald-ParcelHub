@@ -1,33 +1,33 @@
+import MainPageLayout from "@/components/layouts/mainPageLayout";
 import {useAuthContext} from "@/contexts/auth-context";
-import {useEffect} from "react";
 import {useRouter} from "next/router";
 
-
-const DefaultOverviewPage = () => {
+const getComponentForRole = (roleType) => {
     const router = useRouter();
-    const authContext = useAuthContext();
-
-    useEffect(() => {
-        const roleType = authContext.user?.roleType;
-
-        switch (roleType) {
-            case 'Admin':
-                router.push('/admin/e-commerce-order/overview');
-                break;
-            case 'Courier':
-                router.push('/courier/overview');
-                break;
-            case 'Customer':
-                router.push('/customer/overview');
-                break;
-            case 'StationManager':
-                router.push('/station-manager/overview');
-                break;
-            default:
-                router.push('/customer/overview');
-                break;
-        }
-    }, [authContext.user, router]);
+    switch (roleType) {
+        case 'Admin':
+            router.push('/admin/e-commerce-order/overview');
+            break;
+        case 'Courier':
+            router.push('/courier/overview');
+            break;
+        case 'Customer':
+            router.push('/customer/overview');
+            break;
+        case 'Station-Manager':
+            router.push('/station-manager/overview');
+            break;
+    }
 };
 
+const DefaultOverviewPage = () => {
+    const authContext = useAuthContext();
+    return getComponentForRole(authContext.user.roleType);
+};
+
+DefaultOverviewPage.getLayout = (page) => (
+    <MainPageLayout>
+        {page}
+    </MainPageLayout>
+);
 export default DefaultOverviewPage;
