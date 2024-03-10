@@ -33,9 +33,9 @@ public class Customer implements Serializable {
 
     private String orderEmail;
 
-    private String country;
-
     private String city;
+
+    private String country;
 
     private String address;
 

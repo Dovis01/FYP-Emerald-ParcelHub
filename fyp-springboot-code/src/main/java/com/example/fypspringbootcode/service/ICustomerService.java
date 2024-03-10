@@ -5,6 +5,7 @@ import com.example.fypspringbootcode.controller.request.LoginRequest;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.fypspringbootcode.controller.request.RegisterCustomerRequest;
 import com.example.fypspringbootcode.entity.Customer;
+import com.google.gson.JsonArray;
 
 /**
  *
@@ -16,11 +17,15 @@ public interface ICustomerService extends IService<Customer> {
 
     void register(RegisterCustomerRequest registerRequest);
 
+    void addOrderCustomersInfoInBatch(JsonArray ecommerceJsonData);
+
     Customer getByCustomerId(Integer customerId);
 
     Customer getCustomerByToken(Integer accountId);
 
     void deleteByCustomerId(Integer customerId, Integer accountId);
+
+    void deleteOrderCustomerRecordsFromJsonDataInBatch();
 
     Customer updatePersonalInfo(Customer customer, Integer customerId);
 }
