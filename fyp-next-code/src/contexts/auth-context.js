@@ -1,7 +1,7 @@
 import {createContext, useContext, useEffect, useReducer, useState} from 'react';
 import PropTypes from 'prop-types';
 import {useRouter} from 'next/router';
-import {loginByEmail, loginByUsername, register} from "@/api/springboot-api";
+import {loginByEmail, loginByUsername, register, resetPassword} from "@/api/springboot-api";
 
 const HANDLERS = {
     INITIALIZE: 'INITIALIZE',
@@ -73,11 +73,9 @@ export const AuthContextProvider = (props) => {
     };
 
     useEffect(() => {
-        // 尝试从sessionStorage获取用户信息
         const sessionUser = sessionStorage.getItem('userInfo');
         if (sessionUser) {
             const user = JSON.parse(sessionUser);
-            // 如果有用户信息，则使用INITIALIZE动作初始化状态
             dispatch({
                 type: HANDLERS.INITIALIZE,
                 payload: user
@@ -93,9 +91,10 @@ export const AuthContextProvider = (props) => {
         }
 
         const user = {
-            id: '5e86809283e28b96d2d38537',
+            customerId: 1141,
             avatar: '/assets/avatars/avatar-anika-visser.png',
             roleType: 'Customer',
+            adminName: 'AdminRoot',
             username: 'Anika Visser',
             fullName: 'Anika Visser',
             email: 'anika.visser@devias.io'
@@ -176,12 +175,20 @@ export const AuthContextProvider = (props) => {
         }
     };
 
+    const resetPass = async (requestBody) => {
+        const result = await resetPassword(requestBody);
+        if (!result.success) {
+            throw new Error(result.msg);
+        }
+    }
+
     const signOut = () => {
-        window.sessionStorage.removeItem('authenticated');
-        window.sessionStorage.removeItem('userInfo');
-        router.reload();
-        dispatch({
-            type: HANDLERS.SIGN_OUT
+        router.replace('/auth/signIn').then(() => {
+            window.sessionStorage.removeItem('authenticated');
+            window.sessionStorage.removeItem('userInfo');
+            dispatch({
+                type: HANDLERS.SIGN_OUT
+            });
         });
     };
 
@@ -195,6 +202,7 @@ export const AuthContextProvider = (props) => {
                 signInByEmail,
                 signInByUsername,
                 signUp,
+                resetPass,
                 signOut
             }}
         >

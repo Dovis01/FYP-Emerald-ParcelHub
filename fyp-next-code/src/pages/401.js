@@ -59,7 +59,7 @@ const Error401Page = () => (
                         variant="body1"
                         sx={{maxWidth: 600}}
                     >
-                        You either were not authenticated or you came here by some mistakes.
+                        You either were not authorized to access or you came here by some mistakes.
                         Whichever it is, try using the navigation to go back.
                     </Typography>
                     <Button
