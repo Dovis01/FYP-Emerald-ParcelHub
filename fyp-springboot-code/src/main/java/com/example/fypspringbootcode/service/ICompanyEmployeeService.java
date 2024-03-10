@@ -12,7 +12,7 @@ public interface ICompanyEmployeeService extends IService<CompanyEmployee> {
 
     CompanyEmployee checkCompanyEmployee(RegisterEmployeeRoleRequest registerRequest);
 
-    void initializeRoleInfo(CompanyEmployee companyEmployee, Integer accountId, String roleType);
+    void initializeRoleInfo(RegisterEmployeeRoleRequest registerRequest, CompanyEmployee companyEmployee, Integer accountId, String roleType);
 
     CompanyEmployee getByEmployeeId(Integer employeeId);
 

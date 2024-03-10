@@ -54,10 +54,11 @@ public class CompanyEmployeeServiceImpl extends ServiceImpl<CompanyEmployeeMappe
     }
 
     @Override
-    public void initializeRoleInfo(CompanyEmployee companyEmployee, Integer accountId, String roleType) {
+    public void initializeRoleInfo(RegisterEmployeeRoleRequest registerRequest,CompanyEmployee companyEmployee, Integer accountId, String roleType) {
         Integer roleId = roleTypeService.getRoleIdByRoleType(roleType);
         companyEmployee.setRoleId(roleId);
         companyEmployee.setAccountId(accountId);
+        companyEmployee.setWorkCity(registerRequest.getWorkCity());
         boolean isUpdated = updateById(companyEmployee);
         if (!isUpdated) {
             throw new ServiceException(ERROR_CODE_500, "Fail to update the initial employee info of the new " + roleType + " employee");

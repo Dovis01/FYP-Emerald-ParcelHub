@@ -30,6 +30,8 @@ public class CompanyEmployee implements Serializable {
 
     private String avatar;
 
+    private String workCity;
+
     private Integer roleId;
 
     private Integer companyId;
