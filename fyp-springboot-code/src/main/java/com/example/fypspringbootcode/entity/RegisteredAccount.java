@@ -32,10 +32,10 @@ public class RegisteredAccount implements Serializable {
     @TableField(exist = false)
     private String newPassword;
 
-    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Dublin")
     private LocalDateTime registerTime;
 
-    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Dublin")
     private LocalDateTime updateTime;
 
     private Boolean status=true;

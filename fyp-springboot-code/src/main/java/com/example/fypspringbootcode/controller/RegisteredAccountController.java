@@ -1,6 +1,7 @@
 package com.example.fypspringbootcode.controller;
 
 import com.example.fypspringbootcode.common.Result;
+import com.example.fypspringbootcode.controller.request.ResetPasswordRequest;
 import com.example.fypspringbootcode.entity.RegisteredAccount;
 import com.example.fypspringbootcode.service.IRegisteredAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,5 +30,11 @@ public class RegisteredAccountController {
     public Result updateAccountInfo(@RequestBody RegisteredAccount registeredAccount, @PathVariable Integer accountId) {
         RegisteredAccount updatedRegisteredAccount = registeredAccountService.updateAccountInfo(registeredAccount, accountId);
         return Result.success(updatedRegisteredAccount, "The registered account has been updated successfully");
+    }
+
+    @PutMapping("/v1/reset-password")
+    public Result resetPassword(@RequestBody ResetPasswordRequest request) {
+        registeredAccountService.resetPassword(request);
+        return Result.success("The password has been reset successfully");
     }
 }

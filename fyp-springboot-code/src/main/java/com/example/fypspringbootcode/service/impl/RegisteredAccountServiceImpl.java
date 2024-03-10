@@ -6,12 +6,15 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.example.fypspringbootcode.common.config.AppConfig;
 import com.example.fypspringbootcode.controller.request.BaseRegisterRequest;
 import com.example.fypspringbootcode.controller.request.LoginRequest;
+import com.example.fypspringbootcode.controller.request.ResetPasswordRequest;
 import com.example.fypspringbootcode.entity.RegisteredAccount;
 import com.example.fypspringbootcode.exception.ServiceException;
 import com.example.fypspringbootcode.mapper.RegisteredAccountMapper;
+import com.example.fypspringbootcode.service.IAdminService;
 import com.example.fypspringbootcode.service.IRegisteredAccountService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -25,6 +28,9 @@ import static com.example.fypspringbootcode.common.ErrorCodeList.*;
 @Service
 @Slf4j
 public class RegisteredAccountServiceImpl extends ServiceImpl<RegisteredAccountMapper, RegisteredAccount> implements IRegisteredAccountService {
+
+    @Autowired
+    IAdminService adminService;
 
     @Override
     public void deleteByAccountId(Integer accountId) {
@@ -128,10 +134,10 @@ public class RegisteredAccountServiceImpl extends ServiceImpl<RegisteredAccountM
             throw new ServiceException(ERROR_CODE_400, "No new account info is provided to update the account.");
         }
         // Set the new account info to null if it is empty
-        if(registeredAccount.getUsername().isEmpty()){
+        if (registeredAccount.getUsername().isEmpty()) {
             registeredAccount.setUsername(null);
         }
-        if(registeredAccount.getEmail().isEmpty()){
+        if (registeredAccount.getEmail().isEmpty()) {
             registeredAccount.setEmail(null);
         }
         if (!registeredAccount.getNewPassword().isEmpty()) {
@@ -167,6 +173,36 @@ public class RegisteredAccountServiceImpl extends ServiceImpl<RegisteredAccountM
         }
         updatedRegisteredAccount.setPassword(null);
         return updatedRegisteredAccount;
+    }
+
+    @Override
+    public void resetPassword(ResetPasswordRequest request) {
+        if(request.getAdminName() != null){
+            adminService.changePass(request);
+            return;
+        }
+        QueryWrapper<RegisteredAccount> queryWrapper = new QueryWrapper<>();
+        if (request.getUsername() != null && !request.getUsername().isEmpty()) {
+            queryWrapper.eq("username", request.getUsername());
+        }
+        if (request.getEmail() != null && !request.getEmail().isEmpty()) {
+            queryWrapper.eq("email", request.getEmail());
+        }
+        RegisteredAccount result = getRegisteredAccountByQueryWrapper(queryWrapper);
+        if (result == null) {
+            throw new ServiceException(ERROR_CODE_404, "The username or email is wrong, find no matched one.");
+        }
+        result.setPassword(securePass(request.getNewPassword()));
+        result.setUpdateTime(LocalDateTime.now());
+        boolean isUpdated;
+        try {
+            isUpdated = updateById(result);
+        } catch (Exception e) {
+            throw new ServiceException(ERROR_CODE_500, "The internal system is error.");
+        }
+        if (!isUpdated) {
+            throw new ServiceException(ERROR_CODE_404, "The new password has some problems, fail to reset password.");
+        }
     }
 
 

@@ -35,11 +35,27 @@ export const register = async (registrationData, roleType) => {
     return response.json();
 };
 
+export const resetPassword = async (body) => {
+    const response = await fetch(`http://localhost:9090/api/registeredAccount/v1/reset-password`, {
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        method: 'put',
+        body: JSON.stringify(body)
+    });
+    return response.json();
+};
+
+
+/**
+ *  API for Ecommerce Simulation Data
+ * */
+
 export const uploadEcommerceSimulationData = async (simulationData) => {
     const response = await fetch(`http://localhost:9090/api/ecommerceJsonData/v1/insert`, {
         headers: {
             'Content-Type': 'application/json',
-            //'Authorization': window.localStorage.getItem('token')
+            'Authorization': window.localStorage.getItem('token')
         },
         method: 'post',
         body: JSON.stringify({ jsonData: simulationData})
@@ -50,7 +66,8 @@ export const uploadEcommerceSimulationData = async (simulationData) => {
 export const clearAllEcommerceSimulationData = async () => {
     const response = await fetch(`http://localhost:9090/api/ecommerceJsonData/v1/delete-all`, {
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': window.localStorage.getItem('token')
         },
         method: 'delete'
     });
@@ -60,7 +77,8 @@ export const clearAllEcommerceSimulationData = async () => {
 export const clearSelectedEcommerceSimulationData = async (selectedIds) => {
     const response = await fetch(`http://localhost:9090/api/ecommerceJsonData/v1/delete-multiple`, {
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': window.localStorage.getItem('token')
         },
         method: 'delete',
         body: JSON.stringify({ ecommerceJsonDataIdsToDelete: selectedIds})
@@ -71,7 +89,30 @@ export const clearSelectedEcommerceSimulationData = async (selectedIds) => {
 export const getAllEcommerceSimulationData = async () => {
     const response = await fetch(`http://localhost:9090/api/ecommerceJsonData/v1/all-data`, {
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': window.localStorage.getItem('token')
+        },
+        method: 'get'
+    });
+    return response.json();
+};
+
+export const getAllCustomerPersonalOrdersData = async (customerId) => {
+    const response = await fetch(`http://localhost:9090/api/order/v1/part-data/customer/${customerId}`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': window.localStorage.getItem('token')
+        },
+        method: 'get'
+    });
+    return response.json();
+};
+
+export const getAllCustomerPersonalParcelsData = async (customerId) => {
+    const response = await fetch(`http://localhost:9090/api/parcel/v1/part-data/customer/${customerId}`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': window.localStorage.getItem('token')
         },
         method: 'get'
     });

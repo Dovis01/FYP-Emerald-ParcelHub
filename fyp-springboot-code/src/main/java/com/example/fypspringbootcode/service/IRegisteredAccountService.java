@@ -2,6 +2,7 @@ package com.example.fypspringbootcode.service;
 
 import com.example.fypspringbootcode.controller.request.BaseRegisterRequest;
 import com.example.fypspringbootcode.controller.request.LoginRequest;
+import com.example.fypspringbootcode.controller.request.ResetPasswordRequest;
 import com.example.fypspringbootcode.entity.RegisteredAccount;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -20,4 +21,6 @@ public interface IRegisteredAccountService extends IService<RegisteredAccount> {
     RegisteredAccount checkRegisteredAccount(LoginRequest request);
 
     RegisteredAccount updateAccountInfo(RegisteredAccount registeredAccount, Integer accountId);
+
+    void resetPassword(ResetPasswordRequest request);
 }
