@@ -29,6 +29,10 @@ public class Sender implements Serializable {
 
     private String phoneNumber;
 
+    private String city;
+
+    private String country;
+
     private String address;
 
     @Override
