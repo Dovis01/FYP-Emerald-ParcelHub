@@ -4,27 +4,18 @@ import {
     clearSelectedEcommerceSimulationData,
     getAllEcommerceSimulationData
 } from "@/api/springboot-api";
-import {DataGrid, GridToolbar} from '@mui/x-data-grid';
 import {
     Box,
     Button,
-    Collapse,
     Paper,
     SvgIcon,
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableRow,
-    Typography
 } from "@mui/material";
 import * as React from "react";
 import {toast} from "react-toastify";
 import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
-import IconButton from "@mui/material/IconButton";
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import {SeverityPill} from "@/components/customized/severityPill";
+import {DataGridTable} from "@/components/customized/dataGridTableRenderer/dataGridTable";
+import {ParcelItemsTableRenderer} from "@/components/customized/dataGridTableRenderer/parcelItemsTableRenderer";
 
 
 export const JsonDataDisplay = () => {
@@ -46,12 +37,18 @@ export const JsonDataDisplay = () => {
                     price: parcelItem.price,
                     isDetailRow: true,
                     parentId: item.ecommerce_json_data_id,
+                    parcelWeight: item.parcel.weight,
+                    parcelVolume: item.parcel.weight * item.parcel.length * item.parcel.width,
+                    parcelLength: item.parcel.length,
+                    parcelWidth: item.parcel.width,
+                    parcelHeight: item.parcel.height
                 }));
 
                 return {
                     id: item.ecommerce_json_data_id,
                     orderId: item.order_id,
                     orderDate: item.order_date,
+                    orderStatus: item.order_status,
                     customerName: item.customer.name,
                     customerPhone: item.customer.phone,
                     customerEmail: item.customer.email,
@@ -60,7 +57,6 @@ export const JsonDataDisplay = () => {
                     senderPhone: item.sender.phone,
                     senderEmail: item.sender.email,
                     senderAddress: item.sender.address,
-                    deliveryStatus: item.delivery.status,
                     expectedDeliveryDate: item.delivery.expected_delivery_date,
                     eCommercePlatformName: item.e_commerce_platform.name,
                     eCommercePlatformUrl: item.e_commerce_platform.website_url,
@@ -68,60 +64,57 @@ export const JsonDataDisplay = () => {
                     expressDeliveryCompanyType: item.express_delivery_company.companyType,
                     expressDeliveryCompanyLocation: item.express_delivery_company.location,
                     parcelItems: parcelItemsRows,
-                    parcelWeight: item.parcel.weight,
-                    parcelVolume: item.parcel.volume,
+                    parcelStatus: item.parcel.status
                 };
             });
             setRows(newRows.flat());
         };
 
-        fetchJsonData().then().catch((error) => {
-            console.log('Error fetching Json data:', error);
-        });
+        fetchJsonData();
     }, [isClickSelectedToDelete]);
 
     const columns = [
         {field: 'id', headerName: 'Data ID', headerClassName: 'super-app-theme--header', width: 90},
         {field: 'orderId', headerName: 'Order ID', headerClassName: 'super-app-theme--header', width: 110},
         {field: 'orderDate', headerName: 'Order Date', headerClassName: 'super-app-theme--header', width: 190},
-        {field: 'customerName', headerName: 'Customer Name', headerClassName: 'super-app-theme--header', width: 140},
+        {
+            field: 'orderStatus',
+            headerName: 'Order Status',
+            headerClassName: 'super-app-theme--header',
+            width: 163,
+            renderCell: (params) => (
+                <SeverityPill color={params.value === 'To be delivered' ? 'success' : 'warning'}>
+                    {params.value}
+                </SeverityPill>
+            )
+        },
+        {field: 'customerName', headerName: 'Customer Name', headerClassName: 'super-app-theme--header', width: 143},
         {field: 'customerPhone', headerName: 'Customer Phone', headerClassName: 'super-app-theme--header', width: 170},
         {field: 'customerEmail', headerName: 'Customer Email', headerClassName: 'super-app-theme--header', width: 240},
         {
             field: 'customerAddress',
             headerName: 'Customer Address',
             headerClassName: 'super-app-theme--header',
-            width: 270
+            width: 390
         },
         {field: 'senderName', headerName: 'Sender Name', headerClassName: 'super-app-theme--header', width: 140},
         {field: 'senderPhone', headerName: 'Sender Phone', headerClassName: 'super-app-theme--header', width: 160},
         {field: 'senderEmail', headerName: 'Sender Email', headerClassName: 'super-app-theme--header', width: 160},
-        {field: 'senderAddress', headerName: 'Sender Address', headerClassName: 'super-app-theme--header', width: 280},
+        {field: 'senderAddress', headerName: 'Sender Address', headerClassName: 'super-app-theme--header', width: 390},
         {
             field: 'parcelItems',
             headerName: 'Parcel Items',
-            width: isExpandedColumn ? 660 : 150,
-            renderCell: (params) => <ParcelItemsRenderer parcelItems={params.value}/>
+            width: isExpandedColumn ? 800 : 125,
+            renderCell: (params) => <ParcelItemsTableRenderer parcelItems={params.value} expandedRows={expandedRows}
+                                                              handleToggleExpand={handleToggleExpand}/>
         },
         {
-            field: 'parcelWeight',
-            headerName: 'Parcel Total Weight (kg)',
-            headerClassName: 'super-app-theme--header',
-            width: 190
-        },
-        {
-            field: 'parcelVolume',
-            headerName: 'Parcel Total Volume (m³)',
-            headerClassName: 'super-app-theme--header',
-            width: 190
-        },
-        {
-            field: 'deliveryStatus',
-            headerName: 'Delivery Status',
+            field: 'parcelStatus',
+            headerName: 'Parcel Status',
             headerClassName: 'super-app-theme--header',
             width: 150,
             renderCell: (params) => (
-                <SeverityPill color={params.value === 'Received' ? 'success' : 'warning'}>
+                <SeverityPill color={params.value === 'Packaged' ? 'success' : 'warning'}>
                     {params.value}
                 </SeverityPill>
             )
@@ -194,52 +187,8 @@ export const JsonDataDisplay = () => {
         setExpandedRows(newExpandedRows);
     };
 
-    // Parcel Items 渲染器
-    const ParcelItemsRenderer = ({parcelItems}) => (
-        <>
-            <Typography variant="body2" component="span">
-                More details
-            </Typography>
-            <IconButton
-                aria-label="expand row"
-                size="small"
-                onClick={() => handleToggleExpand(parcelItems[0].parentId)}
-            >
-                {expandedRows[parcelItems[0].parentId] ? <KeyboardArrowUpIcon/> : <KeyboardArrowDownIcon/>}
-            </IconButton>
-            <Collapse in={expandedRows[parcelItems[0].parentId]} timeout="auto" unmountOnExit>
-                <Box margin={1}>
-                    <Table size="small" aria-label="purchases">
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>Item ID</TableCell>
-                                <TableCell>Description</TableCell>
-                                <TableCell align="right">Quantity</TableCell>
-                                <TableCell align="right">Weight</TableCell>
-                                <TableCell align="right">Price</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {parcelItems.map((parcelItem) => (
-                                <TableRow key={parcelItem.id}>
-                                    <TableCell component="th" scope="row">
-                                        {parcelItem.id}
-                                    </TableCell>
-                                    <TableCell>{parcelItem.description}</TableCell>
-                                    <TableCell align="right">{parcelItem.quantity}</TableCell>
-                                    <TableCell align="right">{parcelItem.weight}</TableCell>
-                                    <TableCell align="right">{parcelItem.price}</TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </Box>
-            </Collapse>
-        </>
-    );
-
     const handleRowHeight = (params) => {
-        return expandedRows[params.id] ? params.model.parcelItems.length * 96 : 52;
+        return expandedRows[params.id] ? (params.model.parcelItems.length+1) * 96 : 52;
     }
 
     const handleRowSelectionChange = (rowSelectionModel) => {
@@ -261,67 +210,11 @@ export const JsonDataDisplay = () => {
                     borderRadius: 1.2
                 }}
             >
-                <DataGrid
+                <DataGridTable
                     rows={rows}
                     columns={columns}
-                    autoHeight
-                    checkboxSelection
-                    slots={{toolbar: GridToolbar}}
-                    initialState={{
-                        pagination: {paginationModel: {pageSize: 10}},
-                    }}
-                    getRowHeight={handleRowHeight}
-                    onRowSelectionModelChange={handleRowSelectionChange}
-                    pageSizeOptions={[5, 10, 25]}
-                    sx={{
-                        boxShadow: 5,
-                        backgroundColor: 'white',
-                        '& .MuiDataGrid-columnHeaders.MuiDataGrid-withBorderColor': {
-                            borderTopLeftRadius: '0px',
-                            borderTopRightRadius: '0px',
-                        },
-                        '& .MuiDataGrid-toolbarContainer': {
-                            backgroundColor: 'customized.purple',
-                        },
-                        '& .MuiDataGrid-toolbarContainer .MuiButtonBase-root': {
-                            fontSize: '16px',
-                            fontWeight: 'bold',
-                        },
-                        '& .MuiDataGrid-columnHeaders': {
-                            backgroundColor: 'customized.purple',
-                        },
-                        '& .MuiDataGrid-cell:hover': {
-                            color: 'primary.main',
-                        },
-                        '& .MuiDataGrid-row:hover': {
-                            backgroundColor: 'customized.blueLight',
-                        },
-                        '& .MuiDataGrid-row.Mui-selected, & .MuiDataGrid-row.Mui-selected:hover': {
-                            backgroundColor: 'customized.blueLight',
-                            color: 'primary.main',
-                        },
-
-                        '& .MuiDataGrid-virtualScroller::-webkit-scrollbar': {
-                            width: '5px',
-                        },
-                        '& .MuiDataGrid-virtualScroller::-webkit-scrollbar-track': {
-                            width: '2px',
-                            backgroundColor: '#f1f1f1',
-                        },
-                        '& .MuiDataGrid-virtualScroller::-webkit-scrollbar-thumb': {
-                            backgroundColor: '#a2a0a0',
-                            borderRadius: '20px',
-                            border: '6.5px solid transparent',
-                            backgroundClip: 'content-box',
-                        },
-                        '& .MuiDataGrid-virtualScroller::-webkit-scrollbar-thumb:hover': {
-                            backgroundColor: '#7c7a7a',
-                        },
-                        '& .super-app-theme--header': {
-                            fontWeight: 'bold',
-                            fontSize: '14.8px'
-                        }
-                    }}
+                    handleRowHeight={handleRowHeight}
+                    handleRowSelectionChange={handleRowSelectionChange}
                 />
                 <Paper sx={{display: 'flex', justifyContent: 'flex-end', mt: -2}}>
                     <Button

@@ -22,12 +22,12 @@ export const GoogleMapDisplay = () => {
         region: 'IE',
     };
 
-    const svgIconUrl = '/assets/icons/trunk.svg';
+    const svgIconUrl = '/assets/icons/truck.svg';
 
     return (
         <Box>
             <LoadScript
-                googleMapsApiKey="AIzaSyBxzYUMLXI8eTNRtwCbzeLOgBuh0-rZlec"
+                googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
                 language="en"
             >
                 <GoogleMap
