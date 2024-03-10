@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.fypspringbootcode.controller.dto.LoginAdminDTO;
 import com.example.fypspringbootcode.controller.request.BaseRequest;
 import com.example.fypspringbootcode.controller.request.LoginRequest;
-import com.example.fypspringbootcode.controller.request.PasswordRequest;
+import com.example.fypspringbootcode.controller.request.ResetPasswordRequest;
 import com.example.fypspringbootcode.entity.Admin;
 
 import java.util.List;
@@ -24,6 +24,6 @@ public interface IAdminService extends IService<Admin> {
 
     LoginAdminDTO login(LoginRequest request);
 
-    void changePass(PasswordRequest request);
+    void changePass(ResetPasswordRequest request);
 
 }

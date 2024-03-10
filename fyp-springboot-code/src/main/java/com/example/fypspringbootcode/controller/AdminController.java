@@ -4,7 +4,6 @@ import com.example.fypspringbootcode.common.Result;
 import com.example.fypspringbootcode.controller.dto.LoginAdminDTO;
 import com.example.fypspringbootcode.controller.request.AdminPageRequest;
 import com.example.fypspringbootcode.controller.request.LoginRequest;
-import com.example.fypspringbootcode.controller.request.PasswordRequest;
 import com.example.fypspringbootcode.entity.Admin;
 import com.example.fypspringbootcode.service.IAdminService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +23,6 @@ public class AdminController {
     public Result login(@RequestBody LoginRequest request) {
         LoginAdminDTO login = adminService.login(request);
         return Result.success(login, "login by admin name successfully");
-    }
-
-    @PutMapping("/v1/password")
-    public Result password(@RequestBody PasswordRequest request) {
-        adminService.changePass(request);
-        return Result.success();
     }
 
     @PostMapping("/v1/register")

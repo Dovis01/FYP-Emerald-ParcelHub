@@ -8,6 +8,6 @@
     </select>
 
     <update id="updatePassword">
-        update t_00_admin set password = #{newPass} where admin_name = #{userame} and password = #{password}
+        update t_00_admin set password = #{newPassword}, update_time = CURRENT_TIMESTAMP  where admin_name = #{adminName}
     </update>
 </mapper>

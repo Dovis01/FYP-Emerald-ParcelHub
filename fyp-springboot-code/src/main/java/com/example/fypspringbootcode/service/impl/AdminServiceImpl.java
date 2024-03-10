@@ -9,7 +9,7 @@ import com.example.fypspringbootcode.common.config.AppConfig;
 import com.example.fypspringbootcode.controller.dto.LoginAdminDTO;
 import com.example.fypspringbootcode.controller.request.BaseRequest;
 import com.example.fypspringbootcode.controller.request.LoginRequest;
-import com.example.fypspringbootcode.controller.request.PasswordRequest;
+import com.example.fypspringbootcode.controller.request.ResetPasswordRequest;
 import com.example.fypspringbootcode.entity.Admin;
 import com.example.fypspringbootcode.exception.ServiceException;
 import com.example.fypspringbootcode.mapper.AdminMapper;
@@ -123,12 +123,13 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
     }
 
     @Override
-    public void changePass(PasswordRequest request) {
+    public void changePass(ResetPasswordRequest request) {
         // 注意 你要对新的密码进行加密
         request.setNewPassword(securePass(request.getNewPassword()));
-        int count = adminMapper.updatePassword(request);
+        String securePass = securePass(request.getNewPassword());
+        int count = adminMapper.updatePassword(request.getAdminName(), securePass);
         if (count <= 0) {
-            throw new ServiceException(ERROR_CODE_401,"Fail to change the password. Please try again.");
+            throw new ServiceException(ERROR_CODE_401,"Fail to reset the password of admin account. Please try again.");
         }
     }
 
