@@ -1,14 +1,14 @@
 import {useCallback, useEffect, useState} from 'react';
 import Head from 'next/head';
 import NextLink from 'next/link';
-import { useRouter } from 'next/router';
-import { useFormik } from 'formik';
+import {useRouter} from 'next/router';
+import {useFormik} from 'formik';
 import * as Yup from 'yup';
 import {
     Alert,
     Box,
     Button, FormControl, FormControlLabel,
-    FormHelperText, FormLabel,
+    FormLabel,
     Link, Radio, RadioGroup,
     Stack,
     Tab,
@@ -16,7 +16,7 @@ import {
     TextField,
     Typography, useRadioGroup
 } from '@mui/material';
-import { AuthLayout } from '@/components/layouts/authLayout';
+import {AuthLayout} from '@/components/layouts/authLayout';
 import {useAuthContext} from "@/contexts/auth-context";
 import {styled} from "@mui/system";
 import {toast} from "react-toastify";
@@ -51,7 +51,7 @@ const SignInPage = () => {
                 .required('Username is required'),
             password: Yup
                 .string()
-                .max(25,'Password must be 25 characters or less')
+                .max(25, 'Password must be 25 characters or less')
                 .matches(/^\S*$/, 'Password cannot contain spaces')
                 .required('Password is required')
         }),
@@ -61,14 +61,14 @@ const SignInPage = () => {
                 return;
             }
             try {
-                await auth.signInByUsername(values.username, values.password,roleType);
-                toast.success('Sign In by username successfully.  Welcome, '+values.username+'!');
+                await auth.signInByUsername(values.username, values.password, roleType);
+                toast.success('Sign In by username successfully.  Welcome, ' + values.username + '!');
                 await router.push(continueUrl);
             } catch (err) {
-                helpers.setStatus({ success: false });
-                helpers.setErrors({ submit: err.message });
+                helpers.setStatus({success: false});
+                helpers.setErrors({submit: err.message});
                 helpers.setSubmitting(false);
-                toast.error("Ooops! "+err.message);
+                toast.error("Ooops! " + err.message);
             }
         }
     });
@@ -83,11 +83,11 @@ const SignInPage = () => {
             email: Yup
                 .string()
                 .email('Must be a valid email')
-                .max(25,'Email address must be 25 characters or less')
+                .max(25, 'Email address must be 25 characters or less')
                 .required('Email is required'),
             password: Yup
                 .string()
-                .max(25,'Password must be 25 characters or less')
+                .max(25, 'Password must be 25 characters or less')
                 .required('Password is required')
         }),
         onSubmit: async (values, helpers) => {
@@ -96,14 +96,14 @@ const SignInPage = () => {
                 return;
             }
             try {
-                await auth.signInByEmail(values.email, values.password,roleType);
-                toast.success('Sign In by email successfully.  Welcome, '+values.email+'!');
+                await auth.signInByEmail(values.email, values.password, roleType);
+                toast.success('Sign In by email successfully.  Welcome, ' + values.email + '!');
                 await router.push(continueUrl);
             } catch (err) {
-                helpers.setStatus({ success: false });
-                helpers.setErrors({ submit: err.message });
+                helpers.setStatus({success: false});
+                helpers.setErrors({submit: err.message});
                 helpers.setSubmitting(false);
-                toast.error("Ooops! "+err.message);
+                toast.error("Ooops! " + err.message);
             }
         }
     });
@@ -121,19 +121,19 @@ const SignInPage = () => {
                 .required('Admin name is required'),
             password: Yup
                 .string()
-                .max(25,'Admin password must be 25 characters or less')
+                .max(25, 'Admin password must be 25 characters or less')
                 .required('Admin password is required')
         }),
         onSubmit: async (values, helpers) => {
             try {
-                await auth.signInByUsername(values.adminName, values.password,"Admin");
-                toast.success('Sign In as admin account successfully.  Welcome, '+values.adminName+'!');
+                await auth.signInByUsername(values.adminName, values.password, "Admin");
+                toast.success('Sign In as admin account successfully.  Welcome, ' + values.adminName + '!');
                 await router.push(continueUrl);
             } catch (err) {
-                helpers.setStatus({ success: false });
-                helpers.setErrors({ submit: err.message });
+                helpers.setStatus({success: false});
+                helpers.setErrors({submit: err.message});
                 helpers.setSubmitting(false);
-                toast.error("Ooops! "+err.message);
+                toast.error("Ooops! " + err.message);
             }
         }
     });
@@ -182,7 +182,7 @@ const SignInPage = () => {
             >
                 <Box
                     sx={{
-                        mt:-4,
+                        mt: -4,
                         maxWidth: 550,
                         px: 3,
                         py: '100px',
@@ -192,7 +192,7 @@ const SignInPage = () => {
                     <div>
                         <Stack
                             spacing={1}
-                            sx={{ mb: 3 }}
+                            sx={{mb: 3}}
                         >
                             <Typography variant="h4">
                                 Sign In
@@ -214,22 +214,32 @@ const SignInPage = () => {
                             </Typography>
                         </Stack>
                         <FormControl
-                            sx={{display: 'flex', alignItems: 'center', flexDirection: 'row', width: 580,mt:-1,mb:0}}>
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                flexDirection: 'row',
+                                width: 580,
+                                mt: -1,
+                                mb: 0
+                            }}>
                             <FormLabel id="role-row-radio-group"
-                                       sx={{mt:-0.2,marginRight: 1.6, fontSize: '18.1px'}}>Role :</FormLabel>
+                                       sx={{mt: -0.2, marginRight: 1.6, fontSize: '18.1px'}}>Role :</FormLabel>
                             <RadioGroup
                                 row
                                 aria-labelledby="role-row-radio-group"
                                 name="role-radio-group"
                             >
-                                <MyFormControlLabel value="Customer" control={<Radio/>} label="Customer" disabled={method === 'admin'}/>
-                                <MyFormControlLabel value="Courier" control={<Radio/>} label="Courier" disabled={method === 'admin'}/>
-                                <MyFormControlLabel value="ParcelStationManager" control={<Radio/>} label="Parcel Station Manager" disabled={method === 'admin'}/>
+                                <MyFormControlLabel value="Customer" control={<Radio/>} label="Customer"
+                                                    disabled={method === 'admin'}/>
+                                <MyFormControlLabel value="Courier" control={<Radio/>} label="Courier"
+                                                    disabled={method === 'admin'}/>
+                                <MyFormControlLabel value="ParcelStationManager" control={<Radio/>}
+                                                    label="Parcel Station Manager" disabled={method === 'admin'}/>
                             </RadioGroup>
                         </FormControl>
                         <Tabs
                             onChange={handleMethodChange}
-                            sx={{ mb: 3 }}
+                            sx={{mb: 3}}
                             value={method}
                         >
                             <Tab
@@ -275,13 +285,27 @@ const SignInPage = () => {
                                         autoComplete="usernamepassword"
                                     />
                                 </Stack>
-                                <FormHelperText sx={{ mt: 1 }}>
-                                    Optionally you can skip.
-                                </FormHelperText>
+                                <Box sx={{mt: 2,ml:0.4}}>
+                                    <Typography
+                                        color="text.secondary"
+                                        variant="body2"
+                                    >
+                                        Forgot your password?
+                                        &nbsp;
+                                        <Link
+                                            component={NextLink}
+                                            href="/auth/forgetPassword"
+                                            underline="hover"
+                                            variant="subtitle2"
+                                        >
+                                            Find back
+                                        </Link>
+                                    </Typography>
+                                </Box>
                                 <Button
                                     fullWidth
                                     size="large"
-                                    sx={{ mt: 3 }}
+                                    sx={{mt: 2.5}}
                                     type="submit"
                                     variant="contained"
                                 >
@@ -290,7 +314,7 @@ const SignInPage = () => {
                                 <Button
                                     fullWidth
                                     size="large"
-                                    sx={{ mt: 1 }}
+                                    sx={{mt: 1}}
                                     onClick={handleSkip}
                                 >
                                     Skip authentication
@@ -298,7 +322,13 @@ const SignInPage = () => {
                                 <Alert
                                     color="primary"
                                     severity="info"
-                                    sx={{mt:-0.6,width: '100%' , display: 'flex', justifyContent: 'center',backgroundColor: 'transparent'}}
+                                    sx={{
+                                        mt: -0.6,
+                                        width: '100%',
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        backgroundColor: 'transparent'
+                                    }}
                                 >
                                     <div>
                                         You can use <b>adminRoot</b> and password <b>zsj123456</b>
@@ -337,13 +367,27 @@ const SignInPage = () => {
                                         autoComplete="emailpassword"
                                     />
                                 </Stack>
-                                <FormHelperText sx={{ mt: 1 }}>
-                                    Optionally you can skip.
-                                </FormHelperText>
+                                <Box sx={{mt: 2,ml:0.4}}>
+                                    <Typography
+                                        color="text.secondary"
+                                        variant="body2"
+                                    >
+                                        Forgot your password?
+                                        &nbsp;
+                                        <Link
+                                            component={NextLink}
+                                            href="/auth/forgetPassword"
+                                            underline="hover"
+                                            variant="subtitle2"
+                                        >
+                                            Find back
+                                        </Link>
+                                    </Typography>
+                                </Box>
                                 <Button
                                     fullWidth
                                     size="large"
-                                    sx={{ mt: 3 }}
+                                    sx={{mt: 2.5}}
                                     type="submit"
                                     variant="contained"
                                 >
@@ -352,7 +396,7 @@ const SignInPage = () => {
                                 <Button
                                     fullWidth
                                     size="large"
-                                    sx={{ mt: 1 }}
+                                    sx={{mt: 1}}
                                     onClick={handleSkip}
                                 >
                                     Skip authentication
@@ -360,7 +404,13 @@ const SignInPage = () => {
                                 <Alert
                                     color="primary"
                                     severity="info"
-                                    sx={{mt:-0.6,width: '101%', display: 'flex', justifyContent: 'center' ,backgroundColor: 'transparent'}}
+                                    sx={{
+                                        mt: -0.6,
+                                        width: '100%',
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        backgroundColor: 'transparent'
+                                    }}
                                 >
                                     <div>
                                         You can use <b>adminRoot</b> and password <b>zsj123456</b>
@@ -398,13 +448,27 @@ const SignInPage = () => {
                                         autoComplete="adminPassword"
                                     />
                                 </Stack>
-                                <FormHelperText sx={{ mt: 1 }}>
-                                    Optionally you can skip.
-                                </FormHelperText>
+                                <Box sx={{mt: 2,ml:0.4}}>
+                                    <Typography
+                                        color="text.secondary"
+                                        variant="body2"
+                                    >
+                                        Forgot your password?
+                                        &nbsp;
+                                        <Link
+                                            component={NextLink}
+                                            href="/auth/forgetPassword"
+                                            underline="hover"
+                                            variant="subtitle2"
+                                        >
+                                            Find back
+                                        </Link>
+                                    </Typography>
+                                </Box>
                                 <Button
                                     fullWidth
                                     size="large"
-                                    sx={{ mt: 3 }}
+                                    sx={{mt: 2.5}}
                                     type="submit"
                                     variant="contained"
                                 >
@@ -413,7 +477,7 @@ const SignInPage = () => {
                                 <Button
                                     fullWidth
                                     size="large"
-                                    sx={{ mt: 1 }}
+                                    sx={{mt: 1}}
                                     onClick={handleSkip}
                                 >
                                     Skip authentication
@@ -421,7 +485,13 @@ const SignInPage = () => {
                                 <Alert
                                     color="primary"
                                     severity="info"
-                                    sx={{mt:-0.6,width: '100%' , display: 'flex', justifyContent: 'center',backgroundColor: 'transparent'}}
+                                    sx={{
+                                        mt: -0.6,
+                                        width: '100%',
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        backgroundColor: 'transparent'
+                                    }}
                                 >
                                     <div>
                                         You can use <b>adminRoot</b> and password <b>zsj123456</b>

@@ -1,16 +1,16 @@
 import Head from 'next/head';
 import NextLink from 'next/link';
-import { useRouter } from 'next/router';
+import {useRouter} from 'next/router';
 import {useFormik} from 'formik';
 import * as Yup from 'yup';
 import {
     Box,
     Button,
-    FormControl, FormControlLabel,
-    FormLabel, Grid,
+    FormControl, FormControlLabel, FormHelperText,
+    FormLabel, Grid, InputLabel,
     Link,
     Radio,
-    RadioGroup,
+    RadioGroup, Select,
     Stack,
     TextField,
     Typography, useRadioGroup
@@ -20,7 +20,24 @@ import {useAuthContext} from "@/contexts/auth-context";
 import {styled} from "@mui/system";
 import {useEffect, useState} from "react";
 import {toast} from "react-toastify";
+import MenuItem from "@mui/material/MenuItem";
 
+
+const CustomScrollMenu = styled('div')({
+    '&::-webkit-scrollbar': {
+        width: '8px',
+    },
+    '&::-webkit-scrollbar-track': {
+        background: '#f1f1f1',
+    },
+    '&::-webkit-scrollbar-thumb': {
+        background: '#888',
+        borderRadius: '4px',
+    },
+    '&::-webkit-scrollbar-thumb:hover': {
+        background: '#5e5e5e',
+    }
+});
 
 const StyledFormControlLabel = styled((props) => <FormControlLabel {...props} />)(
     ({theme, checked}) => ({
@@ -29,6 +46,9 @@ const StyledFormControlLabel = styled((props) => <FormControlLabel {...props} />
         },
     }),
 );
+
+const workCities = ["Dublin", "Cork", "Galway", "Limerick", "Waterford", "Wexford", "Dundalk", "Bray"];
+const workType = ["Delivery Parcels", "Collect Parcels"];
 
 const SignUpPage = () => {
     const router = useRouter();
@@ -40,6 +60,8 @@ const SignUpPage = () => {
             username: '',
             email: '',
             employeeCode: '',
+            workCity: '',
+            workType: '',
             firstName: '',
             middleName: '',
             lastName: '',
@@ -66,23 +88,29 @@ const SignUpPage = () => {
                 .matches(
                     /^[A-Z]{2}-\d{8}\d{6}-[A-Z0-9]{6}$/,
                     'Employee code must match the pattern XX-YYYYMMDDHHMMSS-XXXXX(UpperCase)'
-                ): Yup.string(),
-            firstName: roleType === 'Customer' ? Yup
+                ) : Yup.string(),
+            workCity: roleType === 'Courier' || roleType === 'ParcelStationManager' ? Yup
                 .string()
-                .max(12, 'First name must be 12 characters or less')
-                .matches(/^\S*$/, 'First name cannot contain spaces')
-                .required('First name is required')
+                .required('Work city is required') : Yup.string(),
+            workType: roleType === 'Courier' ? Yup
+                .string()
+                .required('Work type is required') : Yup.string(),
+            firstName: roleType === 'Customer' ? Yup
+                    .string()
+                    .max(12, 'First name must be 12 characters or less')
+                    .matches(/^\S*$/, 'First name cannot contain spaces')
+                    .required('First name is required')
                 : Yup.string(),
             middleName: roleType === 'Customer' ? Yup
-                .string()
-                .max(12, 'Middle name must be 12 characters or less')
-                .matches(/^\S*$/, 'Middle name cannot contain spaces')
+                    .string()
+                    .max(12, 'Middle name must be 12 characters or less')
+                    .matches(/^\S*$/, 'Middle name cannot contain spaces')
                 : Yup.string(),
             lastName: roleType === 'Customer' ? Yup
-                .string()
-                .max(12, 'Last name must be 12 characters or less')
-                .matches(/^\S*$/, 'Last name cannot contain spaces')
-                .required('Last name is required')
+                    .string()
+                    .max(12, 'Last name must be 12 characters or less')
+                    .matches(/^\S*$/, 'Last name cannot contain spaces')
+                    .required('Last name is required')
                 : Yup.string(),
             password: Yup
                 .string()
@@ -113,6 +141,8 @@ const SignUpPage = () => {
                     email: values.email,
                     password: values.password,
                     employeeCode: values.employeeCode,
+                    workCity: values.workCity,
+                    workType: values.workType,
                     firstName: values.firstName,
                     middleName: values.middleName,
                     lastName: values.lastName
@@ -124,7 +154,7 @@ const SignUpPage = () => {
                 helpers.setStatus({success: false});
                 helpers.setErrors({submit: err.message});
                 helpers.setSubmitting(false);
-                toast.error("Ooops! "+err.message);
+                toast.error("Ooops! " + err.message);
             }
         }
     });
@@ -248,6 +278,182 @@ const SignUpPage = () => {
                                         type="text"
                                         value={formik.values.employeeCode}
                                     />
+                                )}
+                                {(roleType === 'Courier') && (
+                                    <Box sx={{
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        gap: '0.8rem',
+                                    }}>
+                                        <FormControl style={{width: '60%',marginTop:'-9px'}}>
+                                            <InputLabel
+                                                id="CourierWorkCity"
+                                                required
+                                                sx={{
+                                                    mt: 1,
+                                                    '&.MuiInputLabel-shrink': {
+                                                        marginTop: '1.48rem',
+                                                    },
+                                                    ...(formik.touched.workCity && formik.errors.workCity ? { color: 'red' } : {})
+                                                }}
+                                            >
+                                                Select Work City
+                                            </InputLabel>
+                                            <Select
+                                                fullWidth
+                                                variant="outlined"
+                                                labelId="CourierWorkCity"
+                                                value={formik.values.workCity}
+                                                name="workCity"
+                                                onBlur={formik.handleBlur}
+                                                onChange={formik.handleChange}
+                                                error={!!(formik.touched.workCity && formik.errors.workCity)}
+                                                sx={{
+                                                    height: '55px',
+                                                    '.MuiSelect-select': {
+                                                        paddingTop: '33px',
+                                                        textAlign: 'left',
+                                                    },
+                                                    marginTop: '8px',
+                                                }}
+                                                MenuProps={{
+                                                    anchorOrigin: {
+                                                        vertical: 'bottom',
+                                                        horizontal: 'left',
+                                                    },
+                                                    transformOrigin: {
+                                                        vertical: 'top',
+                                                        horizontal: 'left',
+                                                    },
+                                                    getContentAnchorEl: null,
+                                                    style: {marginTop: '1px', maxHeight: 250},
+                                                    PaperProps: {
+                                                        component: CustomScrollMenu,
+                                                    },
+                                                }}
+                                            >
+                                                <MenuItem value="">None</MenuItem>
+                                                {workCities.map((city) => (
+                                                    <MenuItem key={city} value={city}>{city}</MenuItem>
+                                                ))}
+                                            </Select>
+                                            {formik.touched.workCity && formik.errors.workCity && (
+                                                <FormHelperText style={{ color: 'red' }}>{formik.errors.workCity}</FormHelperText>
+                                            )}
+                                        </FormControl>
+                                        <FormControl style={{width: '40%',marginTop:'-9px'}}>
+                                            <InputLabel
+                                                id="WorkType"
+                                                required
+                                                sx={{
+                                                    mt: 1,
+                                                    '&.MuiInputLabel-shrink': {
+                                                        marginTop: '1.48rem',
+                                                    },
+                                                    ...(formik.touched.workType && formik.errors.workType ? { color: 'red' } : {})
+                                                }}
+                                            >
+                                                Select Work Type
+                                            </InputLabel>
+                                            <Select
+                                                fullWidth
+                                                variant="outlined"
+                                                labelId="WorkType"
+                                                value={formik.values.workType}
+                                                name="workType"
+                                                onBlur={formik.handleBlur}
+                                                onChange={formik.handleChange}
+                                                error={!!(formik.touched.workType && formik.errors.workType)}
+                                                sx={{
+                                                    height: '55px',
+                                                    '.MuiSelect-select': {
+                                                        paddingTop: '33px',
+                                                        textAlign: 'left',
+                                                    },
+                                                    marginTop: '8px',
+                                                }}
+                                                MenuProps={{
+                                                    anchorOrigin: {
+                                                        vertical: 'bottom',
+                                                        horizontal: 'left',
+                                                    },
+                                                    transformOrigin: {
+                                                        vertical: 'top',
+                                                        horizontal: 'left',
+                                                    },
+                                                    getContentAnchorEl: null,
+                                                    style: {marginTop: '1px', maxHeight: 420},
+                                                }}
+                                            >
+                                                <MenuItem value="">None</MenuItem>
+                                                {workType.map((type) => (
+                                                    <MenuItem key={type} value={type}>{type}</MenuItem>
+                                                ))}
+                                            </Select>
+                                            {formik.touched.workType && formik.errors.workType && (
+                                                <FormHelperText style={{ color: 'red' }}>{formik.errors.workType}</FormHelperText>
+                                            )}
+                                        </FormControl>
+                                    </Box>
+                                )}
+                                {(roleType === 'ParcelStationManager') && (
+                                    <FormControl fullWidth style={{marginTop:'7px'}}>
+                                        <InputLabel
+                                            id="StationManagerWorkCity"
+                                            required
+                                            sx={{
+                                                mt: 1,
+                                                '&.MuiInputLabel-shrink': {
+                                                    marginTop: '1.48rem',
+                                                },
+                                                ...(formik.touched.workCity && formik.errors.workCity ? { color: 'red' } : {})
+                                            }}
+                                        >
+                                            Select Work City
+                                        </InputLabel>
+                                        <Select
+                                            fullWidth
+                                            variant="outlined"
+                                            labelId="StationManagerWorkCity"
+                                            value={formik.values.workCity}
+                                            name="workCity"
+                                            onBlur={formik.handleBlur}
+                                            onChange={formik.handleChange}
+                                            error={!!(formik.touched.workCity && formik.errors.workCity)}
+                                            sx={{
+                                                height: '55px',
+                                                '.MuiSelect-select': {
+                                                    paddingTop: '33px',
+                                                    textAlign: 'left',
+                                                },
+                                                marginTop: '8px',
+                                            }}
+                                            MenuProps={{
+                                                anchorOrigin: {
+                                                    vertical: 'bottom',
+                                                    horizontal: 'left',
+                                                },
+                                                transformOrigin: {
+                                                    vertical: 'top',
+                                                    horizontal: 'left',
+                                                },
+                                                getContentAnchorEl: null,
+                                                style: {marginTop: '1px', maxHeight: 250},
+                                                PaperProps: {
+                                                    component: CustomScrollMenu,
+                                                },
+                                            }}
+                                        >
+                                            <MenuItem value="">None</MenuItem>
+                                            {workCities.map((city) => (
+                                                <MenuItem key={city} value={city}>{city}</MenuItem>
+                                            ))}
+                                        </Select>
+                                        {formik.touched.workCity && formik.errors.workCity && (
+                                            <FormHelperText style={{ color: 'red' }}>{formik.errors.workCity}</FormHelperText>
+                                        )}
+                                    </FormControl>
                                 )}
                                 {roleType === 'Customer' && (
                                     <Grid container spacing={1.5} style={{marginLeft: -12, marginTop: 0}}>
