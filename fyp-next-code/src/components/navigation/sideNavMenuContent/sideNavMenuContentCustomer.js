@@ -1,9 +1,8 @@
 import ChartBarIcon from '@heroicons/react/24/solid/ChartBarIcon';
 import CogIcon from '@heroicons/react/24/solid/CogIcon';
-import LockClosedIcon from '@heroicons/react/24/solid/LockClosedIcon';
 import ShoppingBagIcon from '@heroicons/react/24/solid/ShoppingBagIcon';
 import UserIcon from '@heroicons/react/24/solid/UserIcon';
-import UserPlusIcon from '@heroicons/react/24/solid/UserPlusIcon';
+import ViewInArIcon from '@mui/icons-material/ViewInAr';
 import MagnifyingGlassCircleIcon from '@heroicons/react/24/solid/MagnifyingGlassCircleIcon';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import {SvgIcon} from '@mui/material';
@@ -11,7 +10,7 @@ import {useAuthContext} from "@/contexts/auth-context";
 
 export const itemsCustomer = () => {
     const authContext = useAuthContext();
-    const customerName = authContext.user.roleType === 'Customer' ? authContext.user.username : 'adminRoot';
+    const customerName = authContext.currentUsername;
     return [
         {
             title: 'Overview',
@@ -27,7 +26,7 @@ export const itemsCustomer = () => {
             path: '',
             icon: (
                 <SvgIcon fontSize="medium">
-                    <ShoppingBagIcon/>
+                    <ViewInArIcon/>
                 </SvgIcon>
             ),
             children: [
@@ -35,7 +34,7 @@ export const itemsCustomer = () => {
                     title: 'Delivery progress',
                     path: '/customer/my-parcels/delivery-progress',
                     icon: (
-                        <SvgIcon fontSize="medium">
+                        <SvgIcon fontSize="medium" sx={{mt:-0.2}}>
                             <LocalShippingIcon/>
                         </SvgIcon>
                     )
@@ -52,6 +51,15 @@ export const itemsCustomer = () => {
             ]
         },
         {
+            title: 'My Orders',
+            path: `/customer/my-orders`,
+            icon: (
+                <SvgIcon fontSize="medium" sx={{mt:-0.2}}>
+                    <ShoppingBagIcon/>
+                </SvgIcon>
+            )
+        },
+        {
             title: 'Account',
             path: `/customer/${customerName}/account`,
             icon: (
@@ -66,24 +74,6 @@ export const itemsCustomer = () => {
             icon: (
                 <SvgIcon fontSize="medium">
                     <CogIcon/>
-                </SvgIcon>
-            )
-        },
-        {
-            title: 'SignIn',
-            path: '/auth/signIn',
-            icon: (
-                <SvgIcon fontSize="medium">
-                    <LockClosedIcon/>
-                </SvgIcon>
-            )
-        },
-        {
-            title: 'SignUp',
-            path: '/auth/signUp',
-            icon: (
-                <SvgIcon fontSize="medium">
-                    <UserPlusIcon/>
                 </SvgIcon>
             )
         }

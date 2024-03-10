@@ -15,7 +15,7 @@ import {useAuthContext} from "@/contexts/auth-context";
 
 export const itemsAdmin = () => {
     const authContext = useAuthContext();
-    const adminName =authContext.user.roleType === 'Admin' ? authContext.user.adminName : 'adminRoot';
+    const adminName =authContext.currentUsername;
     return [
         {
             title: 'E-commerce Order',
@@ -68,7 +68,7 @@ export const itemsAdmin = () => {
                     title: 'Courier',
                     path: '/admin/our-people/courier',
                     icon: (
-                        <SvgIcon fontSize="medium">
+                        <SvgIcon fontSize="medium" sx={{mt:-0.2}}>
                             <LocalShippingIcon/>
                         </SvgIcon>
                     )

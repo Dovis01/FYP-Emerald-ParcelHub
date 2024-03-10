@@ -29,7 +29,7 @@ export const SideNavBar = (props) => {
     const roleMappings = {
         'Customer': 'Welcome, Customer',
         'Courier': 'Parcel Hub Courier',
-        'StationManager': 'Parcel Hub Station Manager',
+        'Station-Manager': 'Parcel Hub Station Manager',
         'Admin': 'Parcel Hub Admin'
     };
 
@@ -44,7 +44,7 @@ export const SideNavBar = (props) => {
         case 'Customer':
             items = itemsCustomer();
             break;
-        case 'StationManager':
+        case 'Station-Manager':
             items = itemsStationManager();
             break;
         default:

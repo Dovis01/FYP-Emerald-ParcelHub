@@ -1,8 +1,8 @@
 import ChartBarIcon from '@heroicons/react/24/solid/ChartBarIcon';
 import CogIcon from '@heroicons/react/24/solid/CogIcon';
 import LockClosedIcon from '@heroicons/react/24/solid/LockClosedIcon';
-import ShoppingBagIcon from '@heroicons/react/24/solid/ShoppingBagIcon';
 import UserIcon from '@heroicons/react/24/solid/UserIcon';
+import ViewInArIcon from '@mui/icons-material/ViewInAr';
 import UserPlusIcon from '@heroicons/react/24/solid/UserPlusIcon';
 import PresentationChartLineIcon from '@heroicons/react/24/solid/PresentationChartLineIcon';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
@@ -11,7 +11,7 @@ import {useAuthContext} from "@/contexts/auth-context";
 
 export const itemsStationManager = () => {
     const authContext = useAuthContext();
-    const stationManagerName = authContext.user.roleType === 'ParcelStationManager' ? authContext.user.username : 'adminRoot';
+    const stationManagerName = authContext.currentUsername;
     return [
         {
             title: 'Overview',
@@ -26,7 +26,7 @@ export const itemsStationManager = () => {
             title: 'Delivery progress',
             path: '',
             icon: (
-                <SvgIcon fontSize="medium">
+                <SvgIcon fontSize="medium" sx={{mt:-0.2}}>
                     <LocalShippingIcon/>
                 </SvgIcon>
             )
@@ -45,7 +45,7 @@ export const itemsStationManager = () => {
             path: '',
             icon: (
                 <SvgIcon fontSize="medium">
-                    <ShoppingBagIcon/>
+                    <ViewInArIcon/>
                 </SvgIcon>
             )
         },
