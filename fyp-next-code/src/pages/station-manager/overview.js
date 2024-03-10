@@ -1,8 +1,8 @@
 import Head from 'next/head';
 import MainPageLayout from "@/components/layouts/mainPageLayout";
 import {Box, Grid, Paper} from "@mui/material";
-import {OverviewAwaitingReceipt} from "@/components/pageSections/stationManagerComponent/overview/overview-awaiting-receipt";
-import {OverviewInStorage} from "@/components/pageSections/stationManagerComponent/overview/overview-in-storage";
+import {OverviewParcelsAwaitingPickUp} from "@/components/pageSections/stationManagerComponent/overview/overview-awaiting-pickup";
+import {OverviewParcelsInStorage} from "@/components/pageSections/stationManagerComponent/overview/overview-in-storage";
 import {OverviewPickupProgress} from "@/components/pageSections/stationManagerComponent/overview/overview-pickup-progress";
 import {OverviewTotalProfit} from "@/components/pageSections/stationManagerComponent/overview/overview-total-profit";
 import {OverviewTrends} from "@/components/pageSections/stationManagerComponent/overview/overview-trends";
@@ -31,7 +31,7 @@ const StationManagerOverviewPage = () => {
                 <Grid container spacing={2} justifyContent="space-evenly">
                     <Grid item xs={12} sm={6} lg={3}>
                         <Paper elevation={12} sx={{height: '100%'}}>
-                            <OverviewAwaitingReceipt
+                            <OverviewParcelsAwaitingPickUp
                                 difference={12}
                                 positive
                                 sx={{height: '100%'}}
@@ -41,7 +41,7 @@ const StationManagerOverviewPage = () => {
                     </Grid>
                     <Grid item xs={12} sm={6} lg={3}>
                         <Paper elevation={12} sx={{height: '100%'}}>
-                            <OverviewInStorage
+                            <OverviewParcelsInStorage
                                 difference={16}
                                 positive={false}
                                 sx={{height: '100%'}}

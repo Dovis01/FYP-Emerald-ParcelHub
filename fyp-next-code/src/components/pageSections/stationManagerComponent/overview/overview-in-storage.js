@@ -4,7 +4,7 @@ import ArrowUpIcon from '@heroicons/react/24/solid/ArrowUpIcon';
 import WarehouseIcon from '@mui/icons-material/Warehouse';
 import { Avatar, Card, CardContent, Stack, SvgIcon, Typography } from '@mui/material';
 
-export const OverviewInStorage = (props) => {
+export const OverviewParcelsInStorage = (props) => {
   const { difference, positive = false, sx, value } = props;
 
   return (
@@ -21,7 +21,7 @@ export const OverviewInStorage = (props) => {
               color="text.secondary"
               variant="overline"
             >
-              In Storage
+              No of parcels in storage
             </Typography>
             <Typography variant="h4">
               {value}
@@ -77,7 +77,7 @@ export const OverviewInStorage = (props) => {
   );
 };
 
-OverviewInStorage.propTypes = {
+OverviewParcelsInStorage.propTypes = {
   difference: PropTypes.number,
   positive: PropTypes.bool,
   value: PropTypes.string.isRequired,

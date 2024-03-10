@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import {Box, Container, Stack, Typography, Unstable_Grid2 as Grid} from '@mui/material';
 import MainPageLayout from "@/components/layouts/mainPageLayout";
-import {JsonDataDisplay} from "@/components/pageSections/adminComponent/ecommerce-Data-Display";
+import {JsonDataDisplay} from "@/components/pageSections/adminComponent/ecommerce-data-display";
 
 
 const ECommerceOrderOverviewPage = () => {

@@ -4,7 +4,7 @@ import ArrowUpIcon from '@heroicons/react/24/solid/ArrowUpIcon';
 import DomainAddIcon from '@mui/icons-material/DomainAdd';
 import { Avatar, Card, CardContent, Stack, SvgIcon, Typography } from '@mui/material';
 
-export const OverviewAwaitingReceipt = (props) => {
+export const OverviewParcelsAwaitingPickUp = (props) => {
   const { difference, positive = false, sx, value } = props;
 
   return (
@@ -21,7 +21,7 @@ export const OverviewAwaitingReceipt = (props) => {
               color="text.secondary"
               variant="overline"
             >
-              Awaiting Receipt
+              No of parcels awaiting pickup
             </Typography>
             <Typography variant="h4">
               {/*{value}*/}660
@@ -77,7 +77,7 @@ export const OverviewAwaitingReceipt = (props) => {
   );
 };
 
-OverviewAwaitingReceipt.prototypes = {
+OverviewParcelsAwaitingPickUp.prototypes = {
   difference: PropTypes.number,
   positive: PropTypes.bool,
   sx: PropTypes.object,
