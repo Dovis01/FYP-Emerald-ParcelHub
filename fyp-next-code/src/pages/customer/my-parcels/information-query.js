@@ -1,6 +1,10 @@
 import MainPageLayout from "@/components/layouts/mainPageLayout";
 import Head from "next/head";
 import {Box, Container, Stack, Typography, Unstable_Grid2 as Grid} from "@mui/material";
+import {PickupGoogleMapDisplay} from "@/components/pageSections/customerComponent/info-query/pickup-map-display";
+import {
+    ParcelQueryInfoDataDisplay
+} from "@/components/pageSections/customerComponent/info-query/parcels-queryInfo-data-display";
 
 
 const MyParcelsInformationQuery = () => {
@@ -24,18 +28,37 @@ const MyParcelsInformationQuery = () => {
                         <Typography variant="h4">
                             Parcels Information Query
                         </Typography>
-                        <Grid
-                            container
-                            spacing={3}
+                        <Box
+                            sx={{
+                                width: '173.3vh', height: '100%',
+                                boxShadow: 20,
+                                bgcolor: 'customized.grey',
+                                overflow: 'hidden',
+                                border: 6,
+                                borderColor: 'primary.main',
+                                borderRadius: 1.2
+                            }}
                         >
                             <Grid
-                                xs={12}
-                                md={12}
-                                lg={12}
+                                container
+                                spacing={2.5}
                             >
-
+                                <Grid
+                                    xs={12}
+                                    md={12}
+                                    lg={12}
+                                >
+                                    <PickupGoogleMapDisplay/>
+                                </Grid>
+                                <Grid
+                                    xs={12}
+                                    md={12}
+                                    lg={12}
+                                >
+                                    <ParcelQueryInfoDataDisplay/>
+                                </Grid>
                             </Grid>
-                        </Grid>
+                        </Box>
                     </Stack>
                 </Container>
             </Box>

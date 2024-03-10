@@ -1,16 +1,17 @@
 import MainPageLayout from "@/components/layouts/mainPageLayout";
 import Head from "next/head";
 import {Box, Container, Stack, Typography, Unstable_Grid2 as Grid} from "@mui/material";
-import {GoogleMapDisplay} from "@/components/pageSections/customerComponent/delivery-progress/myParcels-map-display";
-import {ParcelDeliveryProgressDataDisplay} from "@/components/pageSections/customerComponent/delivery-progress/myParcels-progress-data-display";
+import {useAuthContext} from "@/contexts/auth-context";
+import {MyOrdersDataDisplay} from "@/components/pageSections/customerComponent/myOrders-data-display";
 
 
-const MyParcelsDeliveryProgress = () => {
+const MyOrdersPage = () => {
+    const auth = useAuthContext();
     return (
         <>
             <Head>
                 <title>
-                    Delivery Progress | My Parcels
+                    My Orders | {auth.currentUsername}
                 </title>
             </Head>
             <Box
@@ -24,7 +25,7 @@ const MyParcelsDeliveryProgress = () => {
                 <Container>
                     <Stack spacing={3}>
                         <Typography variant="h4">
-                            Parcels Delivery Progress
+                            My Orders
                         </Typography>
                         <Box
                             sx={{
@@ -37,25 +38,18 @@ const MyParcelsDeliveryProgress = () => {
                                 borderRadius: 1.2
                             }}
                         >
-                        <Grid
-                            container
-                            spacing={2.5}
-                        >
                             <Grid
-                                xs={12}
-                                md={12}
-                                lg={12}
+                                container
+                                spacing={2.5}
                             >
-                                <GoogleMapDisplay />
+                                <Grid
+                                    xs={12}
+                                    md={12}
+                                    lg={12}
+                                >
+                                    <MyOrdersDataDisplay />
+                                </Grid>
                             </Grid>
-                            <Grid
-                                xs={12}
-                                md={12}
-                                lg={12}
-                            >
-                                <ParcelDeliveryProgressDataDisplay />
-                            </Grid>
-                        </Grid>
                         </Box>
                     </Stack>
                 </Container>
@@ -64,10 +58,10 @@ const MyParcelsDeliveryProgress = () => {
     )
 }
 
-MyParcelsDeliveryProgress.getLayout = (page) => (
+MyOrdersPage.getLayout = (page) => (
     <MainPageLayout>
         {page}
     </MainPageLayout>
 );
 
-export default MyParcelsDeliveryProgress;
+export default MyOrdersPage;
