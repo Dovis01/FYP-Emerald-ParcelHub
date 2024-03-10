@@ -27,7 +27,7 @@ public class CourierDeliveryRecord implements Serializable {
 
     private Integer parcelId;
 
-    private Integer trunkId;
+    private Integer truckId;
 
     @Override
     public String toString() {
@@ -35,7 +35,7 @@ public class CourierDeliveryRecord implements Serializable {
         "courierDeliveryRecordId = " + courierDeliveryRecordId +
         ", courierId = " + courierId +
         ", parcelId = " + parcelId +
-        ", trunkId = " + trunkId +
+        ", truckId = " + truckId +
         "}";
     }
 }

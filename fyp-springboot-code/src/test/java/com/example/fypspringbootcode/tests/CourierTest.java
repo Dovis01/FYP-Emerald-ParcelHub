@@ -24,7 +24,7 @@ public class CourierTest extends ServiceImpl<CourierMapper, Courier> {
     public void insertData() {
         Courier courier = new Courier();
         courier.setEmployeeId(2);
-        courier.setDailyDeliveryParcelsNum(14);
+        courier.setDailyDistributionParcelsNum(14);
         try {
             baseMapper.insert(courier);
         } catch (DuplicateKeyException e) {

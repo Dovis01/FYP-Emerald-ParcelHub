@@ -12,6 +12,7 @@ import com.example.fypspringbootcode.exception.ServiceException;
 import com.example.fypspringbootcode.mapper.CourierMapper;
 import com.example.fypspringbootcode.service.ICourierService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.fypspringbootcode.service.ITruckService;
 import com.example.fypspringbootcode.utils.FypProjectUtils;
 import com.example.fypspringbootcode.utils.TokenUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -38,6 +39,9 @@ public class CourierServiceImpl extends ServiceImpl<CourierMapper, Courier> impl
 
     @Autowired
     private CourierDeliveryRecordServiceImpl courierDeliveryRecordService;
+
+    @Autowired
+    private ITruckService truckService;
 
 
     @Override
@@ -88,16 +92,20 @@ public class CourierServiceImpl extends ServiceImpl<CourierMapper, Courier> impl
     @Transactional
     @Override
     public void register(RegisterEmployeeRoleRequest registerRequest) {
+        Integer truckId = truckService.allocateTruckIdToCourier();
+        truckService.disableTruck(truckId);
         Integer accountId = registeredAccountService.createRegisteredAccount(registerRequest);
         CompanyEmployee companyEmployee = companyEmployeeService.checkCompanyEmployee(registerRequest);
-        companyEmployeeService.initializeRoleInfo(companyEmployee,accountId, "Courier");
+        companyEmployeeService.initializeRoleInfo(registerRequest,companyEmployee,accountId, "Courier");
         Courier newCourier = new Courier();
         newCourier.setEmployeeId(companyEmployee.getEmployeeId());
+        newCourier.setTruckId(truckId);
+        newCourier.setWorkType(registerRequest.getWorkType());
         try {
             save(newCourier);
         } catch (Exception e) {
             log.error("The mybatis has failed to insert the new courier and its employeeId is {}", companyEmployee.getEmployeeId(),e);
-            throw new ServiceException(ERROR_CODE_500, "The internal system is error.");
+            throw new ServiceException(ERROR_CODE_500, "This employee code has been registered by another courier.");
         }
     }
 
@@ -160,10 +168,10 @@ public class CourierServiceImpl extends ServiceImpl<CourierMapper, Courier> impl
     @Override
     public Courier updateInfoByAdmin(Courier courier, Integer courierId) {
         courier.setCourierId(courierId);
-        if(courier.getTrunkId() != null){
-            Courier matchedCourier = FypProjectUtils.getEntityByCondition(Courier::getTrunkId, courier.getTrunkId(), baseMapper);
+        if(courier.getTruckId() != null){
+            Courier matchedCourier = FypProjectUtils.getEntityByCondition(Courier::getTruckId, courier.getTruckId(), baseMapper);
             if (matchedCourier != null && !matchedCourier.getCourierId().equals(courierId)){
-                throw new ServiceException(ERROR_CODE_401, "The trunk id has been used by another courier.");
+                throw new ServiceException(ERROR_CODE_401, "The truck id has been used by another courier.");
             }
         }
 

@@ -5,15 +5,20 @@
     <select id="checkCourierLoginAccount" resultType="com.example.fypspringbootcode.controller.dto.LoginCourierDTO">
         SELECT c.courier_id,
         c.employee_id,
-        c.daily_delivery_parcels_num,
-        t.trunk_type,
-        t.trunk_plate_number,
+        c.work_type,
+        c.daily_distribution_parcels_num,
+        t.truck_type,
+        t.truck_plate_number,
         t.max_weight,
+        t.storage_area_height,
+        t.storage_area_width,
+        t.storage_area_length,
         t.volume,
         e.full_name,
         e.employee_code,
         e.phone_number,
         e.avatar,
+        e.work_city,
         r.role_type,
         p.company_name,
         p.company_type,
@@ -30,8 +35,8 @@
         t_81_role_type AS r
         ON e.role_id = r.role_id
         LEFT JOIN
-        t_43_trunk AS t
-        ON c.trunk_id = t.trunk_id
+        t_43_truck AS t
+        ON c.truck_id = t.truck_id
         LEFT JOIN
         t_71_parcel_hub_company AS p
         ON e.company_id = p.company_id
@@ -51,15 +56,21 @@
     <select id="getCourierById" resultType="com.example.fypspringbootcode.controller.dto.LoginCourierDTO">
         SELECT c.courier_id,
         c.employee_id,
-        c.daily_delivery_parcels_num,
-        t.trunk_type,
-        t.trunk_plate_number,
+        c.work_type,
+        c.daily_distribution_parcels_num,
+        c.courier_status,
+        t.truck_type,
+        t.truck_plate_number,
         t.max_weight,
+        t.storage_area_height,
+        t.storage_area_width,
+        t.storage_area_length,
         t.volume,
         e.full_name,
         e.employee_code,
         e.phone_number,
         e.avatar,
+        e.work_city,
         r.role_type,
         p.company_name,
         p.company_type,
@@ -76,8 +87,8 @@
         t_81_role_type AS r
         ON e.role_id = r.role_id
         LEFT JOIN
-        t_43_trunk AS t
-        ON c.trunk_id = t.trunk_id
+        t_43_truck AS t
+        ON c.truck_id = t.truck_id
         LEFT JOIN
         t_71_parcel_hub_company AS p
         ON e.company_id = p.company_id
