@@ -7,11 +7,11 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  *
  * @author Shijin Zhang
- * @since 2024-03-02
+ * @since 2024-03-03
  */
 @CrossOrigin
 @RestController
-@RequestMapping("/orderDetails")
-public class OrderDetailsController {
+@RequestMapping("/parcelStationShelf")
+public class ParcelStationShelfController {
 
 }
