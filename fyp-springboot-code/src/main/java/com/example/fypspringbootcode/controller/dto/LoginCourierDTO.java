@@ -2,6 +2,8 @@ package com.example.fypspringbootcode.controller.dto;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 /**
  * @title:FinalYearProjectCode
  * @description:<TODO description class purpose>
@@ -14,17 +16,23 @@ public class LoginCourierDTO {
     // courier table
     private Integer courierId;
     private Integer employeeId;
-    private Integer dailyDeliveryParcelsNum;
-    // trunk table
-    private String trunkType;
-    private String trunkPlateNumber;
-    private Integer maxWeight;
-    private Integer volume;
+    private Integer dailyDistributionParcelsNum;
+    private String workType;
+    private Boolean courierStatus;
+    // truck table
+    private String truckType;
+    private String truckPlateNumber;
+    private BigDecimal maxWeight;
+    private BigDecimal storageAreaHeight;
+    private BigDecimal storageAreaLength;
+    private BigDecimal storageAreaWidth;
+    private BigDecimal volume;
     // company employee table
     private String fullName;
     private String employeeCode;
     private Integer phoneNumber;
     private String avatar;
+    private String workCity;
     private String roleType;
     // parcel hub company table
     private String companyName;

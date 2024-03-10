@@ -18,6 +18,7 @@ public class LoginStationManagerDTO {
     private Integer employeeId;
     private LocalDate startDate;
     private LocalDate endDate;
+    private Boolean stationManagerStatus;
     // parcel station table
     private Integer stationId;
     private String communityName;
@@ -29,6 +30,7 @@ public class LoginStationManagerDTO {
     private String employeeCode;
     private Integer phoneNumber;
     private String avatar;
+    private String workCity;
     private String roleType;
     // parcel hub company table
     private String companyName;

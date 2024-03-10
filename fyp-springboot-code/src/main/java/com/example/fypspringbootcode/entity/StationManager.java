@@ -33,10 +33,12 @@ public class StationManager implements Serializable {
 
     private LocalDate endDate;
 
-    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Dublin")
     private LocalDateTime registerTime;
 
     private Integer stationId;
+
+    private Boolean stationManagerStatus;
 
     @TableField(exist = false)
     private Integer accountId;

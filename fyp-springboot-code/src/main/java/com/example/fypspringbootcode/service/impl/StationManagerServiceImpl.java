@@ -56,7 +56,7 @@ public class StationManagerServiceImpl extends ServiceImpl<StationManagerMapper,
         }
 
         // check the role type
-        if(!loginStationManagerDTO.getRoleType().equals("StationManager")){
+        if(!loginStationManagerDTO.getRoleType().equals("Station-Manager")){
             throw new ServiceException(ERROR_CODE_401, "The account is not a station manager, please check it again.");
         }
 
@@ -87,14 +87,14 @@ public class StationManagerServiceImpl extends ServiceImpl<StationManagerMapper,
     public void register(RegisterEmployeeRoleRequest registerRequest) {
         Integer accountId = registeredAccountService.createRegisteredAccount(registerRequest);
         CompanyEmployee companyEmployee = companyEmployeeService.checkCompanyEmployee(registerRequest);
-        companyEmployeeService.initializeRoleInfo(companyEmployee,accountId, "StationManager");
+        companyEmployeeService.initializeRoleInfo(registerRequest,companyEmployee,accountId, "Station-Manager");
         StationManager newStationManager = new StationManager();
         newStationManager.setEmployeeId(companyEmployee.getEmployeeId());
         try {
             save(newStationManager);
         } catch (Exception e) {
             log.error("The mybatis has failed to insert the new station manager and its employeeId is {}", companyEmployee.getEmployeeId(),e);
-            throw new ServiceException(ERROR_CODE_500, "The internal system is error.");
+            throw new ServiceException(ERROR_CODE_500, "This employee code has been registered by another station manager.");
         }
     }
 
