@@ -10,4 +10,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IParcelStationService extends IService<ParcelStation> {
 
+    Integer allocateParcelStation(String customerAddress);
+
 }

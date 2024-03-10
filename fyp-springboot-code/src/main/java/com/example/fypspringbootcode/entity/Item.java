@@ -7,6 +7,7 @@ import lombok.Data;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  *
@@ -23,13 +24,15 @@ public class Item implements Serializable {
     @TableId(value = "item_id", type = IdType.AUTO)
     private Integer itemId;
 
-    private String description;
+    private String descriptionInfo;
 
     private Integer quantity;
 
     private String errorInfo;
 
-    private Integer weight;
+    private BigDecimal weight;
+
+    private BigDecimal price;
 
     private Integer parcelId;
 
@@ -37,10 +40,11 @@ public class Item implements Serializable {
     public String toString() {
         return "Item{" +
         "itemId = " + itemId +
-        ", description = " + description +
+        ", description = " + descriptionInfo +
         ", quantity = " + quantity +
         ", errorInfo = " + errorInfo +
         ", weight = " + weight +
+        ", price = " + price +
         ", parcelId = " + parcelId +
         "}";
     }

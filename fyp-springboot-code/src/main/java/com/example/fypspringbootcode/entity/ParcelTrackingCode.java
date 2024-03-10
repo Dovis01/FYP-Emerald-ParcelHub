@@ -11,7 +11,7 @@ import java.io.Serializable;
 /**
  *
  * @author Shijin Zhang
- * @since 2024-03-02
+ * @since 2024-03-10
  */
 @Data
 @TableName("t_56_parcel_tracking_code")

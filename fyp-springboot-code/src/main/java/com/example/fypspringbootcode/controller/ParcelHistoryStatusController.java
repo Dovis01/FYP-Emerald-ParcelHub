@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @CrossOrigin
 @RestController
-@RequestMapping("/parcelTrackingCode")
-public class ParcelTrackingCodeController {
+@RequestMapping("/parcelHistoryStatus")
+public class ParcelHistoryStatusController {
 
 }

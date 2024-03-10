@@ -1,12 +1,15 @@
 package com.example.fypspringbootcode.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
  *
@@ -23,9 +26,18 @@ public class Parcel implements Serializable {
     @TableId(value = "parcel_id", type = IdType.AUTO)
     private Integer parcelId;
 
-    private Integer volume;
+    @TableField(exist = false)
+    private String parcelTrackingCode;
 
-    private Integer weight;
+    private BigDecimal length;
+
+    private BigDecimal width;
+
+    private BigDecimal height;
+
+    private BigDecimal volume;
+
+    private BigDecimal weight;
 
     private String errorInfo;
 
@@ -36,6 +48,9 @@ public class Parcel implements Serializable {
     private Integer senderId;
 
     private Integer shelfId;
+
+    @TableField(exist = false)
+    private List<Item> items;
 
     @Override
     public String toString() {

@@ -25,11 +25,11 @@ public class ParcelStation implements Serializable {
 
     private String communityName;
 
+    private String city;
+
     private String address;
 
     private Integer shelvesTotalNumber;
-
-    private Integer parcelTotalNumber;
 
     @Override
     public String toString() {
@@ -38,7 +38,6 @@ public class ParcelStation implements Serializable {
         ", communityName = " + communityName +
         ", address = " + address +
         ", shelvesNumber = " + shelvesTotalNumber +
-        ", parcelTotalNumber = " + parcelTotalNumber +
         "}";
     }
 }
