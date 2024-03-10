@@ -11,6 +11,7 @@ fyp-next-code/node_modules
 
 # next.js
 fyp-next-code/.next/
+fyp-next-code/.env
 /out/
 
 # production

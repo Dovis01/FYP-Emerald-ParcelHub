@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import {Box, Container, Stack, Typography, Unstable_Grid2 as Grid} from '@mui/material';
 import MainPageLayout from "@/components/layouts/mainPageLayout";
-import {JSONDataFileUpload} from "@/components/pageSections/adminComponent/ecommerce-Json-Upload";
+import {JSONDataFileUpload} from "@/components/pageSections/adminComponent/ecommerce-json-upload";
 import {uploadEcommerceSimulationData} from "@/api/springboot-api";
 import {toast} from "react-toastify";
 
