@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.google.gson.JsonArray;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -17,6 +18,12 @@ public interface IParcelService extends IService<Parcel> {
     void addParcelsInfoInBatch(JsonArray ecommerceJsonData);
 
     ArrayList<Map<String, Object>> getParcelDataByCustomerId(Integer customerId);
+
+    List<Parcel> getAllParcelsToBeCollected();
+
+    List<Parcel> getAllParcelsToBeDelivered();
+
+    Parcel getOneParcelFullInfo(Integer parcelId);
 
     void deleteAllParcelsData();
 

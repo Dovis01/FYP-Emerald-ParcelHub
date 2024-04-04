@@ -2,4 +2,40 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.fypspringbootcode.mapper.ParcelMapper">
 
+    <select id="getParcelsToBeCollectedSortedByOrderDate" resultType="com.example.fypspringbootcode.entity.Parcel">
+        SELECT p.*
+        FROM t_51_parcel p
+        LEFT JOIN t_61_order o ON p.order_id = o.order_id
+        <where>
+            <if test="parcelIdsToBeCollected != null and !parcelIdsToBeCollected.isEmpty()">
+                AND p.parcel_id NOT IN
+                <foreach item="id" collection="parcelIdsToBeCollected" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
+        </where>
+        ORDER BY o.order_date ASC
+    </select>
+
+    <select id="getParcelsToBeDeliveredSortedByOrderDate" resultType="com.example.fypspringbootcode.entity.Parcel">
+        SELECT p.*
+        FROM t_51_parcel p
+        LEFT JOIN t_61_order o ON p.order_id = o.order_id
+        <where>
+            <if test="parcelIdsToBeDelivered.isEmpty and !parcelIdsInParcelHub.isEmpty">
+                AND p.parcel_id IN
+                <foreach item="id" collection="parcelIdsInParcelHub" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
+            <if test="!parcelIdsToBeDelivered.isEmpty">
+                AND p.parcel_id NOT IN
+                <foreach item="id" collection="parcelIdsToBeDelivered" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
+        </where>
+        ORDER BY o.order_date ASC
+    </select>
+
 </mapper>

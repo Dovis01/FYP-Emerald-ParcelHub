@@ -24,6 +24,11 @@ import static com.example.fypspringbootcode.common.ErrorCodeList.ERROR_CODE_500;
 public class ItemServiceImpl extends ServiceImpl<ItemMapper, Item> implements IItemService {
 
     @Override
+    public List<Item> getItemsDataByParcelId(Integer parcelId) {
+        return lambdaQuery().eq(Item::getParcelId, parcelId).list();
+    }
+
+    @Override
     public void addParcelItemsInfoInBatch(JsonArray itemsData, Integer parcelId) {
         List<Item> itemList = new ArrayList<>();
         for (JsonElement element : itemsData) {

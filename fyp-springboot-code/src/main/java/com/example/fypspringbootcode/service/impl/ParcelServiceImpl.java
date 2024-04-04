@@ -1,17 +1,16 @@
 package com.example.fypspringbootcode.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.example.fypspringbootcode.controller.dto.ParcelInfoDTO;
 import com.example.fypspringbootcode.entity.*;
 import com.example.fypspringbootcode.exception.ServiceException;
 import com.example.fypspringbootcode.mapper.*;
-import com.example.fypspringbootcode.service.IItemService;
-import com.example.fypspringbootcode.service.IParcelService;
+import com.example.fypspringbootcode.service.*;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.example.fypspringbootcode.service.IParcelStationService;
-import com.example.fypspringbootcode.service.IParcelTrackingCodeService;
 import com.example.fypspringbootcode.utils.FypProjectUtils;
 import com.google.gson.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,14 +21,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static com.example.fypspringbootcode.common.ErrorCodeList.ERROR_CODE_400;
-import static com.example.fypspringbootcode.common.ErrorCodeList.ERROR_CODE_500;
+import static com.example.fypspringbootcode.common.ErrorCodeList.*;
 
 /**
  * @author Shijin Zhang
  * @since 2024-03-02
  */
 @Service
+@Slf4j
 public class ParcelServiceImpl extends ServiceImpl<ParcelMapper, Parcel> implements IParcelService {
 
     @Autowired
@@ -39,7 +38,16 @@ public class ParcelServiceImpl extends ServiceImpl<ParcelMapper, Parcel> impleme
     private IParcelTrackingCodeService parcelTrackingCodeService;
 
     @Autowired
+    private IParcelHistoryStatusService parcelHistoryStatusService;
+
+    @Autowired
     private IParcelStationService parcelStationService;
+
+    @Autowired
+    private ICourierService courierService;
+
+    @Autowired
+    private CourierCollectionRecordMapper courierCollectionRecordMapper;
 
     @Autowired
     private SenderMapper senderMapper;
@@ -62,6 +70,15 @@ public class ParcelServiceImpl extends ServiceImpl<ParcelMapper, Parcel> impleme
     @Autowired
     private ParcelTrackingCodeMapper parcelTrackingCodeMapper;
 
+    @Autowired
+    private ParcelHubCompanyMapper parcelHubCompanyMapper;
+
+    @Autowired
+    private StationManagerMapper stationManagerMapper;
+
+    @Autowired
+    private CompanyEmployeeMapper companyEmployeeMapper;
+
     @Override
     public void addParcelsInfoInBatch(JsonArray ecommerceJsonData) {
 
@@ -70,6 +87,7 @@ public class ParcelServiceImpl extends ServiceImpl<ParcelMapper, Parcel> impleme
             JsonObject parcel = element.getAsJsonObject().get("parcel").getAsJsonObject();
             String senderName = element.getAsJsonObject().get("sender").getAsJsonObject().get("name").getAsString();
             String customerAddress = element.getAsJsonObject().get("customer").getAsJsonObject().get("address").getAsString();
+            Integer emeraldCompanyId = element.getAsJsonObject().get("express_delivery_company").getAsJsonObject().get("hub_id").getAsInt();
             Integer parcelStationId = parcelStationService.allocateParcelStation(customerAddress);
             Integer senderId = FypProjectUtils.getEntityByCondition(Sender::getFullName, senderName, senderMapper).getSenderId();
             Integer orderId = element.getAsJsonObject().get("order_id").getAsInt();
@@ -89,6 +107,7 @@ public class ParcelServiceImpl extends ServiceImpl<ParcelMapper, Parcel> impleme
             newParcel.setWidth(parcelWidth);
             newParcel.setHeight(parcelHeight);
             newParcel.setStationId(parcelStationId);
+            newParcel.setEmeraldCompanyId(emeraldCompanyId);
 
             try {
                 save(newParcel);
@@ -121,6 +140,44 @@ public class ParcelServiceImpl extends ServiceImpl<ParcelMapper, Parcel> impleme
             jsonMapArray.add(map);
         }
         return jsonMapArray;
+    }
+
+    @Override
+    public List<Parcel> getAllParcelsToBeCollected() {
+        List<Integer> parcelIdsToBeCollected = parcelHistoryStatusService.getParcelIdsByStatusInfo("To be collected");
+        // select parcels by LEFT JOIN and sort by order date
+        List<Parcel> parcels = baseMapper.getParcelsToBeCollectedSortedByOrderDate(parcelIdsToBeCollected);
+
+        if (parcels.isEmpty()) {
+            throw new ServiceException(ERROR_CODE_404, "No parcels to be collected, all parcels have been ToBeCollected.");
+        }
+        return parcels;
+    }
+
+    @Override
+    public List<Parcel> getAllParcelsToBeDelivered() {
+        List<Integer> parcelIdsToBeDelivered = parcelHistoryStatusService.getParcelIdsByStatusInfo("To be delivered");
+        List<Integer> parcelIdsInParcelHub = parcelHistoryStatusService.getParcelIdsByStatusInfo("In parcel hub");
+
+        // The two lists are empty, then throw exception
+        if (parcelIdsToBeDelivered.isEmpty() && parcelIdsInParcelHub.isEmpty()) {
+            throw new ServiceException(ERROR_CODE_404, "No parcels in parcel hub to be delivered.");
+        }
+
+        // Call the custom query method by LEFT JOIN and sort by order date
+        List<Parcel> parcels = baseMapper.getParcelsToBeDeliveredSortedByOrderDate(parcelIdsToBeDelivered, parcelIdsInParcelHub);
+        if (parcels.isEmpty()) {
+            throw new ServiceException(ERROR_CODE_404, "No parcels to be delivered, all parcels have been ToBeDelivered.");
+        }
+        return parcels;
+    }
+
+    @Override
+    public Parcel getOneParcelFullInfo(Integer parcelId) {
+        Parcel parcel = getById(parcelId);
+        parcel.setParcelTrackingCode(parcelTrackingCodeMapper.selectOne(Wrappers.<ParcelTrackingCode>lambdaQuery().eq(ParcelTrackingCode::getParcelId, parcelId)).getParcelTrackingCode());
+        parcel.setItems(itemService.getItemsDataByParcelId(parcelId));
+        return parcel;
     }
 
     @Override
@@ -158,10 +215,19 @@ public class ParcelServiceImpl extends ServiceImpl<ParcelMapper, Parcel> impleme
             parcelInfoDTO.setCustomer(customer);
             // get sender related info
             parcelInfoDTO.setSender(senderMapper.selectById(data.getSenderId()));
+            // get parcel history status related info
+            parcelInfoDTO.setParcelHistoryStatusList(parcelHistoryStatusService.getParcelHistoryStatusListByParcelId(data.getParcelId()));
+            // get parcel hub company related info
+            parcelInfoDTO.setParcelHubCompany(parcelHubCompanyMapper.selectById(data.getEmeraldCompanyId()));
+            // get courier related info
+            parcelInfoDTO.setCourier(courierService.getOneCourierFullObjectInfo(courierCollectionRecordMapper.getCourierIdByParcelId(data.getParcelId())));
             // get parcel station related info
             parcelInfoDTO.setParcelStation(parcelStationMapper.selectById(data.getStationId()));
             // get parcel station shelf related info
             parcelInfoDTO.setParcelStationShelf(parcelStationShelfMapper.selectById(data.getShelfId()));
+            // get parcel station manager related info
+            Integer companyEmployeeId = stationManagerMapper.selectOne(Wrappers.<StationManager>lambdaQuery().select(StationManager::getEmployeeId).eq(StationManager::getStationId, data.getStationId())).getEmployeeId();
+            parcelInfoDTO.setParcelStationManager(companyEmployeeMapper.selectById(companyEmployeeId));
             String jsonString = gson.toJson(parcelInfoDTO);
             jsonStringList.add(jsonString);
         }

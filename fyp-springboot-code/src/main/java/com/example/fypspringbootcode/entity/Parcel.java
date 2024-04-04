@@ -43,9 +43,11 @@ public class Parcel implements Serializable {
 
     private Integer orderId;
 
-    private Integer stationId;
-
     private Integer senderId;
+
+    private Integer emeraldCompanyId;
+
+    private Integer stationId;
 
     private Integer shelfId;
 
@@ -62,6 +64,7 @@ public class Parcel implements Serializable {
         ", orderId = " + orderId +
         ", stationId = " + stationId +
         ", senderId = " + senderId +
+        ", emeraldCompanyId = " + emeraldCompanyId +
         ", shelfId = " + shelfId +
         "}";
     }
