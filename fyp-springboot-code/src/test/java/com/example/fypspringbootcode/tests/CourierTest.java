@@ -9,6 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DuplicateKeyException;
 
+import java.util.List;
+
 
 /**
  * @title:FinalYearProjectCode
@@ -24,12 +26,21 @@ public class CourierTest extends ServiceImpl<CourierMapper, Courier> {
     public void insertData() {
         Courier courier = new Courier();
         courier.setEmployeeId(2);
-        courier.setDailyDistributionParcelsNum(14);
+        courier.setDailyMaxDistributionParcelsNum(14);
         try {
             baseMapper.insert(courier);
         } catch (DuplicateKeyException e) {
             log.error("Fail to insert data, courier:{}", courier.getCourierId(), e);
             throw new ServiceException("Company name already exists");
+        }
+    }
+
+    @Test
+    public void test() {
+        List<Courier> couriers = list();
+        for (Courier courier : couriers) {
+            courier.setRemainingParcelsNumToDistribute(courier.getDailyMaxDistributionParcelsNum());
+            updateById(courier);
         }
     }
 }

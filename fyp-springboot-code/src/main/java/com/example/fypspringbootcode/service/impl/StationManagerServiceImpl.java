@@ -7,8 +7,10 @@ import com.example.fypspringbootcode.controller.dto.LoginStationManagerDTO;
 import com.example.fypspringbootcode.controller.request.LoginRequest;
 import com.example.fypspringbootcode.controller.request.RegisterEmployeeRoleRequest;
 import com.example.fypspringbootcode.entity.CompanyEmployee;
+import com.example.fypspringbootcode.entity.ParcelHubCompany;
 import com.example.fypspringbootcode.entity.StationManager;
 import com.example.fypspringbootcode.exception.ServiceException;
+import com.example.fypspringbootcode.mapper.ParcelHubCompanyMapper;
 import com.example.fypspringbootcode.mapper.StationManagerMapper;
 import com.example.fypspringbootcode.service.IStationManagerService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -36,6 +38,12 @@ public class StationManagerServiceImpl extends ServiceImpl<StationManagerMapper,
 
     @Autowired
     private CompanyEmployeeServiceImpl companyEmployeeService;
+
+    @Autowired
+    private ParcelStationServiceImpl parcelStationService;
+
+    @Autowired
+    private ParcelHubCompanyMapper parcelHubCompanyMapper;
 
     @Override
     public LoginStationManagerDTO login(LoginRequest loginRequest) {
@@ -88,13 +96,15 @@ public class StationManagerServiceImpl extends ServiceImpl<StationManagerMapper,
         Integer accountId = registeredAccountService.createRegisteredAccount(registerRequest);
         CompanyEmployee companyEmployee = companyEmployeeService.checkCompanyEmployee(registerRequest);
         companyEmployeeService.initializeRoleInfo(registerRequest,companyEmployee,accountId, "Station-Manager");
+        ParcelHubCompany parcelHubCompany = parcelHubCompanyMapper.selectById(companyEmployee.getCompanyId());
         StationManager newStationManager = new StationManager();
         newStationManager.setEmployeeId(companyEmployee.getEmployeeId());
+        newStationManager.setStationId(parcelStationService.allocateParcelStationToManager(parcelHubCompany.getCity()));
         try {
             save(newStationManager);
         } catch (Exception e) {
             log.error("The mybatis has failed to insert the new station manager and its employeeId is {}", companyEmployee.getEmployeeId(),e);
-            throw new ServiceException(ERROR_CODE_500, "This employee code has been registered by another station manager.");
+            throw new ServiceException(ERROR_CODE_500, "This employee code has been registered by another station manager or the station has been assigned to another.");
         }
     }
 

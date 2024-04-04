@@ -29,7 +29,9 @@ public class Courier implements Serializable {
 
     private String workType;
 
-    private Integer dailyDistributionParcelsNum;
+    private Integer dailyMaxDistributionParcelsNum;
+
+    private Integer remainingParcelsNumToDistribute;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Dublin")
     private LocalDateTime registerTime;
@@ -39,14 +41,18 @@ public class Courier implements Serializable {
     @TableField(exist = false)
     private Integer accountId;
 
-    private boolean courierStatus = true;
+    @TableField(exist = false)
+    private CompanyEmployee employeeInfo;
+
+    private Boolean courierStatus = true;
 
     @Override
     public String toString() {
         return "Courier{" +
                 "courierId = " + courierId +
                 ", employeeId = " + employeeId +
-                ", dailyDistributionParcelsNum = " + dailyDistributionParcelsNum +
+                ", dailyMaxDistributionParcelsNum = " + dailyMaxDistributionParcelsNum +
+                ", remainingParcelsNumToDistribute = " + remainingParcelsNumToDistribute +
                 ", registeredDate = " + registerTime +
                 ", truckId = " + truckId +
                 ", status = " + courierStatus +

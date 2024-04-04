@@ -47,7 +47,7 @@ public class CourierController {
     }
 
     @GetMapping("/v1/{courierId}")
-    public Result getByFullName(@PathVariable Integer courierId) {
+    public Result getByCourierId(@PathVariable Integer courierId) {
         LoginCourierDTO courier = courierService.getByCourierId(courierId);
         return Result.success(courier , "The courier has been found successfully");
     }

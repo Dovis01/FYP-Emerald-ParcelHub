@@ -6,7 +6,9 @@
         SELECT c.courier_id,
         c.employee_id,
         c.work_type,
-        c.daily_distribution_parcels_num,
+        c.daily_max_distribution_parcels_num,
+        c.remaining_parcels_num_to_distribute,
+        c.courier_status,
         t.truck_type,
         t.truck_plate_number,
         t.max_weight,
@@ -18,10 +20,11 @@
         e.employee_code,
         e.phone_number,
         e.avatar,
-        e.work_city,
         r.role_type,
         p.company_name,
         p.company_type,
+        p.country,
+        p.city,
         a.account_id,
         a.username,
         a.email,
@@ -35,7 +38,7 @@
         t_81_role_type AS r
         ON e.role_id = r.role_id
         LEFT JOIN
-        t_43_truck AS t
+        t_44_truck AS t
         ON c.truck_id = t.truck_id
         LEFT JOIN
         t_71_parcel_hub_company AS p
@@ -57,7 +60,8 @@
         SELECT c.courier_id,
         c.employee_id,
         c.work_type,
-        c.daily_distribution_parcels_num,
+        c.daily_max_distribution_parcels_num,
+        c.remaining_parcels_num_to_distribute,
         c.courier_status,
         t.truck_type,
         t.truck_plate_number,
@@ -70,7 +74,6 @@
         e.employee_code,
         e.phone_number,
         e.avatar,
-        e.work_city,
         r.role_type,
         p.company_name,
         p.company_type,
@@ -87,7 +90,7 @@
         t_81_role_type AS r
         ON e.role_id = r.role_id
         LEFT JOIN
-        t_43_truck AS t
+        t_44_truck AS t
         ON c.truck_id = t.truck_id
         LEFT JOIN
         t_71_parcel_hub_company AS p
