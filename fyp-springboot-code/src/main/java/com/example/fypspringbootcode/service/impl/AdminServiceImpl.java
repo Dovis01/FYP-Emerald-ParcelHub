@@ -32,7 +32,7 @@ import static com.example.fypspringbootcode.common.ErrorCodeList.ERROR_CODE_500;
 public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements IAdminService {
 
     @Autowired
-    AdminMapper adminMapper;
+    private AdminMapper adminMapper;
 
     @Override
     public List<Admin> list() {
@@ -103,7 +103,7 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
         if (!securePass.equals(admin.getPassword())) {
             throw new ServiceException(ERROR_CODE_401,"The password of admin is wrong.");
         }
-        if (!admin.isStatus()) {
+        if (!admin.getStatus()) {
             throw new ServiceException(ERROR_CODE_401,"The admin is disabled. Please contact the administrator.");
         }
     }

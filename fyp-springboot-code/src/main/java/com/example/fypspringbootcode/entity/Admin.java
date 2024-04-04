@@ -24,7 +24,7 @@ public class Admin {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Dublin")
     private LocalDateTime updateTime;
 
-    private boolean status = true;
+    private Boolean status = true;
     @Override
     public String toString() {
         return "Admin{" +
