@@ -16,7 +16,8 @@ public class LoginCourierDTO {
     // courier table
     private Integer courierId;
     private Integer employeeId;
-    private Integer dailyDistributionParcelsNum;
+    private Integer dailyMaxDistributionParcelsNum;
+    private Integer remainingParcelsNumToDistribute;
     private String workType;
     private Boolean courierStatus;
     // truck table
@@ -30,13 +31,15 @@ public class LoginCourierDTO {
     // company employee table
     private String fullName;
     private String employeeCode;
-    private Integer phoneNumber;
+    private String phoneNumber;
     private String avatar;
     private String workCity;
     private String roleType;
     // parcel hub company table
     private String companyName;
     private String companyType;
+    private String country;
+    private String city;
     // registered account table
     private String accountId;
     private String username;

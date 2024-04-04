@@ -13,6 +13,7 @@ import com.example.fypspringbootcode.mapper.RegisteredAccountMapper;
 import com.example.fypspringbootcode.service.IAdminService;
 import com.example.fypspringbootcode.service.IRegisteredAccountService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.fypspringbootcode.utils.FypProjectUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -126,21 +127,9 @@ public class RegisteredAccountServiceImpl extends ServiceImpl<RegisteredAccountM
 
     @Override
     public RegisteredAccount updateAccountInfo(RegisteredAccount registeredAccount, Integer accountId) {
+        FypProjectUtils.setEntityEmptyStringsToNull(registeredAccount);
 
-        // Check if the new account info is provided
-        if (registeredAccount.getNewPassword().isEmpty() &&
-                registeredAccount.getUsername().isEmpty() &&
-                registeredAccount.getEmail().isEmpty()) {
-            throw new ServiceException(ERROR_CODE_400, "No new account info is provided to update the account.");
-        }
-        // Set the new account info to null if it is empty
-        if (registeredAccount.getUsername().isEmpty()) {
-            registeredAccount.setUsername(null);
-        }
-        if (registeredAccount.getEmail().isEmpty()) {
-            registeredAccount.setEmail(null);
-        }
-        if (!registeredAccount.getNewPassword().isEmpty()) {
+        if (registeredAccount.getNewPassword() != null && !registeredAccount.getNewPassword().isEmpty()) {
             registeredAccount.setPassword(securePass(registeredAccount.getNewPassword()));
         }
 

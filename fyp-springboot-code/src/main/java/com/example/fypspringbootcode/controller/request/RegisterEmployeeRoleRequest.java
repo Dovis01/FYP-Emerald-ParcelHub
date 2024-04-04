@@ -14,7 +14,6 @@ import lombok.EqualsAndHashCode;
 @Data
 public class RegisterEmployeeRoleRequest extends BaseRegisterRequest{
     private String employeeCode;
-    private String workCity;
     private String workType;
 }
 

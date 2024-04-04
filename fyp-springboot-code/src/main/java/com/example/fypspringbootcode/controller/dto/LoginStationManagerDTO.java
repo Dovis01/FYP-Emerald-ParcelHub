@@ -28,13 +28,15 @@ public class LoginStationManagerDTO {
     // company employee table
     private String fullName;
     private String employeeCode;
-    private Integer phoneNumber;
+    private String phoneNumber;
     private String avatar;
     private String workCity;
     private String roleType;
     // parcel hub company table
     private String companyName;
     private String companyType;
+    private String country;
+    private String city;
     // registered account table
     private String accountId;
     private String username;
