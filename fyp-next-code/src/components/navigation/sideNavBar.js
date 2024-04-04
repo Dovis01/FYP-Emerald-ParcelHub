@@ -135,6 +135,15 @@ export const SideNavBar = (props) => {
                             >
                                 {roleMappings[authContext.user.roleType]}
                             </Typography>
+                            {authContext.user.roleType === 'Courier' ? (
+                                <Typography
+                                    color="neutral.400"
+                                    variant="body2"
+                                    sx={{mb: 0.5, ml: 0.7, mt:-0.5}}
+                                >
+                                    Work Type: {authContext.user.workType}
+                                </Typography>
+                            ) : null}
                         </div>
                         <SvgIcon
                             fontSize="small"

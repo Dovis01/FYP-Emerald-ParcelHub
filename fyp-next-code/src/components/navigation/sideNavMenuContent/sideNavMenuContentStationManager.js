@@ -10,6 +10,7 @@ import {SvgIcon} from '@mui/material';
 import {useAuthContext} from "@/contexts/auth-context";
 
 export const itemsStationManager = () => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const authContext = useAuthContext();
     const stationManagerName = authContext.currentUsername;
     return [

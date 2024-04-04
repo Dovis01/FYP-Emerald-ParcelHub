@@ -9,6 +9,7 @@ import {SvgIcon} from '@mui/material';
 import {useAuthContext} from "@/contexts/auth-context";
 
 export const itemsCustomer = () => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const authContext = useAuthContext();
     const customerName = authContext.currentUsername;
     return [
