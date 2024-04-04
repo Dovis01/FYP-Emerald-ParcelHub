@@ -4,9 +4,11 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.fypspringbootcode.entity.Truck;
 import com.example.fypspringbootcode.exception.ServiceException;
+import com.example.fypspringbootcode.mapper.OrderMapper;
 import com.example.fypspringbootcode.mapper.TruckMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
@@ -24,7 +26,7 @@ import static com.example.fypspringbootcode.common.ErrorCodeList.ERROR_CODE_500;
  **/
 @SpringBootTest
 @Slf4j
-public class TruckTest extends ServiceImpl<TruckMapper, Truck>{
+public class TruckTest extends ServiceImpl<TruckMapper, Truck> {
 
     @Test
     public void allocateTruckIdToCourier() {
@@ -37,20 +39,18 @@ public class TruckTest extends ServiceImpl<TruckMapper, Truck>{
             log.error("The deserialization of mybatis has failed for the trucks", e);
             throw new ServiceException(ERROR_CODE_500, "The internal system is error");
         }
-        if(availableTruckIds.isEmpty()){
+        if (availableTruckIds.isEmpty()) {
             System.out.println(availableTruckIds);
-        }else {
+        } else {
             System.out.println(availableTruckIds.get(0));
         }
     }
 
     @Test
     public void test() {
-        List<Truck> trucks = list();
-        for (Truck truck : trucks) {
-            truck.setTruckStatus(true);
-        }
-        updateBatchById(trucks);
+        lambdaUpdate().set(Truck::getTruckType, "Small").eq(Truck::getTruckType, "small").update();
+        lambdaUpdate().set(Truck::getTruckType, "Medium").eq(Truck::getTruckType, "medium").update();
+        lambdaUpdate().set(Truck::getTruckType, "Large").eq(Truck::getTruckType, "large").update();
     }
 
     @Test

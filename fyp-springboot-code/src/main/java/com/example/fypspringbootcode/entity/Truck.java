@@ -15,7 +15,7 @@ import java.math.BigDecimal;
  * @since 2024-02-13
  */
 @Data
-@TableName("t_43_truck")
+@TableName("t_44_truck")
 public class Truck implements Serializable {
 
     @Serial
