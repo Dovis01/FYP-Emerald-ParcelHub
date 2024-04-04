@@ -1,9 +1,9 @@
 import Head from 'next/head';
 import {Box, Container, Stack, Typography, Unstable_Grid2 as Grid} from '@mui/material';
 import MainPageLayout from "@/components/layouts/mainPageLayout";
-import {AccountProfile} from '@/components/pageSections/account/account-profile';
-import {AccountProfileDetails} from '@/components/pageSections/account/account-profile-details';
 import {useAuthContext} from "@/contexts/auth-context";
+import {AccountProfile} from "@/components/pageSections/adminComponent/account/account-profile";
+import {AccountProfileDetails} from "@/components/pageSections/adminComponent/account/account-profile-details";
 
 const AdminAccountPage = () => {
     const auth = useAuthContext();
@@ -31,7 +31,6 @@ const AdminAccountPage = () => {
                             container
                         >
                             <Grid
-                                item
                                 xs={12}
                                 md={6}
                                 lg={4}
@@ -39,7 +38,6 @@ const AdminAccountPage = () => {
                                 <AccountProfile/>
                             </Grid>
                             <Grid
-                                item
                                 xs={12}
                                 md={6}
                                 lg={8}
