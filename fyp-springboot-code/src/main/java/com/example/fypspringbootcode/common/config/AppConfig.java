@@ -20,4 +20,6 @@ public class AppConfig {
 
     public static final String DEFAULT_PASS = dotenv.get("DEFAULT_PASS");
 
+    public static final String GOOGLE_MAPS_API_KEY = dotenv.get("GOOGLE_MAPS_API_KEY");
+
 }

@@ -37,6 +37,7 @@ yarn-error.log*
 next-env.d.ts
 
 fyp-springboot-code/HELP.md
+fyp-springboot-code/.env
 .env
 target/
 !fyp-springboot-code/.mvn/wrapper/maven-wrapper.jar
