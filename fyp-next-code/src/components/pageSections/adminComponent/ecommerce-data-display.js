@@ -220,7 +220,7 @@ export const JsonDataDisplay = () => {
                     <Button
                         variant="text"
                         onClick={handleClearSelectedData}
-                        sx={{ml: 0.8, mt: 1, mb: 2.1, fontSize: '15.8px', fontWeight: 'bold'}}
+                        sx={{ml: 0.8, mt: 3, mb: 1.4, fontSize: '15.8px', fontWeight: 'bold'}}
                         startIcon={(
                             <SvgIcon fontSize="small">
                                 <DeleteForeverOutlinedIcon/>
@@ -232,7 +232,7 @@ export const JsonDataDisplay = () => {
                     <Button
                         variant="text"
                         onClick={handleClearAllData}
-                        sx={{ml: 0.8, mt: 1, mb: 2.1, fontSize: '15.8px', fontWeight: 'bold'}}
+                        sx={{ml: 0.8, mt: 3, mb: 1.4, fontSize: '15.8px', fontWeight: 'bold'}}
                         startIcon={(
                             <SvgIcon fontSize="small">
                                 <DeleteForeverOutlinedIcon/>

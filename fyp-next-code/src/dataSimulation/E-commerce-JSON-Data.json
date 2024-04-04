@@ -47,10 +47,10 @@
         "website_url": "https://www.shopsmart.ie"
       },
       "express_delivery_company": {
-        "company_name": "Emerald Parcel Hub",
-        "hub_id": "1001",
-        "location": "10 Merrion Road, Ballsbridge, Dublin, Ireland, D04 P0V6",
-        "companyType": "Headquarters"
+        "company_name": "Emerald Parcel Hub Express",
+        "hub_id": "1005",
+        "location": "22 O'Callaghan Drive, Caherdavin, Limerick, Ireland, V94 DP73",
+        "companyType": "Subsidiary"
       }
     },
     {
@@ -60,7 +60,7 @@
       "customer": {
         "name": "John Doe",
         "phone": "+353 0899238238",
-        "address": "51 Oak Way, Maryborough Ridge, Cork, Ireland, T12 Y2Q3",
+        "address": "22 Oak Drive, Maryborough Ridge, Cork, Ireland, T12 X9P7",
         "email": "johndoe223344@gmail.com"
       },
       "sender": {
@@ -100,10 +100,10 @@
         "website_url": "https://www.shopsmart.ie"
       },
       "express_delivery_company": {
-        "company_name": "Emerald Parcel Hub",
-        "hub_id": "1001",
-        "location": "10 Merrion Road, Ballsbridge, Dublin, Ireland, D04 P0V6",
-        "companyType": "Headquarters"
+        "company_name": "Emerald Parcel Hub Express",
+        "hub_id": "1005",
+        "location": "22 O'Callaghan Drive, Caherdavin, Limerick, Ireland, V94 DP73",
+        "companyType": "Subsidiary"
       }
     },
     {
@@ -153,10 +153,10 @@
         "website_url": "https://www.amarsmart.ie"
       },
       "express_delivery_company": {
-        "company_name": "Emerald Parcel Hub",
-        "hub_id": "1001",
-        "location": "10 Merrion Road, Ballsbridge, Dublin, Ireland, D04 P0V6",
-        "companyType": "Headquarters"
+        "company_name": "Emerald Parcel Hub Warehouse Cork",
+        "hub_id": "1010",
+        "location": "8 St Patrick's Street, Cork, Ireland, T12 T9ED",
+        "companyType": "Subsidiary"
       }
     },
     {
@@ -200,9 +200,9 @@
       },
       "express_delivery_company": {
         "company_name": "Emerald Parcel Hub",
-        "hub_id": "1001",
-        "location": "10 Merrion Road, Ballsbridge, Dublin, Ireland, D04 P0V6",
-        "companyType": "Headquarters"
+        "hub_id": "1007",
+        "location": "4 Parnell Street, Waterford, Ireland, X91 WR14",
+        "companyType": "Subsidiary"
       }
     },
     {
@@ -245,10 +245,10 @@
         "website_url": "https://www.gadgetshop.ie"
       },
       "express_delivery_company": {
-        "company_name": "Emerald Parcel Hub",
-        "hub_id": "1001",
-        "location": "10 Merrion Road, Ballsbridge, Dublin, Ireland, D04 P0V6",
-        "companyType": "Headquarters"
+        "company_name": "Emerald Parcel Hub Warehouse Cork",
+        "hub_id": "1010",
+        "location": "8 St Patrick's Street, Cork, Ireland, T12 T9ED",
+        "companyType": "Subsidiary"
       }
     },
     {
@@ -292,9 +292,9 @@
       },
       "express_delivery_company": {
         "company_name": "Emerald Parcel Hub",
-        "hub_id": "1001",
-        "location": "10 Merrion Road, Ballsbridge, Dublin, Ireland, D04 P0V6",
-        "companyType": "Headquarters"
+        "hub_id": "1008",
+        "location": "11 Scotch Quay, Newtown, Waterford, X91 C52K",
+        "companyType": "Subsidiary"
       }
     },
     {
@@ -337,9 +337,9 @@
         "website_url": "https://www.buynow.ie"
       },
       "express_delivery_company": {
-        "company_name": "Emerald Parcel Hub Express",
-        "hub_id": "1004",
-        "location": "32 Dame Street, Dublin, Ireland, D02 P658",
+        "company_name": "Emerald Parcel Hub Express Galway",
+        "hub_id": "1011",
+        "location": "2 Eyre Street, Galway, Ireland, H91 YY09",
         "companyType": "Subsidiary"
       }
     },
@@ -383,10 +383,10 @@
         "website_url": "https://www.techbazaar.ie"
       },
       "express_delivery_company": {
-        "company_name": "Emerald Parcel Hub Express",
-        "hub_id": "1005",
-        "location": "28 O'Connell Street Upper, Dublin, Ireland, D01 T2V6",
-        "companyType": "Subsidiary"
+        "company_name": "Emerald Parcel Hub",
+        "hub_id": "1001",
+        "location": "10 Merrion Road, Ballsbridge, Dublin, Ireland, D04 P0V6",
+        "companyType": "Headquarters"
       }
     },
     {
@@ -403,7 +403,7 @@
         "name": "Charlotte Anderson",
         "email": "charlotteanderson48@hotmail.com",
         "phone": "+353 0891369094",
-        "address": "32 Eyre Square, Galway, Ireland, H91 E8N7"
+        "address": "7 Church Street, Newport, Tipperary, Ireland, E41 YT92"
       },
       "parcel": {
         "status": "Packaged",
@@ -443,9 +443,9 @@
         "website_url": "https://www.gadgetgo.ie"
       },
       "express_delivery_company": {
-        "company_name": "Emerald Parcel Hub Express Cork ",
-        "hub_id": "1009",
-        "location": "39 South Mall, Cork, Ireland, T12 R6YE",
+        "company_name": "Emerald Parcel Hub Technology Management",
+        "hub_id": "1006",
+        "location": "61 Greenhills Road, Garryowen, Limerick, Ireland, V94 X2R9",
         "companyType": "Subsidiary"
       }
     },
@@ -503,9 +503,9 @@
         "website_url": "https://www.electroshop.ie"
       },
       "express_delivery_company": {
-        "company_name": "Emerald Parcel Hub Warehouse Waterford",
-        "hub_id": "1008",
-        "location": "11 Scotch Quay, Newtown, Waterford, X91 C52K",
+        "company_name": "Emerald Parcel Hub Warehouse Cork",
+        "hub_id": "1010",
+        "location": "8 St Patrick's Street, Cork, Ireland, T12 T9ED",
         "companyType": "Subsidiary"
       }
     },
@@ -563,10 +563,10 @@
         "website_url": "https://www.electroshop.ie"
       },
       "express_delivery_company": {
-        "company_name": "Emerald Parcel Hub Warehouse Galway",
-        "hub_id": "1012",
-        "location": "33 Eyre Square, Galway, Ireland, H91 E3E2",
-        "companyType": "Subsidiary"
+        "company_name": "Emerald Parcel Hub",
+        "hub_id": "1001",
+        "location": "10 Merrion Road, Ballsbridge, Dublin, Ireland, D04 P0V6",
+        "companyType": "Headquarters"
       }
     },
     {
@@ -623,9 +623,539 @@
         "website_url": "https://www.electroshop.ie"
       },
       "express_delivery_company": {
-        "company_name": "Emerald Parcel Hub Warehouse",
-        "hub_id": "1002",
-        "location": "12 Merrion Square North, Dublin, Ireland, D02 WR29",
+        "company_name": "Emerald Parcel Hub Express Galway",
+        "hub_id": "1011",
+        "location": "2 Eyre Street, Galway, Ireland, H91 YY09",
+        "companyType": "Subsidiary"
+      }
+    },
+    {
+      "order_id": "45612",
+      "order_date": "2024-03-05T09:00:00Z",
+      "order_status": "Packaged",
+      "customer": {
+        "name": "John Doe",
+        "phone": "+353 0899238238",
+        "address": "22 Oak Drive, Maryborough Ridge, Cork, Ireland, T12 X9P7",
+        "email": "johndoe223344@gmail.com"
+      },
+      "sender": {
+        "name": "Emily Wilson",
+        "email": "emilywilson@hotmail.com",
+        "phone": "+353 0891234567",
+        "address": "12 Main Street, Dungarvan, Waterford, Ireland, X35 YZ89"
+      },
+      "parcel": {
+        "status": "Packaged",
+        "weight": 1.0,
+        "length": 0.5,
+        "width": 0.3,
+        "height": 0.2,
+        "items": [
+          {
+            "item_id": "18901",
+            "description": "Smartwatch",
+            "quantity": 1,
+            "weight": 0.1,
+            "price": 199.99
+          },
+          {
+            "item_id": "23056",
+            "description": "Fitness Tracker",
+            "quantity": 4,
+            "weight": 0.05,
+            "price": 79.99
+          }
+        ]
+      },
+      "delivery": {
+        "expected_delivery_date": "2024-03-10T14:00:00Z"
+      },
+      "e_commerce_platform": {
+        "name": "GadgetGo",
+        "website_url": "https://www.gadgetgo.ie"
+      },
+      "express_delivery_company": {
+        "company_name": "Emerald Parcel Hub Warehouse Waterford",
+        "hub_id": "1008",
+        "location": "11 Scotch Quay, Newtown, Waterford, X91 C52K",
+        "companyType": "Subsidiary"
+      }
+    },
+    {
+      "order_id": "67891",
+      "order_date": "2024-03-10T15:30:00Z",
+      "order_status": "Packaged",
+      "customer": {
+        "name": "Frank Smith",
+        "phone": "+353 0890228338",
+        "address": "79 Oak Close, Maryborough Ridge, Cork, Ireland, T12 W8V5",
+        "email": "Frankssmith11@gmail.com"
+      },
+      "sender": {
+        "name": "Oliver Brown",
+        "email": "oliverbrown@gmail.com",
+        "phone": "+353 0891011121",
+        "address": "28 High Street, Killarney, Kerry, Ireland, V93 K2L9"
+      },
+      "parcel": {
+        "status": "Packaged",
+        "weight": 5.0,
+        "length": 2.0,
+        "width": 1.5,
+        "height": 1.2,
+        "items": [
+          {
+            "item_id": "98765",
+            "description": "Laptop",
+            "quantity": 1,
+            "weight": 2.2,
+            "price": 899.99
+          },
+          {
+            "item_id": "76543",
+            "description": "External Hard Drive",
+            "quantity": 2,
+            "weight": 1.4,
+            "price": 99.99
+          }
+        ]
+      },
+      "delivery": {
+        "expected_delivery_date": "2024-03-15T14:00:00Z"
+      },
+      "e_commerce_platform": {
+        "name": "TechBazaar",
+        "website_url": "https://www.techbazaar.ie"
+      },
+      "express_delivery_company": {
+        "company_name": "Emerald Parcel Hub Warehouse Waterford",
+        "hub_id": "1008",
+        "location": "11 Scotch Quay, Newtown, Waterford, X91 C52K",
+        "companyType": "Subsidiary"
+      }
+    },
+    {
+      "order_id": "24680",
+      "order_date": "2024-03-12T11:00:00Z",
+      "order_status": "Packaged",
+      "customer": {
+        "name": "Linda Green",
+        "phone": "+353 0899287454",
+        "address": "63 Oak Terrace, Maryborough Ridge, Cork, Ireland, T12 E9T7",
+        "email": "lindagreen69017@gmail.com"
+      },
+      "sender": {
+        "name": "Sophia Wilson",
+        "email": "sophiawilson@yahoo.com",
+        "phone": "+353 0871234567",
+        "address": "6 Main Street, Tralee, Kerry, Ireland, V92 X2Y3"
+      },
+      "parcel": {
+        "status": "Packaged",
+        "weight": 3.8,
+        "length": 1.8,
+        "width": 1.2,
+        "height": 0.8,
+        "items": [
+          {
+            "item_id": "45678",
+            "description": "Tablet",
+            "quantity": 1,
+            "weight": 0.6,
+            "price": 349.99
+          },
+          {
+            "item_id": "90123",
+            "description": "Bluetooth Speaker",
+            "quantity": 2,
+            "weight": 1.4,
+            "price": 99.99
+          }
+        ]
+      },
+      "delivery": {
+        "expected_delivery_date": "2024-03-17T14:00:00Z"
+      },
+      "e_commerce_platform": {
+        "name": "GadgetShop",
+        "website_url": "https://www.gadgetshop.ie"
+      },
+      "express_delivery_company": {
+        "company_name": "Emerald Parcel Hub Express Waterford",
+        "hub_id": "1007",
+        "location": "4 Parnell Street, Waterford, Ireland, X91 WR14",
+        "companyType": "Subsidiary"
+      }
+    },
+    {
+      "order_id": "13579",
+      "order_date": "2024-03-15T18:00:00Z",
+      "order_status": "Packaged",
+      "customer": {
+        "name": "Chris Johnson",
+        "phone": "+353 0899287455",
+        "address": "29 Ash Road, Stonebridge Cross, Galway, Ireland, H91 K5L8",
+        "email": "chrisjohnson69018@gmail.com"
+      },
+      "sender": {
+        "name": "Liam Murphy",
+        "email": "liammurphy@hotmail.com",
+        "phone": "+353 0861234567",
+        "address": "3 Main Street, Westport, Mayo, Ireland, F28 XY89"
+      },
+      "parcel": {
+        "status": "Packaged",
+        "weight": 1.8,
+        "length": 0.8,
+        "width": 0.5,
+        "height": 0.3,
+        "items": [
+          {
+            "item_id": "23456",
+            "description": "Wireless Headphones",
+            "quantity": 2,
+            "weight": 0.4,
+            "price": 99.99
+          },
+          {
+            "item_id": "67890",
+            "description": "Power Bank",
+            "quantity": 1,
+            "weight": 0.3,
+            "price": 39.99
+          }
+        ]
+      },
+      "delivery": {
+        "expected_delivery_date": "2024-03-20T14:00:00Z"
+      },
+      "e_commerce_platform": {
+        "name": "OnlineElectronics",
+        "website_url": "https://www.onlineelectronics.ie"
+      },
+      "express_delivery_company": {
+        "company_name": "Emerald Parcel Hub Express Cork",
+        "hub_id": "1009",
+        "location": "39 South Mall, Cork, Ireland, T12 R6YE",
+        "companyType": "Subsidiary"
+      }
+    },
+    {
+      "order_id": "86420",
+      "order_date": "2024-03-18T09:30:00Z",
+      "order_status": "Packaged",
+      "customer": {
+        "name": "Vodis Lmith",
+        "phone": "+353 0899287456",
+        "address": "7 Maple Avenue, Stonebridge Cross, Galway, Ireland, H91 N9Y4",
+        "email": "Vodismssmith9@gmail.com"
+      },
+      "sender": {
+        "name": "Noah Taylor",
+        "email": "noahtaylor@gmail.com",
+        "phone": "+353 0851234567",
+        "address": "21 Main Street, Galway, Ireland, H91 XY89"
+      },
+      "parcel": {
+        "status": "Packaged",
+        "weight": 2.0,
+        "length": 1.0,
+        "width": 0.6,
+        "height": 0.4,
+        "items": [
+          {
+            "item_id": "19876",
+            "description": "Gaming Mouse",
+            "quantity": 1,
+            "weight": 0.2,
+            "price": 59.99
+          },
+          {
+            "item_id": "54321",
+            "description": "Gaming Keyboard",
+            "quantity": 1,
+            "weight": 1.2,
+            "price": 99.99
+          }
+        ]
+      },
+      "delivery": {
+        "expected_delivery_date": "2024-03-23T14:00:00Z"
+      },
+      "e_commerce_platform": {
+        "name": "BuyNow",
+        "website_url": "https://www.buynow.ie"
+      },
+      "express_delivery_company": {
+        "company_name": "Emerald Parcel Hub Express Galway",
+        "hub_id": "1011",
+        "location": "2 Eyre Street, Galway, Ireland, H91 YY09",
+        "companyType": "Subsidiary"
+      }
+    },
+    {
+      "order_id": "17283",
+      "order_date": "2024-03-20T14:00:00Z",
+      "order_status": "Packaged",
+      "customer": {
+        "name": "John Plane",
+        "phone": "+353 0899287457",
+        "address": "53 Oak Way, Stonebridge Cross, Galway, Ireland, H91 X2R6",
+        "email": "johppLnea0@gmail.com"
+      },
+      "sender": {
+        "name": "Emma Davis",
+        "email": "emmadavis@yahoo.com",
+        "phone": "+353 0852414151",
+        "address": "14 Main Street, Sligo, Ireland, F91 XY89"
+      },
+      "parcel": {
+        "status": "Packaged",
+        "weight": 3.0,
+        "length": 2.0,
+        "width": 1.5,
+        "height": 1.0,
+        "items": [
+          {
+            "item_id": "12345",
+            "description": "Digital Camera",
+            "quantity": 1,
+            "weight": 0.8,
+            "price": 599.99
+          },
+          {
+            "item_id": "57090",
+            "description": "Camera Tripod",
+            "quantity": 1,
+            "weight": 1.2,
+            "price": 49.99
+          }
+        ]
+      },
+      "delivery": {
+        "expected_delivery_date": "2024-03-25T14:00:00Z"
+      },
+      "e_commerce_platform": {
+        "name": "TechBazaar",
+        "website_url": "https://www.techbazaar.ie"
+      },
+      "express_delivery_company": {
+        "company_name": "Emerald Parcel Hub Express",
+        "hub_id": "1005",
+        "location": "22 O'Callaghan Drive, Caherdavin, Limerick, Ireland, V94 DP73",
+        "companyType": "Subsidiary"
+      }
+    },
+    {
+      "order_id": "95713",
+      "order_date": "2024-03-22T11:15:00Z",
+      "order_status": "Packaged",
+      "customer": {
+        "name": "Alex Murphy",
+        "phone": "+353 0899204683",
+        "address": "34 Willow Grove, Stonebridge Cross, Galway, Ireland, H91 P7Y1",
+        "email": "Alexcurphy43704@gmail.com"
+      },
+      "sender": {
+        "name": "Isabella Thompson",
+        "email": "isabellathompson@hotmail.com",
+        "phone": "+353 0871234568",
+        "address": "21 Main Street, Adare, Limerick, Ireland, V94 RX66"
+      },
+      "parcel": {
+        "status": "Packaged",
+        "weight": 2.1,
+        "length": 3.0,
+        "width": 2.0,
+        "height": 1.5,
+        "items": [
+          {
+            "item_id": "24670",
+            "description": "Drone",
+            "quantity": 1,
+            "weight": 1.2,
+            "price": 799.99
+          },
+          {
+            "item_id": "13679",
+            "description": "Drone Remote Controller",
+            "quantity": 1,
+            "weight": 0.3,
+            "price": 99.99
+          }
+        ]
+      },
+      "delivery": {
+        "expected_delivery_date": "2024-03-27T14:00:00Z"
+      },
+      "e_commerce_platform": {
+        "name": "GadgetGo",
+        "website_url": "https://www.gadgetgo.ie"
+      },
+      "express_delivery_company": {
+        "company_name": "Emerald Parcel Hub Technology Management",
+        "hub_id": "1006",
+        "location": "61 Greenhills Road, Garryowen, Limerick, Ireland, V94 X2R9",
+        "companyType": "Subsidiary"
+      }
+    },
+    {
+      "order_id": "38564",
+      "order_date": "2024-03-25T16:30:00Z",
+      "order_status": "Packaged",
+      "customer": {
+        "name": "Jane Smith",
+        "phone": "+353 0893214730",
+        "address": "11 Oak Road, Ferrypark, Waterford, Ireland, X91 D9F3",
+        "email": "cJanesmith68135@gmail.com"
+      },
+      "sender": {
+        "name": "Ava Wilson",
+        "email": "avawilson@gmail.com",
+        "phone": "+353 0851157511",
+        "address": "25 Main Street, Limerick, Ireland, V94 XY89"
+      },
+      "parcel": {
+        "status": "Packaged",
+        "weight": 130,
+        "length": 4.0,
+        "width": 2.5,
+        "height": 2.0,
+        "items": [
+          {
+            "item_id": "36420",
+            "description": "Washing Machine",
+            "quantity": 1,
+            "weight": 70.0,
+            "price": 599.99
+          },
+          {
+            "item_id": "10283",
+            "description": "Dishwasher",
+            "quantity": 1,
+            "weight": 60.0,
+            "price": 499.99
+          }
+        ]
+      },
+      "delivery": {
+        "expected_delivery_date": "2024-03-30T14:00:00Z"
+      },
+      "e_commerce_platform": {
+        "name": "ElectroShop",
+        "website_url": "https://www.electroshop.ie"
+      },
+      "express_delivery_company": {
+        "company_name": "Emerald Parcel Hub Express Galway",
+        "hub_id": "1011",
+        "location": "2 Eyre Street, Galway, Ireland, H91 YY09",
+        "companyType": "Subsidiary"
+      }
+    },
+    {
+      "order_id": "71936",
+      "order_date": "2024-03-28T10:00:00Z",
+      "order_status": "Packaged",
+      "customer": {
+        "name": "John Doe",
+        "phone": "+353 0899238238",
+        "address": "22 Oak Drive, Maryborough Ridge, Cork, Ireland, T12 X9P7",
+        "email": "johndoe223344@gmail.com"
+      },
+      "sender": {
+        "name": "Liam O'Brien",
+        "email": "liamobrienj@hotmail.com",
+        "phone": "+353 0861237890",
+        "address": "24 Ormond Street, Nenagh, Tipperary, Ireland, E45 XK92"
+      },
+      "parcel": {
+        "status": "Packaged",
+        "weight": 100.0,
+        "length": 5.0,
+        "width": 3.0,
+        "height": 2.5,
+        "items": [
+          {
+            "item_id": "35791",
+            "description": "Refrigerator",
+            "quantity": 1,
+            "weight": 80.0,
+            "price": 899.99
+          },
+          {
+            "item_id": "82649",
+            "description": "Microwave Oven",
+            "quantity": 1,
+            "weight": 15.0,
+            "price": 149.99
+          }
+        ]
+      },
+      "delivery": {
+        "expected_delivery_date": "2024-04-02T14:00:00Z"
+      },
+      "e_commerce_platform": {
+        "name": "ElectroShop",
+        "website_url": "https://www.electroshop.ie"
+      },
+      "express_delivery_company": {
+        "company_name": "Emerald Parcel Hub Express",
+        "hub_id": "1005",
+        "location": "22 O'Callaghan Drive, Caherdavin, Limerick, Ireland, V94 DP73",
+        "companyType": "Subsidiary"
+      }
+    },
+    {
+      "order_id": "49201",
+      "order_date": "2024-03-30T09:15:00Z",
+      "order_status": "Packaged",
+      "customer": {
+        "name": "Dovie Smith",
+        "phone": "+353 0896216125",
+        "address": "49 Beech Grove, Ferrypark, Waterford, Ireland, X91 R2B9",
+        "email": "cDoviesmith625@gmail.com"
+      },
+      "sender": {
+        "name": "Emily Murphy",
+        "email": "emilymurphy@yahoo.com",
+        "phone": "+353 0871231234",
+        "address": "32 Main Street, Cork, Ireland, T12 AB34"
+      },
+      "parcel": {
+        "status": "Packaged",
+        "weight": 58.0,
+        "length": 5.5,
+        "width": 3.5,
+        "height": 2.0,
+        "items": [
+          {
+            "item_id": "57812",
+            "description": "Oven",
+            "quantity": 1,
+            "weight": 45.0,
+            "price": 549.99
+          },
+          {
+            "item_id": "31626",
+            "description": "Cookware Set",
+            "quantity": 1,
+            "weight": 8.0,
+            "price": 99.99
+          }
+        ]
+      },
+      "delivery": {
+        "expected_delivery_date": "2024-04-04T14:00:00Z"
+      },
+      "e_commerce_platform": {
+        "name": "ElectroShop",
+        "website_url": "https://www.electroshop.ie"
+      },
+      "express_delivery_company": {
+        "company_name": "Emerald Parcel Hub Warehouse Cork",
+        "hub_id": "1010",
+        "location": "8 St Patrick's Street, Cork, Ireland, T12 T9ED",
         "companyType": "Subsidiary"
       }
     }

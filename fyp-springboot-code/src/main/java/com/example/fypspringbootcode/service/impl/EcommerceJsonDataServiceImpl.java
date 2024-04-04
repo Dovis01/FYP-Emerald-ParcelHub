@@ -29,19 +29,22 @@ import static com.example.fypspringbootcode.common.ErrorCodeList.*;
 public class EcommerceJsonDataServiceImpl extends ServiceImpl<EcommerceJsonDataMapper, EcommerceJsonData> implements IEcommerceJsonDataService {
 
     @Autowired
-    IEcommerceWebsiteService ecommerceWebsiteService;
+    private IEcommerceWebsiteService ecommerceWebsiteService;
 
     @Autowired
-    ICustomerService customerService;
+    private ICourierCollectionRecordService courierCollectionRecordService;
 
     @Autowired
-    ISenderService senderService;
+    private ICustomerService customerService;
 
     @Autowired
-    IOrderService orderService;
+    private ISenderService senderService;
 
     @Autowired
-    IParcelService parcelService;
+    private IOrderService orderService;
+
+    @Autowired
+    private IParcelService parcelService;
 
     @Transactional
     @Override
@@ -114,6 +117,7 @@ public class EcommerceJsonDataServiceImpl extends ServiceImpl<EcommerceJsonDataM
             throw new ServiceException(ERROR_CODE_500, "The internal system is error");
         }
         ecommerceWebsiteService.deleteAllEcommerceWebsite();
+        courierCollectionRecordService.resetAllCollectionRecords();
     }
 
     @Override

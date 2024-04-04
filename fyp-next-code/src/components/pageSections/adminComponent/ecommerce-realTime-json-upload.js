@@ -11,7 +11,7 @@ import SouthIcon from '@mui/icons-material/South';
 import * as React from "react";
 import {toast} from "react-toastify";
 
-export const JSONDataFileUpload = ({onUpload}) => {
+export const RealTimeJSONDataFileUpload = ({onUpload}) => {
     const [selectedFile, setSelectedFile] = useState(null);
     const [isDragOver, setIsDragOver] = useState(false);
     const handleFileChange = (event) => {
@@ -108,7 +108,7 @@ export const JSONDataFileUpload = ({onUpload}) => {
                         }}
                         variant="h1"
                     >
-                        JSON Data Upload Entry Point
+                        Real Time Json Data Upload Entry Point
                     </Typography>
                     <Typography
                         align="center"
@@ -120,7 +120,7 @@ export const JSONDataFileUpload = ({onUpload}) => {
                         }}
                         variant="body1"
                     >
-                        You can upload a JSON file by the button below or by dragging and dropping the file here.
+                        You can upload a real time Json file by the button below or by dragging and dropping the file here.
                     </Typography>
                     <Box
                         sx={{
