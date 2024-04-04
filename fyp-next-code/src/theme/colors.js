@@ -6,6 +6,7 @@ const withAlphas = (color) => {
     alpha4: alpha(color.main, 0.04),
     alpha8: alpha(color.main, 0.08),
     alpha12: alpha(color.main, 0.12),
+    alpha18: alpha(color.main, 0.18),
     alpha30: alpha(color.main, 0.30),
     alpha50: alpha(color.main, 0.50)
   };
@@ -38,6 +39,7 @@ export const indigo = withAlphas({
 export const customized = withAlphas({
   main: '#b2e9dd',
   purple: '#cfd1ff',
+  mapCol: 'rgba(0,0,0,0.55)',
   grey: '#eeeeee',
   blueLight: 'rgba(232,245,253,0.96)',
   light: 'rgba(198,229,252,0.94)',

@@ -1,6 +1,7 @@
 package com.example.fypspringbootcode.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -28,15 +29,19 @@ public class CompanyEmployee implements Serializable {
 
     private String phoneNumber;
 
-    private String avatar;
+    @TableField(exist = false)
+    private String emailAddress;
 
-    private String workCity;
+    private String avatar;
 
     private Integer roleId;
 
     private Integer companyId;
 
     private Integer accountId;
+
+    @TableField(exist = false)
+    private ParcelHubCompany parcelHubCompany;
 
     @Override
     public String toString() {

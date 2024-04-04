@@ -12,21 +12,21 @@ import java.io.Serializable;
 /**
  *
  * @author Shijin Zhang
- * @since 2024-02-13
+ * @since 2024-03-19
  */
 @Data
-@TableName("t_42_courier_delivery_record")
-public class CourierDeliveryRecord implements Serializable {
+@TableName("t_43_courier_collection_record")
+public class CourierCollectionRecord implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "delivery_record_id", type = IdType.AUTO)
-    private Integer deliveryRecordId;
+    @TableId(value = "collection_record_id", type = IdType.AUTO)
+    private Integer collectionRecordId;
 
     private Integer courierId;
 
-    private Integer stationId;
+    private Integer senderId;
 
     private Integer parcelId;
 
@@ -36,7 +36,7 @@ public class CourierDeliveryRecord implements Serializable {
     private Courier courier;
 
     @TableField(exist = false)
-    private ParcelStation parcelStation;
+    private Sender sender;
 
     @TableField(exist = false)
     private Parcel parcel;
@@ -44,15 +44,12 @@ public class CourierDeliveryRecord implements Serializable {
     @TableField(exist = false)
     private Truck truck;
 
-    @TableField(exist = false)
-    private CompanyEmployee parcelStationManager;
-
     @Override
     public String toString() {
-        return "CourierDeliveryRecord{" +
-        "deliveryRecordId = " + deliveryRecordId +
+        return "CourierCollectionRecord{" +
+        "collectionRecordId = " + collectionRecordId +
         ", courierId = " + courierId +
-        ", stationId = " + stationId +
+        ", senderId = " + senderId +
         ", parcelId = " + parcelId +
         ", truckId = " + truckId +
         "}";

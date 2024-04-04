@@ -2,10 +2,14 @@ package com.example.fypspringbootcode.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.example.fypspringbootcode.controller.request.RegisterEmployeeRoleRequest;
 import com.example.fypspringbootcode.entity.CompanyEmployee;
+import com.example.fypspringbootcode.entity.ParcelHubCompany;
 import com.example.fypspringbootcode.exception.ServiceException;
 import com.example.fypspringbootcode.mapper.CompanyEmployeeMapper;
+import com.example.fypspringbootcode.mapper.ParcelHubCompanyMapper;
+import com.example.fypspringbootcode.mapper.RegisteredAccountMapper;
 import com.example.fypspringbootcode.service.ICompanyEmployeeService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.fypspringbootcode.utils.FypProjectUtils;
@@ -13,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
@@ -29,6 +34,12 @@ public class CompanyEmployeeServiceImpl extends ServiceImpl<CompanyEmployeeMappe
 
     @Autowired
     private RoleTypeServiceImpl roleTypeService;
+
+    @Autowired
+    private RegisteredAccountMapper registeredAccountMapper;
+
+    @Autowired
+    private ParcelHubCompanyMapper parcelHubCompanyMapper;
 
     @Override
     public CompanyEmployee checkCompanyEmployee(RegisterEmployeeRoleRequest registerRequest) {
@@ -58,7 +69,6 @@ public class CompanyEmployeeServiceImpl extends ServiceImpl<CompanyEmployeeMappe
         Integer roleId = roleTypeService.getRoleIdByRoleType(roleType);
         companyEmployee.setRoleId(roleId);
         companyEmployee.setAccountId(accountId);
-        companyEmployee.setWorkCity(registerRequest.getWorkCity());
         boolean isUpdated = updateById(companyEmployee);
         if (!isUpdated) {
             throw new ServiceException(ERROR_CODE_500, "Fail to update the initial employee info of the new " + roleType + " employee");
@@ -77,6 +87,9 @@ public class CompanyEmployeeServiceImpl extends ServiceImpl<CompanyEmployeeMappe
         if (companyEmployee == null) {
             throw new ServiceException(ERROR_CODE_404, "The employee id provided is wrong, find no matched one to get");
         }
+        companyEmployee.setEmailAddress(registeredAccountMapper.selectById(companyEmployee.getAccountId()).getEmail());
+        companyEmployee.setParcelHubCompany(parcelHubCompanyMapper.selectOne(Wrappers.<ParcelHubCompany>lambdaQuery().eq(ParcelHubCompany::getCompanyId, companyEmployee.getCompanyId())));
+        companyEmployee.setEmployeeCode(null);
         return companyEmployee;
     }
 
@@ -84,6 +97,9 @@ public class CompanyEmployeeServiceImpl extends ServiceImpl<CompanyEmployeeMappe
     public CompanyEmployee updateEmployeeInfo(CompanyEmployee companyEmployee, Integer employeeId) {
         companyEmployee.setEmployeeId(employeeId);
         FypProjectUtils.setEntityEmptyStringsToNull(companyEmployee);
+        if (!hasUpdatableFields(companyEmployee)) {
+            return null;
+        }
         if (companyEmployee.getPhoneNumber() != null){
             CompanyEmployee matchedCompanyEmployee = FypProjectUtils.getEntityByCondition(CompanyEmployee::getPhoneNumber, companyEmployee.getPhoneNumber(), baseMapper);
             if (matchedCompanyEmployee != null && !matchedCompanyEmployee.getEmployeeId().equals(employeeId)){
@@ -98,12 +114,11 @@ public class CompanyEmployeeServiceImpl extends ServiceImpl<CompanyEmployeeMappe
         }
 
         // Update the record
-        boolean isUpdated;
+        boolean isUpdated = false;
         try {
             isUpdated = updateById(companyEmployee);
         } catch (Exception e) {
             log.error("The mybatis has failed to update the company employee {}", employeeId, e);
-            throw new ServiceException(ERROR_CODE_400, "The employee info provided to update is null, please check it again");
         }
         if (!isUpdated) {
             throw new ServiceException(ERROR_CODE_404, "The employee id provided is wrong, find no matched one to update employee info");
@@ -176,8 +191,22 @@ public class CompanyEmployeeServiceImpl extends ServiceImpl<CompanyEmployeeMappe
                 .toString();
     }
 
-//    public static void main(String[] args) {
-//        String employeeCode = generateEmployeeCode("John Doe");
-//        System.out.println(employeeCode);
-//    }
+    private boolean hasUpdatableFields(CompanyEmployee companyEmployee) {
+        Method[] methods = companyEmployee.getClass().getMethods();
+
+        for (Method method : methods) {
+            if (method.getName().startsWith("get") && !method.getName().equals("getClass") && method.getParameterCount() == 0) {
+                try {
+                    Object value = method.invoke(companyEmployee);
+                    if (value != null && !method.getName().equalsIgnoreCase("getEmployeeId")) {
+                        return true;
+                    }
+                } catch (Exception e) {
+                    throw new ServiceException(ERROR_CODE_500, "The internal system is error");
+                }
+            }
+        }
+
+        return false;
+    }
 }
