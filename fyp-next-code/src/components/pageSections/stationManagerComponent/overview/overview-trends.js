@@ -134,7 +134,7 @@ export const OverviewTrends = (props) => {
           options={chartOptions}
           series={chartSeries}
           type="bar"
-          width="100%"
+          sx={{width:'110vh'}}
         />
       </CardContent>
       <Divider />

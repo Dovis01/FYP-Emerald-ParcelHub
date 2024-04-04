@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
 import ArrowDownIcon from '@heroicons/react/24/solid/ArrowDownIcon';
 import ArrowUpIcon from '@heroicons/react/24/solid/ArrowUpIcon';
-import DomainAddIcon from '@mui/icons-material/DomainAdd';
+import WarehouseIcon from '@mui/icons-material/Warehouse';
 import { Avatar, Card, CardContent, Stack, SvgIcon, Typography } from '@mui/material';
 
-export const OverviewAwaitingReceipt = (props) => {
+export const OverviewInTruck = (props) => {
   const { difference, positive = false, sx, value } = props;
 
   return (
@@ -21,21 +21,21 @@ export const OverviewAwaitingReceipt = (props) => {
               color="text.secondary"
               variant="overline"
             >
-              Awaiting Receipt
+              No. of parcels in truck
             </Typography>
             <Typography variant="h4">
-              {/*{value}*/}660
+              {value}
             </Typography>
           </Stack>
           <Avatar
             sx={{
-              backgroundColor: 'error.main',
+              backgroundColor: 'success.main',
               height: 56,
               width: 56
             }}
           >
             <SvgIcon>
-              <DomainAddIcon />
+              <WarehouseIcon />
             </SvgIcon>
           </Avatar>
         </Stack>
@@ -77,9 +77,10 @@ export const OverviewAwaitingReceipt = (props) => {
   );
 };
 
-OverviewAwaitingReceipt.prototypes = {
+OverviewInTruck.propTypes = {
   difference: PropTypes.number,
   positive: PropTypes.bool,
-  sx: PropTypes.object,
-  value: PropTypes.string.isRequired
+  value: PropTypes.string.isRequired,
+  sx: PropTypes.object
 };
+

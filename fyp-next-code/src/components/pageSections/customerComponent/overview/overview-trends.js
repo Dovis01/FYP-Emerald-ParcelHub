@@ -126,7 +126,7 @@ export const OverviewTrends = (props) => {
             Sync
           </Button>
         )}
-        title="Inventory Quantity Trends"
+        title="The Number of Personal Parcels Comparison Trends"
       />
       <CardContent>
         <Chart
@@ -134,7 +134,7 @@ export const OverviewTrends = (props) => {
           options={chartOptions}
           series={chartSeries}
           type="bar"
-          width="100%"
+          sx={{width:'110vh'}}
         />
       </CardContent>
       <Divider />

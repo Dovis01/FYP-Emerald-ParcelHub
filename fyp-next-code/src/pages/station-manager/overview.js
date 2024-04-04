@@ -25,7 +25,8 @@ const StationManagerOverviewPage = () => {
                 component="main"
                 sx={{
                     width: '112.5%',
-                    py: 2.7
+                    py: 2.7,
+                    maxWidth: '250vh'
                 }}
             >
                 <Grid container spacing={2} justifyContent="space-evenly">

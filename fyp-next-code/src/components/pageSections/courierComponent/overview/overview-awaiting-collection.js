@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
 import ArrowDownIcon from '@heroicons/react/24/solid/ArrowDownIcon';
 import ArrowUpIcon from '@heroicons/react/24/solid/ArrowUpIcon';
-import WarehouseIcon from '@mui/icons-material/Warehouse';
+import DomainAddIcon from '@mui/icons-material/DomainAdd';
 import { Avatar, Card, CardContent, Stack, SvgIcon, Typography } from '@mui/material';
 
-export const OverviewInStorage = (props) => {
+export const OverviewAwaitingCollection = (props) => {
   const { difference, positive = false, sx, value } = props;
 
   return (
@@ -14,28 +14,28 @@ export const OverviewInStorage = (props) => {
           alignItems="flex-start"
           direction="row"
           justifyContent="space-between"
-          spacing={3}
+          spacing={2}
         >
           <Stack spacing={1}>
             <Typography
               color="text.secondary"
               variant="overline"
             >
-              In Storage
+              No. of parcels awaiting collection
             </Typography>
             <Typography variant="h4">
-              {value}
+              10
             </Typography>
           </Stack>
           <Avatar
             sx={{
-              backgroundColor: 'success.main',
+              backgroundColor: 'error.main',
               height: 56,
               width: 56
             }}
           >
             <SvgIcon>
-              <WarehouseIcon />
+              <DomainAddIcon />
             </SvgIcon>
           </Avatar>
         </Stack>
@@ -77,10 +77,9 @@ export const OverviewInStorage = (props) => {
   );
 };
 
-OverviewInStorage.propTypes = {
+OverviewAwaitingCollection.prototypes = {
   difference: PropTypes.number,
   positive: PropTypes.bool,
-  value: PropTypes.string.isRequired,
-  sx: PropTypes.object
+  sx: PropTypes.object,
+  value: PropTypes.string.isRequired
 };
-

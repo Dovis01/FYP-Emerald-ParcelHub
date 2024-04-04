@@ -3,9 +3,23 @@ import ArrowDownIcon from '@heroicons/react/24/solid/ArrowDownIcon';
 import ArrowUpIcon from '@heroicons/react/24/solid/ArrowUpIcon';
 import WarehouseIcon from '@mui/icons-material/Warehouse';
 import { Avatar, Card, CardContent, Stack, SvgIcon, Typography } from '@mui/material';
+import {useAuthContext} from "@/contexts/auth-context";
+import {useEffect, useState} from "react";
+import {getAllCustomerPersonalParcelsData} from "@/api/springboot-api";
 
-export const OverviewInStorage = (props) => {
-  const { difference, positive = false, sx, value } = props;
+export const OverviewAwaitingPickup = (props) => {
+  const { difference, positive = false, sx} = props;
+  const auth = useAuthContext();
+  const [value, setValue] = useState(null);
+
+  useEffect(() => {
+    const fetchJsonData = async () => {
+      const result = await getAllCustomerPersonalParcelsData(auth.user.customerId);
+      setValue(() => result.data.length);
+    };
+
+    fetchJsonData();
+  }, [auth.user.customerId]);
 
   return (
     <Card sx={sx}>
@@ -14,14 +28,14 @@ export const OverviewInStorage = (props) => {
           alignItems="flex-start"
           direction="row"
           justifyContent="space-between"
-          spacing={3}
+          spacing={2}
         >
           <Stack spacing={1}>
             <Typography
               color="text.secondary"
               variant="overline"
             >
-              In Storage
+              No. of parcels awaiting pickup
             </Typography>
             <Typography variant="h4">
               {value}
@@ -77,7 +91,7 @@ export const OverviewInStorage = (props) => {
   );
 };
 
-OverviewInStorage.propTypes = {
+OverviewAwaitingPickup.propTypes = {
   difference: PropTypes.number,
   positive: PropTypes.bool,
   value: PropTypes.string.isRequired,

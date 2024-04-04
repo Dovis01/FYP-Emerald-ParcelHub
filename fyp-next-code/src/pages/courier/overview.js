@@ -1,12 +1,12 @@
 import Head from 'next/head';
 import MainPageLayout from "@/components/layouts/mainPageLayout";
 import {Box, Grid, Paper} from "@mui/material";
-import {OverviewAwaitingReceipt} from "@/components/pageSections/courierComponent/overview/overview-awaiting-receipt";
-import {OverviewInStorage} from "@/components/pageSections/courierComponent/overview/overview-in-storage";
+import {OverviewAwaitingCollection} from "@/components/pageSections/courierComponent/overview/overview-awaiting-collection";
+import {OverviewInTruck} from "@/components/pageSections/courierComponent/overview/overview-in-truck";
 import {OverviewPickupProgress} from "@/components/pageSections/courierComponent/overview/overview-pickup-progress";
 import {OverviewTotalProfit} from "@/components/pageSections/courierComponent/overview/overview-total-profit";
 import {OverviewTrends} from "@/components/pageSections/courierComponent/overview/overview-trends";
-import {OverviewContactTraffic} from "@/components/pageSections/courierComponent/overview/overview-contact-traffic";
+import {OverviewDeliveryTask} from "@/components/pageSections/courierComponent/overview/overview-delivery-task";
 import {OverviewLatestInventory} from "@/components/pageSections/courierComponent/overview/overview-latest-inventory";
 import {OverviewLatestRecords} from "@/components/pageSections/courierComponent/overview/overview-latest-records";
 import {chartSeriesTrend, order, products} from "@/dataSimulation/overviewData";
@@ -25,13 +25,14 @@ const CourierOverviewPage = () => {
                 component="main"
                 sx={{
                     width: '112.5%',
-                    py: 2.7
+                    py: 2.7,
+                    maxWidth: '250vh'
                 }}
             >
                 <Grid container spacing={2} justifyContent="space-evenly">
                     <Grid item xs={12} sm={6} lg={3}>
                         <Paper elevation={12} sx={{height: '100%'}}>
-                            <OverviewAwaitingReceipt
+                            <OverviewAwaitingCollection
                                 difference={12}
                                 positive
                                 sx={{height: '100%'}}
@@ -41,11 +42,11 @@ const CourierOverviewPage = () => {
                     </Grid>
                     <Grid item xs={12} sm={6} lg={3}>
                         <Paper elevation={12} sx={{height: '100%'}}>
-                            <OverviewInStorage
+                            <OverviewInTruck
                                 difference={16}
                                 positive={false}
                                 sx={{height: '100%'}}
-                                value="1.6k"
+                                value="6"
                             />
                         </Paper>
                     </Grid>
@@ -79,9 +80,8 @@ const CourierOverviewPage = () => {
                     </Grid>
                     <Grid item xs={12} md={6} lg={4}>
                         <Paper elevation={12} sx={{height: '100%'}}>
-                            <OverviewContactTraffic
-                                chartSeries={[63, 15, 22]}
-                                labels={['Desktop', 'Tablet', 'Phone']}
+                            <OverviewDeliveryTask
+                                products={products}
                                 sx={{height: '100%'}}
                             />
                         </Paper>
