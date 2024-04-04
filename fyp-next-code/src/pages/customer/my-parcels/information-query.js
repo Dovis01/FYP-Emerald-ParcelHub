@@ -1,10 +1,8 @@
 import MainPageLayout from "@/components/layouts/mainPageLayout";
 import Head from "next/head";
 import {Box, Container, Stack, Typography, Unstable_Grid2 as Grid} from "@mui/material";
-import {PickupGoogleMapDisplay} from "@/components/pageSections/customerComponent/info-query/pickup-map-display";
-import {
-    ParcelQueryInfoDataDisplay
-} from "@/components/pageSections/customerComponent/info-query/parcels-queryInfo-data-display";
+import {PickupGoogleMapDisplay} from "@/components/pageSections/customerComponent/my-parcels/info-query/pickup-map-display";
+import {ParcelQueryInfoDataDisplay} from "@/components/pageSections/customerComponent/my-parcels/info-query/parcels-queryInfo-data-display";
 
 
 const MyParcelsInformationQuery = () => {
@@ -32,7 +30,7 @@ const MyParcelsInformationQuery = () => {
                             sx={{
                                 width: '173.3vh', height: '100%',
                                 boxShadow: 20,
-                                bgcolor: 'customized.grey',
+                                bgcolor: 'customized.blueLight',
                                 overflow: 'hidden',
                                 border: 6,
                                 borderColor: 'primary.main',
@@ -48,14 +46,14 @@ const MyParcelsInformationQuery = () => {
                                     md={12}
                                     lg={12}
                                 >
-                                    <PickupGoogleMapDisplay/>
+                                    <PickupGoogleMapDisplay />
                                 </Grid>
                                 <Grid
                                     xs={12}
                                     md={12}
                                     lg={12}
                                 >
-                                    <ParcelQueryInfoDataDisplay/>
+                                    <ParcelQueryInfoDataDisplay />
                                 </Grid>
                             </Grid>
                         </Box>

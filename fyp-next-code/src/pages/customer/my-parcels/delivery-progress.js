@@ -1,8 +1,10 @@
 import MainPageLayout from "@/components/layouts/mainPageLayout";
 import Head from "next/head";
 import {Box, Container, Stack, Typography, Unstable_Grid2 as Grid} from "@mui/material";
-import {GoogleMapDisplay} from "@/components/pageSections/customerComponent/delivery-progress/myParcels-map-display";
-import {ParcelDeliveryProgressDataDisplay} from "@/components/pageSections/customerComponent/delivery-progress/myParcels-progress-data-display";
+import {GoogleMapDisplay} from "@/components/pageSections/customerComponent/my-parcels/delivery-progress/google-map-display";
+import {
+    ParcelDeliveryProgressDataDisplay
+} from "@/components/pageSections/customerComponent/my-parcels/delivery-progress/parcels-progress-data-display";
 
 
 const MyParcelsDeliveryProgress = () => {
@@ -30,32 +32,32 @@ const MyParcelsDeliveryProgress = () => {
                             sx={{
                                 width: '173.3vh', height: '100%',
                                 boxShadow: 20,
-                                bgcolor: 'customized.grey',
+                                bgcolor: 'customized.blueLight',
                                 overflow: 'hidden',
                                 border: 6,
                                 borderColor: 'primary.main',
                                 borderRadius: 1.2
                             }}
                         >
-                        <Grid
-                            container
-                            spacing={2.5}
-                        >
                             <Grid
-                                xs={12}
-                                md={12}
-                                lg={12}
+                                container
+                                spacing={2.5}
                             >
-                                <GoogleMapDisplay />
+                                <Grid
+                                    xs={12}
+                                    md={12}
+                                    lg={12}
+                                >
+                                    <GoogleMapDisplay/>
+                                </Grid>
+                                <Grid
+                                    xs={12}
+                                    md={12}
+                                    lg={12}
+                                >
+                                    <ParcelDeliveryProgressDataDisplay/>
+                                </Grid>
                             </Grid>
-                            <Grid
-                                xs={12}
-                                md={12}
-                                lg={12}
-                            >
-                                <ParcelDeliveryProgressDataDisplay />
-                            </Grid>
-                        </Grid>
                         </Box>
                     </Stack>
                 </Container>

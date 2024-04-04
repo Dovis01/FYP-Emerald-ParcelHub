@@ -31,13 +31,16 @@ public class ParcelStation implements Serializable {
 
     private Integer shelvesTotalNumber;
 
+    private Boolean stationAssignManagerStatus;
+
     @Override
     public String toString() {
         return "ParcelStation{" +
         "stationId = " + stationId +
         ", communityName = " + communityName +
         ", address = " + address +
-        ", shelvesNumber = " + shelvesTotalNumber +
+        ", shelvesTotalNumber = " + shelvesTotalNumber +
+        ", stationAssignManagerStatus = " + stationAssignManagerStatus +
         "}";
     }
 }

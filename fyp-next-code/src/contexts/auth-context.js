@@ -91,9 +91,18 @@ export const AuthContextProvider = (props) => {
         }
 
         const user = {
-            customerId: 1141,
+            customerId: 1207,
+            //courierId: 1020,
+            //workType: 'Collect Parcels',
+            courierId: 1019,
+            workType: 'Deliver Parcels',
+            truckType: 'Small',
+            maxWeight: 100,
+            country: 'Ireland',
+            city: 'Waterford',
             avatar: '/assets/avatars/avatar-anika-visser.png',
-            roleType: 'Customer',
+            roleType: 'Courier',
+            //roleType: 'Customer',
             adminName: 'AdminRoot',
             username: 'Anika Visser',
             fullName: 'Anika Visser',

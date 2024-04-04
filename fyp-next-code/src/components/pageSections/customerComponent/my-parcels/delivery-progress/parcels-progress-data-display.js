@@ -15,10 +15,12 @@ import {CustomerTableRenderer} from "@/components/customized/dataGridTableRender
 import {
     ParcelHistoryStatusListRenderer
 } from "@/components/customized/dataGridTableRenderer/parcelHistoryStatusListRenderer";
+import {useGoogleMapContext} from "@/contexts/googleMap-context";
 
 
-export const ParcelQueryInfoDataDisplay = () => {
+export const ParcelDeliveryProgressDataDisplay = () => {
     const auth = useAuthContext();
+    const googleMap = useGoogleMapContext();
     const [rows, setRows] = useState([]);
     const [isExpandedColumnParcelItems, setIsExpandedColumnParcelItems] = useState(false);
     const [isExpandedColumnSender, setIsExpandedColumnSender] = useState(false);
@@ -34,6 +36,14 @@ export const ParcelQueryInfoDataDisplay = () => {
                 return;
             }
             const newRows = result.data.map((parcelInfo) => {
+                googleMap.updateCustomerTrackingRouteAddresses({
+                    orderId: parcelInfo.parcel.orderId,
+                    routeAddresses: [
+                        parcelInfo.sender.address + ', SEN',
+                        parcelInfo.parcelHubCompany.address + ', PHC',
+                        parcelInfo.parcelStation.address + ', PST'
+                    ]
+                });
                 const parcelItemsRows = parcelInfo.parcel.items.map((parcelItem) => ({
                     id: parcelItem.itemId,
                     description: parcelItem.descriptionInfo,
@@ -82,7 +92,13 @@ export const ParcelQueryInfoDataDisplay = () => {
                     senderInfo: sender,
                     customerId: parcelInfo.customer.customerId,
                     customerInfo: customer,
-                    stationName: 'Emerald ParcelHub - '+parcelInfo.parcelStation.communityName,
+                    deliveryCompanyName: parcelInfo.parcelHubCompany.companyName,
+                    deliveryCompanyType: parcelInfo.parcelHubCompany.companyType,
+                    deliveryCompanyAddress: parcelInfo.parcelHubCompany.address,
+                    courierFullName: parcelInfo.courier.employeeInfo.fullName,
+                    courierPhoneNumber: parcelInfo.courier.employeeInfo.phoneNumber,
+                    courierEmailAddress: parcelInfo.courier.employeeInfo.emailAddress,
+                    stationName: 'Emerald ParcelHub - ' + parcelInfo.parcelStation.communityName,
                     stationCommunityName: parcelInfo.parcelStation.communityName,
                     stationAddress: parcelInfo.parcelStation.address,
                 };
@@ -94,7 +110,7 @@ export const ParcelQueryInfoDataDisplay = () => {
     }, []);
 
     const columns = [
-        {field: 'id', headerName: 'Order ID', headerClassName: 'super-app-theme--header', width: 100},
+        {field: 'id', headerName: 'Order Id', headerClassName: 'super-app-theme--header', width: 100},
         {
             field: 'parcelTrackingCode',
             headerName: 'Parcel Tracking Code',
@@ -113,27 +129,77 @@ export const ParcelQueryInfoDataDisplay = () => {
             headerName: 'Parcel History Status List',
             width: isExpandedColumnStatusHistory ? 562 : 220,
             renderCell: (params) => <ParcelHistoryStatusListRenderer statusData={params} expandedRows={expandedRows}
-                                                              handleToggleExpand={handleToggleExpandStatusHistory}/>
+                                                                     handleToggleExpand={handleToggleExpandStatusHistory}/>
         },
         {
             field: 'senderInfo',
             headerName: 'Sender Info',
-            width: isExpandedColumnSender ? 650 : 150,
+            width: isExpandedColumnSender ? 650 : 130,
             renderCell: (params) => <SenderTableRenderer senderData={params} expandedRows={expandedRows}
-                                                              handleToggleExpand={handleToggleExpandSender}/>
+                                                         handleToggleExpand={handleToggleExpandSender}/>
         },
         {
             field: 'customerInfo',
             headerName: 'Customer Info',
-            width: isExpandedColumnCustomer? 650 : 150,
+            width: isExpandedColumnCustomer ? 650 : 135,
             renderCell: (params) => <CustomerTableRenderer customerData={params} expandedRows={expandedRows}
-                                                              handleToggleExpand={handleToggleExpandCustomer}/>
+                                                           handleToggleExpand={handleToggleExpandCustomer}/>
         },
-        {field: 'stationName', headerName: 'Parcel Station Name', headerClassName: 'super-app-theme--header', width: 310},
-        {field: 'stationCommunityName', headerName: 'Community Name', headerClassName: 'super-app-theme--header', width: 180},
-        {field: 'stationAddress', headerName: 'Parcel Station Address', headerClassName: 'super-app-theme--header', width:435},
+        {
+            field: 'courierFullName',
+            headerName: 'Courier Full Name',
+            headerClassName: 'super-app-theme--header',
+            width: 170
+        },
+        {
+            field: 'courierPhoneNumber',
+            headerName: 'Courier Phone Number',
+            headerClassName: 'super-app-theme--header',
+            width: 210
+        },
+        {
+            field: 'courierEmailAddress',
+            headerName: 'Courier Email Address',
+            headerClassName: 'super-app-theme--header',
+            width: 230
+        },
+        {
+            field: 'deliveryCompanyName',
+            headerName: 'Delivery Company Name',
+            headerClassName: 'super-app-theme--header',
+            width: 350
+        },
+        {
+            field: 'deliveryCompanyType',
+            headerName: 'Company Type',
+            headerClassName: 'super-app-theme--header',
+            width: 145
+        },
+        {
+            field: 'deliveryCompanyAddress',
+            headerName: 'Delivery Company Address',
+            headerClassName: 'super-app-theme--header',
+            width: 450
+        },
+        {
+            field: 'stationName',
+            headerName: 'Parcel Station Name',
+            headerClassName: 'super-app-theme--header',
+            width: 310
+        },
+        {
+            field: 'stationCommunityName',
+            headerName: 'Community Name',
+            headerClassName: 'super-app-theme--header',
+            width: 180
+        },
+        {
+            field: 'stationAddress',
+            headerName: 'Parcel Station Address',
+            headerClassName: 'super-app-theme--header',
+            width: 435
+        },
     ];
-
 
 
     const handleToggleExpandParcelItems = (rowId) => {
@@ -179,7 +245,7 @@ export const ParcelQueryInfoDataDisplay = () => {
         let senderHeight = expandedRows[params.model.senderId] ? 350 : defaultHeight;
         let statusHistoryHeight = expandedRows[params.model.parcelId] ? (params.model.parcelHistoryStatusList.length + 1) * 60 : defaultHeight;
 
-        return Math.max(parcelItemsHeight, customerHeight, senderHeight,statusHistoryHeight);
+        return Math.max(parcelItemsHeight, customerHeight, senderHeight, statusHistoryHeight);
     }
 
     const handleRowSelectionChange = (rowSelectionModel) => {
