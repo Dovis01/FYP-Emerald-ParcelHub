@@ -1,7 +1,6 @@
 import Head from 'next/head';
 import {Box, Container, Stack, Typography} from '@mui/material';
-import {SettingsNotifications} from '@/components/pageSections/settings/settings-notifications';
-import {SettingsPassword} from '@/components/pageSections/settings/settings-password';
+import {SettingsNotifications} from '@/components/pageSections/courierComponent/settings/settings-notifications';
 import MainPageLayout from "@/components/layouts/mainPageLayout";
 import {useAuthContext} from "@/contexts/auth-context";
 
@@ -18,6 +17,7 @@ const CourierSettingPage = () => {
                 component="main"
                 sx={{
                     width: '100vh',
+                    height: '100vh',
                     py:2
                 }}
             >
@@ -27,7 +27,6 @@ const CourierSettingPage = () => {
                             Settings
                         </Typography>
                         <SettingsNotifications/>
-                        <SettingsPassword/>
                     </Stack>
                 </Container>
             </Box>

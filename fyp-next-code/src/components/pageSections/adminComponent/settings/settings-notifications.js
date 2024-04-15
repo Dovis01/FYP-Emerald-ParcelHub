@@ -38,7 +38,6 @@ export const SettingsNotifications = () => {
                             wrap="wrap"
                         >
                             <Grid
-                                item
                                 lg={6}
                                 xs={12}
                                 sm={6}
@@ -69,7 +68,6 @@ export const SettingsNotifications = () => {
                                 </Stack>
                             </Grid>
                             <Grid
-                                item
                                 lg={6}
                                 md={4}
                                 sm={6}

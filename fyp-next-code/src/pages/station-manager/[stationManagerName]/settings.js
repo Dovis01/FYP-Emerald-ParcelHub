@@ -1,11 +1,10 @@
 import Head from 'next/head';
 import {Box, Container, Stack, Typography} from '@mui/material';
-import {SettingsNotifications} from '@/components/pageSections/settings/settings-notifications';
-import {SettingsPassword} from '@/components/pageSections/settings/settings-password';
+import {SettingsNotifications} from '@/components/pageSections/stationManagerComponent/settings/settings-notifications';
 import MainPageLayout from "@/components/layouts/mainPageLayout";
 import {useAuthContext} from "@/contexts/auth-context";
 
-const AdminSettingPage = () => {
+const StationManagerSettingPage = () => {
     const auth = useAuthContext();
     return(
         <>
@@ -18,6 +17,7 @@ const AdminSettingPage = () => {
                 component="main"
                 sx={{
                     width: '100vh',
+                    height: '100vh',
                     py:2
                 }}
             >
@@ -27,7 +27,6 @@ const AdminSettingPage = () => {
                             Settings
                         </Typography>
                         <SettingsNotifications/>
-                        <SettingsPassword/>
                     </Stack>
                 </Container>
             </Box>
@@ -35,10 +34,10 @@ const AdminSettingPage = () => {
     );
 }
 
-AdminSettingPage.getLayout = (page) => (
+StationManagerSettingPage.getLayout = (page) => (
     <MainPageLayout>
         {page}
     </MainPageLayout>
 );
 
-export default AdminSettingPage;
+export default StationManagerSettingPage;
