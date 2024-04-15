@@ -28,23 +28,32 @@ public class WebConfig implements  WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
 
         registry.addInterceptor(jwtInterceptor).addPathPatterns("/api/**")
+                .excludePathPatterns("/api/v3/api-docs/**")
                 .excludePathPatterns("/api/admin/v1/login")
                 .excludePathPatterns("/api/courier/v1/login")
                 .excludePathPatterns("/api/courier/v1/register")
                 .excludePathPatterns("/api/customer/v1/login")
                 .excludePathPatterns("/api/customer/v1/register")
                 .excludePathPatterns("/api/stationManager/v1/login")
-                .excludePathPatterns("/api/stationManager/v1/register")
-                .excludePathPatterns("/api/registeredAccount/**")
-                .excludePathPatterns("/api/ecommerceJsonData/**")
-                .excludePathPatterns("/api/order/**")
-                .excludePathPatterns("/api/parcel/**")
-                .excludePathPatterns("/api/courierCollectionRecord/**")
-                .excludePathPatterns("/api/courierDeliveryRecord/**")
-                .excludePathPatterns("/api/googleGeocodingCache/**")
-                .excludePathPatterns("/api/parcelHistoryStatus/**")
-                .excludePathPatterns("/api/courier/**")
-                .excludePathPatterns("/api/companyEmployee/**");
+                .excludePathPatterns("/api/stationManager/v1/register");
+//                .excludePathPatterns("/api/stationManager/**")
+//                .excludePathPatterns("/api/registeredAccount/**")
+//                .excludePathPatterns("/api/ecommerceJsonData/**")
+//                .excludePathPatterns("/api/order/**")
+//                .excludePathPatterns("/api/parcel/**")
+//                .excludePathPatterns("/api/stationParcelsToPlace/**")
+//                .excludePathPatterns("/api/parcelStationShelf/**")
+//                .excludePathPatterns("/api/courierCollectionRecord/**")
+//                .excludePathPatterns("/api/courierDeliveryRecord/**")
+//                .excludePathPatterns("/api/googleGeocodingCache/**")
+//                .excludePathPatterns("/api/parcelHistoryStatus/**")
+//                .excludePathPatterns("/api/parcelPickupCode/**")
+//                .excludePathPatterns("/api/courier/**")
+//                .excludePathPatterns("/api/pastStatistics/**")
+//                .excludePathPatterns("/api/ecommerceWebsite/**")
+//                .excludePathPatterns("/api/infoNotification/**")
+//                .excludePathPatterns("/api/customer/**")
+//                .excludePathPatterns("/api/companyEmployee/**");
     }
 
 
