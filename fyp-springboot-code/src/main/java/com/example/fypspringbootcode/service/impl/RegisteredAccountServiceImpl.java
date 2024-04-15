@@ -31,7 +31,7 @@ import static com.example.fypspringbootcode.common.ErrorCodeList.*;
 public class RegisteredAccountServiceImpl extends ServiceImpl<RegisteredAccountMapper, RegisteredAccount> implements IRegisteredAccountService {
 
     @Autowired
-    IAdminService adminService;
+    private IAdminService adminService;
 
     @Override
     public void deleteByAccountId(Integer accountId) {

@@ -1,9 +1,10 @@
 import {useEffect, useState} from "react";
 import {
-    getAllCustomerPersonalParcelsData,
+    addPlaceParcelsRecordsDataOfStation, deletePlaceParcelsRecordsDataOfStation,
+    getDeliveringParcelsDataOfParcelStation,
 } from "@/api/springboot-api";
 import {
-    Box,
+    Box, Button, Paper, SvgIcon,
 } from "@mui/material";
 import * as React from "react";
 import {toast} from "react-toastify";
@@ -16,12 +17,18 @@ import {
     ParcelHistoryStatusListRenderer
 } from "@/components/customized/dataGridTableRenderer/parcelHistoryStatusListRenderer";
 import {useGoogleMapContext} from "@/contexts/googleMap-context";
+import DoneAllIcon from '@mui/icons-material/DoneAll';
+import {LinearStepperFinishDialog} from "@/components/customized/linearStepper/linearStepperFinishDialog";
+import ArrowPathIcon from "@heroicons/react/24/solid/ArrowPathIcon";
 
 
-export const ParcelQueryInfoDataDisplay = () => {
+export const ProgressDataDisplay = () => {
     const auth = useAuthContext();
     const googleMap = useGoogleMapContext();
     const [rows, setRows] = useState([]);
+    const [confirmOpen, setConfirmOpen] = useState(false);
+    const [resetOpen, setResetOpen] = useState(false);
+    const [isSelectedRowIds, setIsSelectedRowIds] = useState([]);
     const [isExpandedColumnParcelItems, setIsExpandedColumnParcelItems] = useState(false);
     const [isExpandedColumnSender, setIsExpandedColumnSender] = useState(false);
     const [isExpandedColumnCustomer, setIsExpandedColumnCustomer] = useState(false);
@@ -29,17 +36,25 @@ export const ParcelQueryInfoDataDisplay = () => {
     const [expandedRows, setExpandedRows] = useState({});
 
     useEffect(() => {
-        const fetchJsonData = async () => {
-            const result = await getAllCustomerPersonalParcelsData(auth.user.customerId);
+        const fetchData = async () => {
+            const result = await getDeliveringParcelsDataOfParcelStation(auth.user?.stationId);
             if (!result.success) {
                 toast.error('Ooops! ' + result.msg);
                 return;
             }
+            const addressMap = {};
             const newRows = result.data.map((parcelInfo) => {
-                googleMap.updateCustomerStationAddresses([
-                    parcelInfo.customer.address + ', CUS',
-                    parcelInfo.parcelStation.address + ', PST'
-                ])
+                const companyAddress = parcelInfo.parcelHubCompany.address + ', PHC';
+                const stationAddress = parcelInfo.parcelStation.address + ', PST';
+                const combinedAddress = companyAddress + '|' + stationAddress;
+                const trackingCode = parcelInfo.parcel.parcelTrackingCode;
+
+                if (addressMap[combinedAddress]) {
+                    addressMap[combinedAddress].push(trackingCode);
+                } else {
+                    addressMap[combinedAddress] = [trackingCode];
+                }
+
                 const parcelItemsRows = parcelInfo.parcel.items.map((parcelItem) => ({
                     id: parcelItem.itemId,
                     description: parcelItem.descriptionInfo,
@@ -82,98 +97,140 @@ export const ParcelQueryInfoDataDisplay = () => {
                     id: parcelInfo.parcel.orderId,
                     parcelId: parcelInfo.parcel.parcelId,
                     parcelTrackingCode: parcelInfo.parcel.parcelTrackingCode,
-                    parcelPickupCode: parcelInfo.parcel.parcelPickupCode,
                     parcelItems: parcelItemsRows,
                     parcelHistoryStatusList: parcelHistoryStatusList,
                     senderId: parcelInfo.sender.senderId,
                     senderInfo: sender,
                     customerId: parcelInfo.customer.customerId,
                     customerInfo: customer,
+                    deliveryCompanyName: parcelInfo.parcelHubCompany.companyName,
+                    deliveryCompanyType: parcelInfo.parcelHubCompany.companyType,
+                    deliveryCompanyCity: parcelInfo.parcelHubCompany.city,
+                    deliveryCompanyAddress: parcelInfo.parcelHubCompany.address,
+                    courierFullName: parcelInfo.courier?.employeeInfo.fullName,
+                    courierPhoneNumber: parcelInfo.courier?.employeeInfo.phoneNumber,
+                    courierEmailAddress: parcelInfo.courier?.employeeInfo.emailAddress,
                     stationName: 'Emerald ParcelHub - ' + parcelInfo.parcelStation.communityName,
                     stationCommunityName: parcelInfo.parcelStation.communityName,
+                    stationCity: parcelInfo.parcelStation.city,
                     stationAddress: parcelInfo.parcelStation.address,
-                    stationManagerFullName: parcelInfo.parcelStationManager.fullName,
-                    stationManagerPhoneNumber: parcelInfo.parcelStationManager.phoneNumber,
                 };
+            });
+            Object.entries(addressMap).forEach(([combinedAddress, trackingCodes]) => {
+                const [companyAddress, stationAddress] = combinedAddress.split('|');
+                googleMap.updateStationDeliveringParcelsRouteAddresses({
+                    parcelTrackingCodes: trackingCodes,
+                    routeAddresses: [companyAddress, stationAddress],
+                });
             });
             setRows(newRows.flat());
         };
 
-        fetchJsonData();
+        fetchData();
     }, []);
 
     const columns = [
-        {field: 'id', headerName: 'Order ID', headerClassName: 'super-app-theme--header', width:86},
+        {field: 'id', headerName: 'Order Id', headerClassName: 'super-app-theme--header', width: 100},
         {
             field: 'parcelTrackingCode',
             headerName: 'Parcel Tracking Code',
             headerClassName: 'super-app-theme--header',
-            width: 172
-        },
-        {
-            field: 'parcelPickupCode',
-            headerName: 'Parcel Pickup Code',
-            headerClassName: 'super-app-theme--header',
-            width: 162
+            width: 190
         },
         {
             field: 'parcelItems',
             headerName: 'Parcel Items',
-            width: isExpandedColumnParcelItems ? 800 : 113,
+            width: isExpandedColumnParcelItems ? 800 : 150,
             renderCell: (params) => <ParcelItemsTableRenderer parcelItems={params.value} expandedRows={expandedRows}
                                                               handleToggleExpand={handleToggleExpandParcelItems}/>
         },
         {
             field: 'parcelHistoryStatusList',
             headerName: 'Parcel History Status List',
-            width: isExpandedColumnStatusHistory ? 562 : 203,
+            width: isExpandedColumnStatusHistory ? 562 : 220,
             renderCell: (params) => <ParcelHistoryStatusListRenderer statusData={params} expandedRows={expandedRows}
                                                                      handleToggleExpand={handleToggleExpandStatusHistory}/>
         },
         {
             field: 'senderInfo',
             headerName: 'Sender Info',
-            width: isExpandedColumnSender ? 650 : 113,
+            width: isExpandedColumnSender ? 650 : 130,
             renderCell: (params) => <SenderTableRenderer senderData={params} expandedRows={expandedRows}
                                                          handleToggleExpand={handleToggleExpandSender}/>
         },
         {
             field: 'customerInfo',
             headerName: 'Customer Info',
-            width: isExpandedColumnCustomer ? 650 : 122,
+            width: isExpandedColumnCustomer ? 650 : 135,
             renderCell: (params) => <CustomerTableRenderer customerData={params} expandedRows={expandedRows}
                                                            handleToggleExpand={handleToggleExpandCustomer}/>
+        },
+        {
+            field: 'courierFullName',
+            headerName: 'Courier Full Name',
+            headerClassName: 'super-app-theme--header',
+            width: 170
+        },
+        {
+            field: 'courierPhoneNumber',
+            headerName: 'Courier Phone Number',
+            headerClassName: 'super-app-theme--header',
+            width: 210
+        },
+        {
+            field: 'courierEmailAddress',
+            headerName: 'Courier Email Address',
+            headerClassName: 'super-app-theme--header',
+            width: 230
+        },
+        {
+            field: 'deliveryCompanyName',
+            headerName: 'Delivery Company Name',
+            headerClassName: 'super-app-theme--header',
+            width: 350
+        },
+        {
+            field: 'deliveryCompanyType',
+            headerName: 'Company Type',
+            headerClassName: 'super-app-theme--header',
+            width: 145
+        },
+        {
+            field: 'deliveryCompanyCity',
+            headerName: 'Company City',
+            headerClassName: 'super-app-theme--header',
+            width: 130
+        },
+        {
+            field: 'deliveryCompanyAddress',
+            headerName: 'Delivery Company Address',
+            headerClassName: 'super-app-theme--header',
+            width: 450
         },
         {
             field: 'stationName',
             headerName: 'Parcel Station Name',
             headerClassName: 'super-app-theme--header',
-            width: 300
+            width: 310
+        },
+        {
+            field: 'stationCity',
+            headerName: 'Station City',
+            headerClassName: 'super-app-theme--header',
+            width: 120
         },
         {
             field: 'stationCommunityName',
             headerName: 'Community Name',
             headerClassName: 'super-app-theme--header',
-            width: 170
+            width: 180
         },
         {
             field: 'stationAddress',
             headerName: 'Parcel Station Address',
             headerClassName: 'super-app-theme--header',
-            width: 416
+            width: 435
         },
-        {
-            field: 'stationManagerFullName',
-            headerName: 'Station Manager Name',
-            headerClassName: 'super-app-theme--header',
-            width: 196
-        },
-        {
-            field: 'stationManagerPhoneNumber',
-            headerName: 'Manager Phone Number',
-            headerClassName: 'super-app-theme--header',
-            width: 220
-        }
     ];
 
 
@@ -231,12 +288,84 @@ export const ParcelQueryInfoDataDisplay = () => {
             setIsExpandedColumnStatusHistory(false);
             setExpandedRows({});
         }
+        setIsSelectedRowIds(rowSelectionModel);
     };
+
+    const handleConfirmDialogOpen = () => {
+        setConfirmOpen(true);
+    };
+
+    const handleResetDialogOpen = () => {
+        setResetOpen(true);
+    };
+
+    const handleConfirmDialogClose = () => {
+        setConfirmOpen(false);
+    };
+
+    const handleResetDialogClose = () => {
+        setResetOpen(false);
+    };
+
+    const handleConfirmReceivedForParcels = async () => {
+        const selectedParcelIds = rows.filter(row => isSelectedRowIds.includes(row.id)).map(row => row.parcelId);
+        if (selectedParcelIds.length === 0) {
+            toast.error('Please select at least one parcel to confirm received!');
+            setConfirmOpen(false);
+            return;
+        }
+        const selectedParcelTrackingCodes = rows.filter(row => isSelectedRowIds.includes(row.id)).map(row => row.parcelTrackingCode);
+        googleMap.updateStationDeliverySelectedParcelTrackingCodes(selectedParcelTrackingCodes);
+        const result = await addPlaceParcelsRecordsDataOfStation(selectedParcelIds, auth.user?.stationManagerId, auth.user?.stationId);
+        if (result.success) {
+            toast.success('Successfully confirmed received for selected parcels!');
+        } else {
+            toast.error('Ooops! ' + result.msg);
+        }
+        setConfirmOpen(false);
+    }
+
+    const handleResetReceivedForParcels = async () => {
+        googleMap.updateStationDeliverySelectedParcelTrackingCodes([]);
+        const result = await deletePlaceParcelsRecordsDataOfStation(auth.user?.stationManagerId, auth.user?.stationId);
+        result.success ? toast.success('Successfully reset received for all parcels!') : toast.error('Ooops! ' + result.msg);
+        setResetOpen(false);
+    }
 
     return (
         <Box>
             <DataGridTable rows={rows} columns={columns} handleRowHeight={handleRowHeight}
                            handleRowSelectionChange={handleRowSelectionChange}/>
+            <Paper sx={{display: 'flex', justifyContent: 'flex-end', mt: -0.2, mb: -0.8}}>
+                <Button
+                    variant="text"
+                    onClick={handleConfirmDialogOpen}
+                    sx={{ml: 0.8, mt: 1, mb: 2.1, fontSize: '15.8px', fontWeight: 'bold'}}
+                    startIcon={<DoneAllIcon/>}
+                >
+                    Confirm received for parcels
+                </Button>
+                <LinearStepperFinishDialog open={confirmOpen}
+                                           handleDialogClose={handleConfirmDialogClose}
+                                           handleFinishConfirm={handleConfirmReceivedForParcels}
+                                           taskType={'Confirm Received'}/>
+                <Button
+                    variant="text"
+                    onClick={handleResetDialogOpen}
+                    sx={{ml: 0.8, mt: 1, mb: 2.1, fontSize: '15.8px', fontWeight: 'bold'}}
+                    startIcon={(
+                        <SvgIcon fontSize="small">
+                            <ArrowPathIcon/>
+                        </SvgIcon>
+                    )}
+                >
+                    Reset received parcels
+                </Button>
+                <LinearStepperFinishDialog open={resetOpen}
+                                           handleDialogClose={handleResetDialogClose}
+                                           handleFinishConfirm={handleResetReceivedForParcels}
+                                           taskType={'Reset Received'}/>
+            </Paper>
         </Box>
     )
 }

@@ -3,6 +3,7 @@ package com.example.fypspringbootcode.controller.request;
 import com.example.fypspringbootcode.entity.googleRoute.CourierCollectionRouteInfo;
 import com.example.fypspringbootcode.entity.googleRoute.CourierDeliveryRouteInfo;
 import com.example.fypspringbootcode.entity.googleRoute.CusTrackParcelRouteInfo;
+import com.example.fypspringbootcode.entity.googleRoute.StationDeliveringParcelsRouteInfo;
 import lombok.Data;
 
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.List;
 @Data
 public class RouteGeoAddressRequest {
     private List<CusTrackParcelRouteInfo> cusTrackParcelRouteAddresses;
+    private List<StationDeliveringParcelsRouteInfo> stationDeliveringParcelsRouteAddresses;
     private List<CourierCollectionRouteInfo> courierCollectionRouteAddresses;
     private List<CourierDeliveryRouteInfo> courierDeliveryRouteAddresses;
 }
