@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Image from 'next/image';
-import {styled, alpha} from '@mui/material/styles';
+import {styled, alpha, useTheme} from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -13,10 +13,12 @@ import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import {Avatar, Divider, ListItemIcon, Tooltip} from "@mui/material";
+import {Avatar, Chip, Divider, ListItemIcon, Tooltip} from "@mui/material";
 import {useAuthContext} from "@/contexts/auth-context";
 import {Logout} from "@mui/icons-material";
 import BadgeOutlinedIcon from '@mui/icons-material/BadgeOutlined';
+import GitHubIcon from '@mui/icons-material/GitHub';
+import Diversity2Icon from '@mui/icons-material/Diversity2';
 
 const SIDE_NAV_WIDTH = 285;
 
@@ -64,6 +66,7 @@ const TopAppBar = () => {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const isMenuOpen = Boolean(anchorEl);
     const auth = useAuthContext();
+    const theme = useTheme();
 
     const handleProfileMenuOpen = (event) => {
         setAnchorEl(event.currentTarget);
@@ -179,7 +182,42 @@ const TopAppBar = () => {
                         />
                     </Search>
                     <Box sx={{flexGrow: 1}}/>
+                    <Chip
+                        icon={<Diversity2Icon />}
+                        label="Welcome to Emerald Parcel Hub Website! You can know everything about your parcels here 👍!"
+                        variant="outlined"
+                        clickable
+                        sx={{
+                            border:1,
+                            bgcolor: theme.palette.customized.purpleLight,
+                            borderColor: theme.palette.primary.main,
+                            color: theme.palette.primary.main,
+                            fontSize: '0.875rem',
+                            fontWeight:580,
+                            paddingY: theme.spacing(2.1),
+                            '& .MuiChip-icon': {
+                                color: 'inherit',
+                                marginLeft:1.5
+                            },
+                            '&:hover': {
+                                border:2,
+                                backgroundColor: `${theme.palette.customized.purpleLight} !important`,
+                            },
+                        }}
+                    />
                     <Box sx={{display: {xs: 'none', md: 'flex'}}}>
+                        <IconButton size="large" aria-label="show 4 new mails" sx={{ml:0.7, mr:-0.7}}
+                                    onClick={() => window.open('https://github.com/Dovis01/FYP-Emerald-ParcelHub', '_blank')}>
+                            <Tooltip title="Access Github Repository" arrow PopperProps={{
+                                sx: {
+                                    '& .MuiTooltip-tooltip': {
+                                        fontSize: '0.78em',
+                                    }
+                                }
+                            }}>
+                                    <GitHubIcon/>
+                            </Tooltip>
+                        </IconButton>
                         <IconButton size="large" aria-label="show 4 new mails" >
                             <Tooltip title="Email notification" arrow PopperProps={{
                                 sx: {

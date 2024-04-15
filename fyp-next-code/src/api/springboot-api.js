@@ -63,14 +63,25 @@ export const uploadEcommerceSimulationRealTimeData = async (simulationData) => {
     return response.json();
 };
 
-export const uploadEcommerceSimulationPastTimeData = async (simulationData) => {
-    const response = await fetch(`http://localhost:9090/api/ecommerceJsonData/v1/insert`, {
+export const uploadEcommerceSimulationPastTimeData = async (simulationPastData) => {
+    const response = await fetch(`http://localhost:9090/api/pastStatistics/v1/insert`, {
         headers: {
             'Content-Type': 'application/json',
             'Authorization': window.sessionStorage.getItem('token')
         },
         method: 'post',
-        body: JSON.stringify({jsonData: simulationData})
+        body: JSON.stringify({jsonDataRecords: simulationPastData})
+    });
+    return response.json();
+};
+
+export const getEcommerceSimulationPastTimeDataByRoleType = async (roleType) => {
+    const response = await fetch(`http://localhost:9090/api/pastStatistics/v1/part-data/${roleType}`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': window.sessionStorage.getItem('token')
+        },
+        method: 'get',
     });
     return response.json();
 };
@@ -109,29 +120,6 @@ export const getAllEcommerceSimulationData = async () => {
     return response.json();
 };
 
-export const getAllCustomerPersonalOrdersData = async (customerId) => {
-    const response = await fetch(`http://localhost:9090/api/order/v1/part-data/customer/${customerId}`, {
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': window.sessionStorage.getItem('token')
-        },
-        method: 'get'
-    });
-    return response.json();
-};
-
-export const getAllCustomerPersonalParcelsData = async (customerId) => {
-    const response = await fetch(`http://localhost:9090/api/parcel/v1/part-data/customer/${customerId}`, {
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': window.sessionStorage.getItem('token')
-        },
-        method: 'get'
-    });
-    return response.json();
-};
-
-
 /**
  * API for Google Map Geocoding
  * */
@@ -144,6 +132,18 @@ export const transferCusTrackParcelRouteAddressToLatAndLng = async (routeAddress
         },
         method: 'post',
         body: JSON.stringify({cusTrackParcelRouteAddresses: routeAddressesData})
+    });
+    return response.json();
+};
+
+export const transferStationDeliveringParcelsRouteAddressToLatAndLng = async (routeAddressesData) => {
+    const response = await fetch(`http://localhost:9090/api/googleGeocodingCache/v1/transfer/route-addresses/station-delivering-parcels`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': window.sessionStorage.getItem('token')
+        },
+        method: 'post',
+        body: JSON.stringify({stationDeliveringParcelsRouteAddresses: routeAddressesData})
     });
     return response.json();
 };
@@ -185,8 +185,71 @@ export const getAddressLatitudeAndLongitude = async (addresses) => {
 };
 
 /**
+ * API for Customer
+ * */
+
+export const getAllCustomersInfoDataForAdmin = async () => {
+    const response = await fetch(`http://localhost:9090/api/customer/v1/all/customers-info`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': window.sessionStorage.getItem('token')
+        },
+        method: 'get'
+    });
+    return response.json();
+};
+
+export const getAllCustomerPersonalOrdersData = async (customerId) => {
+    const response = await fetch(`http://localhost:9090/api/order/v1/part-data/customer/${customerId}`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': window.sessionStorage.getItem('token')
+        },
+        method: 'get'
+    });
+    return response.json();
+};
+
+export const getAllCustomerPersonalParcelsData = async (customerId) => {
+    const response = await fetch(`http://localhost:9090/api/parcel/v1/part-data/customer/${customerId}`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': window.sessionStorage.getItem('token')
+        },
+        method: 'get'
+    });
+    return response.json();
+};
+
+/**
+ * API for Company Employee
+ * */
+
+export const getAllCompanyEmployeesInfoDataForAdmin = async () => {
+    const response = await fetch(`http://localhost:9090/api/companyEmployee/v1/all/employees-info`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': window.sessionStorage.getItem('token')
+        },
+        method: 'get'
+    });
+    return response.json();
+};
+
+/**
  * API for Courier
  * */
+
+export const getAllCouriersInfoDataForAdmin = async () => {
+    const response = await fetch(`http://localhost:9090/api/courier/v1/all/couriers-info`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': window.sessionStorage.getItem('token')
+        },
+        method: 'get'
+    });
+    return response.json();
+};
 
 export const getCourierTodayCollectionTasks = async (courierId) => {
     const response = await fetch(`http://localhost:9090/api/courierCollectionRecord/v1/today-tasks/${courierId}`, {
@@ -266,6 +329,80 @@ export const updateCourierPersonalInfo = async (infoBody, courierId) => {
     return response.json();
 };
 
+export const disableCourier = async (courierId) => {
+    const response = await fetch(`http://localhost:9090/api/courier/v1/update/disable/${courierId}`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': window.sessionStorage.getItem('token')
+        },
+        method: 'put',
+    });
+    return response.json();
+};
+
+/**
+ * API for Station Manager
+ * */
+
+export const getAllStationManagersInfoDataForAdmin = async () => {
+    const response = await fetch(`http://localhost:9090/api/stationManager/v1/all/stationManagers-info`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': window.sessionStorage.getItem('token')
+        },
+        method: 'get'
+    });
+    return response.json();
+};
+
+export const updateStationManagerPersonalInfo = async (infoBody, stationManagerId) => {
+    const response = await fetch(`http://localhost:9090/api/stationManager/v1/personal/update/${stationManagerId}`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': window.sessionStorage.getItem('token')
+        },
+        method: 'put',
+        body: JSON.stringify(infoBody)
+    });
+    return response.json();
+};
+
+export const disableStationManager= async (stationManagerId) => {
+    const response = await fetch(`http://localhost:9090/api/stationManager/v1/update/disable/${stationManagerId}`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': window.sessionStorage.getItem('token')
+        },
+        method: 'put',
+    });
+    return response.json();
+};
+
+/**
+ * API for Parcel Hub Station
+ * */
+
+export const getDeliveringParcelsDataOfParcelStation = async (stationId) => {
+    const response = await fetch(`http://localhost:9090/api/parcel/v1/part-data/parcel-station/delivering/${stationId}`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': window.sessionStorage.getItem('token')
+        },
+        method: 'get'
+    });
+    return response.json();
+};
+
+export const getStoredParcelsDataOfParcelStation = async (stationId) => {
+    const response = await fetch(`http://localhost:9090/api/parcel/v1/part-data/parcel-station/stored/${stationId}`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': window.sessionStorage.getItem('token')
+        },
+        method: 'get'
+    });
+    return response.json();
+};
 
 /**
  * API for Registered Account
@@ -309,3 +446,136 @@ export const refreshParcelsStatusInBatchForCourier = async (parcelTrackingCodes,
     });
     return response.json();
 };
+
+/**
+ * API for Station Parcels to Place
+ * */
+
+export const addPlaceParcelsRecordsDataOfStation = async (parcelIds, stationManagerId, stationId) => {
+    const response = await fetch(`http://localhost:9090/api/stationParcelsToPlace/v1/place-parcels-records/${stationManagerId}/${stationId}`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': window.sessionStorage.getItem('token')
+        },
+        method: 'post',
+        body: JSON.stringify({parcelIds: parcelIds})
+    });
+    return response.json();
+};
+
+export const getPlaceParcelsRecordsDataOfStation = async (stationManagerId, stationId) => {
+    const response = await fetch(`http://localhost:9090/api/stationParcelsToPlace/v1/search/place-parcels-records/${stationManagerId}/${stationId}`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': window.sessionStorage.getItem('token')
+        },
+        method: 'get',
+    });
+    return response.json();
+};
+
+export const deletePlaceParcelsRecordsDataOfStation = async (stationManagerId, stationId) => {
+    const response = await fetch(`http://localhost:9090/api/stationParcelsToPlace/v1/remove/place-parcels-records/${stationManagerId}/${stationId}`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': window.sessionStorage.getItem('token')
+        },
+        method: 'delete',
+    });
+    return response.json();
+};
+
+/**
+ * API for Parcel Station Shelf
+ * */
+
+export const getShelvesStorageDataOfParcelStation = async (stationId) => {
+    const response = await fetch(`http://localhost:9090/api/parcelStationShelf/v1/shelves-storage-data/${stationId}`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': window.sessionStorage.getItem('token')
+        },
+        method: 'get',
+    });
+    return response.json();
+}
+
+export const placeOneParcelToParcelStationShelf = async (parcelId, values,stationId) => {
+    const response = await fetch(`http://localhost:9090/api/parcelStationShelf/v1/place-parcel/${parcelId}/${stationId}`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': window.sessionStorage.getItem('token')
+        },
+        method: 'post',
+        body: JSON.stringify({
+            mainShelfSerialNumber: values.mainShelfSerialNumber,
+            floorSerialNumber: values.floorSerialNumber,
+            maxStorageParcelNumber: values.maxParcelsNumToStore,
+        })
+    });
+    return response.json();
+}
+
+export const resetOneParcelStationAllShelvesData = async (stationId) => {
+    const response = await fetch(`http://localhost:9090/api/parcelStationShelf/v1/reset-shelves-storage-data/${stationId}`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': window.sessionStorage.getItem('token')
+        },
+        method: 'put',
+    });
+    return response.json();
+}
+
+/**
+ * API for Information Notification
+ * */
+
+export const sendInformationNotificationData = async (sendInfo, sendWay) => {
+    const response = await fetch(`http://localhost:9090/api/infoNotification/send-notification/${sendWay}`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': window.sessionStorage.getItem('token')
+        },
+        method: 'post',
+        body: JSON.stringify({
+            targetPhone: sendInfo.targetPhone,
+            phoneMessage: sendInfo.phoneMessage,
+            toAddress: sendInfo.toAddress,
+            customerName: sendInfo.customerName,
+            stationAddress: sendInfo.stationAddress,
+            pickupCode: sendInfo.pickupCode,
+        })
+    });
+    return response.json();
+}
+
+/**
+ * API for Parcel Pickup Code
+ * */
+
+export const getParcelPickupCodesByCustomerId = async (customerId) => {
+    const response = await fetch(`http://localhost:9090/api/parcelPickupCode/v1/search/customer/${customerId}`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': window.sessionStorage.getItem('token')
+        },
+        method: 'get',
+    });
+    return response.json();
+}
+
+/**
+ * API for Ecommerce Website
+ * */
+
+export const getEcommerceWebsiteInfoStatisticsByCustomerId = async (customerId) => {
+    const response = await fetch(`http://localhost:9090/api/ecommerceWebsite/v1/info-statistics/customer/${customerId}`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': window.sessionStorage.getItem('token')
+        },
+        method: 'get',
+    });
+    return response.json();
+}
