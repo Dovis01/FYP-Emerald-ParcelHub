@@ -39,6 +39,8 @@ export const indigo = withAlphas({
 export const customized = withAlphas({
   main: '#b2e9dd',
   purple: '#cfd1ff',
+  purpleLight: 'rgba(215,231,251,0.87)',
+  purpleDark: 'rgba(138,99,253,0.87)',
   mapCol: 'rgba(0,0,0,0.55)',
   grey: '#eeeeee',
   blueLight: 'rgba(232,245,253,0.96)',
@@ -76,7 +78,7 @@ export const warning = withAlphas({
 
 export const error = withAlphas({
   lightest: '#FEF3F2',
-  light: '#FEE4E2',
+  light: '#d26f65',
   main: '#F04438',
   dark: '#B42318',
   darkest: '#7A271A',

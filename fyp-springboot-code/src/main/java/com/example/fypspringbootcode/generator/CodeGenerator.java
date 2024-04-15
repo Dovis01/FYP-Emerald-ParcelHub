@@ -38,8 +38,8 @@ public class CodeGenerator {
                             .pathInfo(Collections.singletonMap(OutputFile.xml, "D:\\SETU_Study\\FYP-Code\\FinalYearProjectCode\\fyp-springboot-code\\src\\main\\resources\\mapper"));
                 })
                 .strategyConfig(builder -> {
-                    builder.addInclude("role")
-                            .addTablePrefix("t_", "c_")
+                    builder.addInclude("t_23_past_statistics")
+                            .addTablePrefix("t_23_")
                             .entityBuilder().enableFileOverride()
                             .controllerBuilder().enableFileOverride()
                             .serviceBuilder().enableFileOverride()

@@ -68,7 +68,7 @@ export const AuthContextProvider = (props) => {
     const roleMappings = {
         'Customer': 'customer',
         'Courier': 'courier',
-        'ParcelStationManager': 'stationManager',
+        'Station-Manager': 'stationManager',
         'Admin': 'admin'
     };
 
@@ -92,21 +92,32 @@ export const AuthContextProvider = (props) => {
 
         const user = {
             customerId: 1207,
+            stationId:2001,
             //courierId: 1020,
             //workType: 'Collect Parcels',
-            courierId: 1019,
-            workType: 'Deliver Parcels',
+            //courierId: 1019,
+            //workType: 'Deliver Parcels',
+            stationManagerId: 105,
+            startDate: "2024-02-14",
+            endDate: "2024-02-22",
+            registerTime: "2024-02-14 01:27:10",
+            dailyMaxDistributionParcelsNum: 7,
+            remainingParcelsNumToDistribute: 5,
             truckType: 'Small',
             maxWeight: 100,
             country: 'Ireland',
             city: 'Waterford',
             avatar: '/assets/avatars/avatar-anika-visser.png',
-            roleType: 'Courier',
-            //roleType: 'Customer',
+            accountId: 2051,
+            //roleType: 'Admin',
+            //roleType: 'Station-Manager',
+            //roleType: 'Courier',
+            roleType: 'Customer',
             adminName: 'AdminRoot',
             username: 'Anika Visser',
             fullName: 'Anika Visser',
-            email: 'anika.visser@devias.io'
+            email: 'anika.visser@devias.io',
+            status:true
         };
 
         window.sessionStorage.setItem('authenticated', 'true');

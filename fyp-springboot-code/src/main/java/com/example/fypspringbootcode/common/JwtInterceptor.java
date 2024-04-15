@@ -18,6 +18,7 @@ import com.example.fypspringbootcode.service.ICourierService;
 import com.example.fypspringbootcode.service.ICustomerService;
 import com.example.fypspringbootcode.service.IStationManagerService;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -42,7 +43,7 @@ public class JwtInterceptor implements HandlerInterceptor {
     private IStationManagerService stationManagerService;
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+    public boolean preHandle(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull Object handler) {
         // get token from request header
         String authHeader = request.getHeader("Authorization");
         if (StrUtil.isBlank(authHeader)) {

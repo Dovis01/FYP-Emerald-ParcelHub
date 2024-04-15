@@ -11,6 +11,11 @@ import {useAuthContext} from "@/contexts/auth-context";
 import {DataGridTable} from "@/components/customized/dataGridTableRenderer/dataGridTable";
 import {ParcelItemsTableRenderer} from "@/components/customized/dataGridTableRenderer/parcelItemsTableRenderer";
 
+const pillDisplayMap = {
+    'Packaged': 'warning',
+    'In transit': 'info',
+    'Delivered': 'success',
+}
 
 export const MyOrdersDataDisplay = () => {
     const auth = useAuthContext();
@@ -71,7 +76,7 @@ export const MyOrdersDataDisplay = () => {
             headerClassName: 'super-app-theme--header',
             width: 155,
             renderCell: (params) => (
-                <SeverityPill color={params.value === 'Delivered' ? 'success' : 'warning'}>
+                <SeverityPill color={pillDisplayMap[params.value]}>
                     {params.value}
                 </SeverityPill>
             )
