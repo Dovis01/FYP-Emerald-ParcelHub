@@ -2,6 +2,7 @@ package com.example.fypspringbootcode.service;
 
 import com.example.fypspringbootcode.controller.dto.CourierRouteAddressGeoInfoDTO;
 import com.example.fypspringbootcode.controller.dto.CusTrackParcelGeoRouteDTO;
+import com.example.fypspringbootcode.controller.dto.StationDeliveringParcelsGeoRouteDTO;
 import com.example.fypspringbootcode.controller.request.RouteGeoAddressRequest;
 import com.example.fypspringbootcode.controller.request.TransferAddressRequest;
 import com.example.fypspringbootcode.entity.GoogleGeocodingCache;
@@ -17,6 +18,8 @@ import java.util.List;
 public interface IGoogleGeocodingCacheService extends IService<GoogleGeocodingCache> {
 
     List<CusTrackParcelGeoRouteDTO> transferCusTrackParcelRouteAddresses(RouteGeoAddressRequest request);
+
+    List<StationDeliveringParcelsGeoRouteDTO> transferStationDeliveringParcelsRouteAddresses(RouteGeoAddressRequest request);
 
     List<CourierRouteAddressGeoInfoDTO> transferCourierCollectionRouteAddresses(RouteGeoAddressRequest request);
 

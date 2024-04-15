@@ -4,12 +4,14 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.example.fypspringbootcode.common.config.AppConfig;
 import com.example.fypspringbootcode.controller.dto.CourierRouteAddressGeoInfoDTO;
 import com.example.fypspringbootcode.controller.dto.CusTrackParcelGeoRouteDTO;
+import com.example.fypspringbootcode.controller.dto.StationDeliveringParcelsGeoRouteDTO;
 import com.example.fypspringbootcode.controller.request.RouteGeoAddressRequest;
 import com.example.fypspringbootcode.controller.request.TransferAddressRequest;
 import com.example.fypspringbootcode.entity.GoogleGeocodingCache;
 import com.example.fypspringbootcode.entity.googleRoute.CourierCollectionRouteInfo;
 import com.example.fypspringbootcode.entity.googleRoute.CourierDeliveryRouteInfo;
 import com.example.fypspringbootcode.entity.googleRoute.CusTrackParcelRouteInfo;
+import com.example.fypspringbootcode.entity.googleRoute.StationDeliveringParcelsRouteInfo;
 import com.example.fypspringbootcode.exception.ServiceException;
 import com.example.fypspringbootcode.mapper.GoogleGeocodingCacheMapper;
 import com.example.fypspringbootcode.service.IGoogleGeocodingCacheService;
@@ -57,6 +59,35 @@ public class GoogleGeocodingCacheServiceImpl extends ServiceImpl<GoogleGeocoding
             CusTrackParcelGeoRouteDTO geoRoute = new CusTrackParcelGeoRouteDTO();
             List<GoogleGeocodingCache> routeRecord = new ArrayList<>();
             geoRoute.setOrderId(routeInfo.getOrderId());
+
+            for (String routeAddress : routeInfo.getRouteAddresses()) {
+                int lastCommaIndex = routeAddress.lastIndexOf(',');
+                String addressType = addressTypeMap.get(routeAddress.substring(lastCommaIndex + 2));
+                String address = routeAddress.substring(0, lastCommaIndex);
+
+                LambdaQueryWrapper<GoogleGeocodingCache> queryWrapper = new LambdaQueryWrapper<>();
+                queryWrapper.eq(GoogleGeocodingCache::getAddress, address);
+                getOneOpt(queryWrapper).ifPresentOrElse(
+                        routeRecord::add,
+                        () -> routeRecord.add(getGeoCodingFromGoogle(address, addressType))
+                );
+            }
+
+            geoRoute.setRouteRecord(routeRecord);
+            geoRoutes.add(geoRoute);
+        }
+
+        return geoRoutes;
+    }
+
+    @Override
+    public List<StationDeliveringParcelsGeoRouteDTO> transferStationDeliveringParcelsRouteAddresses(RouteGeoAddressRequest request) {
+        List<StationDeliveringParcelsGeoRouteDTO> geoRoutes = new ArrayList<>();
+
+        for (StationDeliveringParcelsRouteInfo routeInfo : request.getStationDeliveringParcelsRouteAddresses()) {
+            StationDeliveringParcelsGeoRouteDTO geoRoute = new StationDeliveringParcelsGeoRouteDTO();
+            List<GoogleGeocodingCache> routeRecord = new ArrayList<>();
+            geoRoute.setParcelTrackingCodes(routeInfo.getParcelTrackingCodes());
 
             for (String routeAddress : routeInfo.getRouteAddresses()) {
                 int lastCommaIndex = routeAddress.lastIndexOf(',');

@@ -3,6 +3,7 @@ package com.example.fypspringbootcode.controller;
 import com.example.fypspringbootcode.common.Result;
 import com.example.fypspringbootcode.controller.dto.CourierRouteAddressGeoInfoDTO;
 import com.example.fypspringbootcode.controller.dto.CusTrackParcelGeoRouteDTO;
+import com.example.fypspringbootcode.controller.dto.StationDeliveringParcelsGeoRouteDTO;
 import com.example.fypspringbootcode.controller.request.RouteGeoAddressRequest;
 import com.example.fypspringbootcode.controller.request.TransferAddressRequest;
 import com.example.fypspringbootcode.entity.GoogleGeocodingCache;
@@ -29,6 +30,12 @@ public class GoogleGeocodingCacheController {
     public Result transferCusTrackParcelRouteAddresses(@RequestBody RouteGeoAddressRequest request) {
         List<CusTrackParcelGeoRouteDTO> geoRoutes= googleGeocodingCacheService.transferCusTrackParcelRouteAddresses(request);
         return Result.success(geoRoutes, "Get route records for customer tracking parcel with latitude and longitude successfully.");
+    }
+
+    @PostMapping("/v1/transfer/route-addresses/station-delivering-parcels")
+    public Result transferStationDeliveringParcelsRouteAddresses(@RequestBody RouteGeoAddressRequest request) {
+        List<StationDeliveringParcelsGeoRouteDTO> geoRoutes= googleGeocodingCacheService.transferStationDeliveringParcelsRouteAddresses(request);
+        return Result.success(geoRoutes, "Get route records for parcel station delivering parcels with latitude and longitude successfully.");
     }
 
     @PostMapping("/v1/transfer/route-addresses/courier-collection")

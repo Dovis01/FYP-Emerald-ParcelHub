@@ -137,7 +137,7 @@ export const GoogleMapDisplay = () => {
             return <Marker
                 position={{lat: midpoint.lat(), lng: midpoint.lng()}}
                 icon={{
-                    url: '/assets/icons/googleMap/truck.png',
+                    url: '/assets/icons/googleMap/Truck.png',
                     scaledSize: new window.google.maps.Size(80, 80),
                     anchor: new window.google.maps.Point(58, 50)
                 }}
