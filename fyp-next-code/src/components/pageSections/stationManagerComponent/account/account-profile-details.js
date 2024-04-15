@@ -1,4 +1,3 @@
-import {useCallback, useState} from 'react';
 import {
     Box,
     Button,
@@ -6,113 +5,92 @@ import {
     CardActions,
     CardContent,
     CardHeader,
-    Divider, FormControl, InputLabel, Paper, Select,
+    Divider, Paper,
     TextField,
     Unstable_Grid2 as Grid
 } from '@mui/material';
-import MenuItem from "@mui/material/MenuItem";
-import {styled} from '@mui/system';
-
-const CustomScrollMenu = styled('div')({
-    '&::-webkit-scrollbar': {
-        width: '8px',
-    },
-    '&::-webkit-scrollbar-track': {
-        background: '#f1f1f1',
-    },
-    '&::-webkit-scrollbar-thumb': {
-        background: '#888',
-        borderRadius: '4px',
-    },
-    '&::-webkit-scrollbar-thumb:hover': {
-        background: '#5e5e5e',
-    }
-});
-
-const countryMap = [
-    "China",
-    "America",
-    "England",
-    "Ireland",
-    "Australia",
-    "France",
-    "Japan",
-    "Germany"
-];
-
-const countryCitiesMap = {
-    america: [
-        "New York", "California", "Washington", "Texas", "Florida", "Illinois", "Pennsylvania", "Ohio"
-    ],
-    england: [
-        "London", "Manchester", "Liverpool", "Birmingham", "Leeds", "Bristol", "Newcastle", "Sheffield"
-    ],
-    ireland: [
-        "Dublin", "Cork", "Galway", "Limerick", "Waterford", "Drogheda", "Dundalk", "Bray"
-    ],
-    france: [
-        "Paris", "Marseille", "Lyon", "Toulouse", "Nice", "Nantes", "Strasbourg", "Montpellier"
-    ],
-    germany: [
-        "Berlin", "Munich", "Frankfurt", "Hamburg", "Cologne", "Stuttgart", "Düsseldorf", "Dresden"
-    ],
-    japan: [
-        "Tokyo", "Osaka", "Kyoto", "Hokkaido", "Nagoya", "Fukuoka", "Sapporo", "Kobe"
-    ],
-    australia: [
-        "Sydney", "Melbourne", "Brisbane", "Perth", "Adelaide", "Gold Coast", "Canberra", "Hobart"
-    ],
-    china: [
-        "Beijing", "Shanghai", "Nanjing", "Hangzhou", "Nantong", "Suzhou", "Wuxi", "Xuzhou", "Rugao", "Dongtai"
-    ],
-};
+import {useAuthContext} from "@/contexts/auth-context";
+import {updateStationManagerPersonalInfo, updateRegisteredAccountInfo} from "@/api/springboot-api";
+import {toast} from "react-toastify";
+import {useFormik} from "formik";
+import * as Yup from "yup";
 
 export const AccountProfileDetails = () => {
-    const [country, setCountry] = useState('china');
-    const [updatedUser, setUpdatedUser] = useState(null);
-    const [values, setValues] = useState({
-        firstName: 'Shijin',
-        lastName: 'Zhang',
-        email: '20104636@mail.wit.ie',
-        phone: '',
-        state: 'Waterford',
-        country: 'Ireland'
+    const auth = useAuthContext();
+    const nameList = auth.user?.fullName.split(' ');
+
+    const formik = useFormik({
+        initialValues: {
+            firstName: nameList[0] || '',
+            lastName: nameList[nameList.length - 1] || '',
+            phoneNumber: auth.user?.phoneNumber || '',
+            username: auth.user?.username || '',
+            email: auth.user?.email || '',
+            newPassword: '',
+            confirmPassword: '',
+            submit: null
+        },
+        validationSchema: Yup.object({
+            phoneNumber: Yup
+                .string()
+                .matches(/^\+353\s08\d{8}$/, 'Invalid mobile phone format. Expected format: +353 08XXXXXXXX'),
+            username: Yup
+                .string()
+                .max(20, 'Username must be 20 characters or less')
+                .matches(/^\S*$/, 'Username cannot contain spaces'),
+            email: Yup
+                .string()
+                .email('Must be a valid email')
+                .max(25, 'Email address must be 25 characters or less'),
+            newPassword: Yup
+                .string()
+                .max(25, 'Password must be 25 characters or less')
+                .min(8, 'Password must be at least 8 characters')
+                .matches(/[A-Z]/, 'Password must contain at least one uppercase letter')
+                .matches(/[0-9]/, 'Password must contain at least one number')
+                .matches(/[\^$*.\[\]{}()?"!@#%&/,><':;|_~`]/, 'Password must contain at least one special character') // 特殊字符集可能需要根据实际需求调整
+                .matches(/^\S*$/, 'Password cannot contain spaces'),
+            confirmPassword: Yup
+                .string()
+                .max(25, 'Confirm password must be 25 characters or less')
+                .min(8, 'Confirm password must be at least 8 characters')
+                .oneOf([Yup.ref('newPassword')], 'Passwords must match')
+                .matches(/^\S*$/, 'Confirm password cannot contain spaces'),
+        }),
+        onSubmit: async (values, helpers) => {
+            try {
+                const [stationManagerResult, accountResult] = await Promise.all([
+                    updateStationManagerPersonalInfo(values, auth.user.stationManagerId),
+                    updateRegisteredAccountInfo(values, auth.user.accountId)
+                ]);
+                if (stationManagerResult.success && accountResult.success) {
+                    toast.success('Your account info updated successfully!');
+                } else if(!stationManagerResult.success) {
+                    toast.error(stationManagerResult.msg);
+                } else if (!accountResult.success) {
+                    toast.error(accountResult.msg);
+                }else {
+                    toast.error('Ooops! Failed to update account info.');
+                }
+            } catch (err) {
+                helpers.setStatus({success: false});
+                helpers.setErrors({submit: err.message});
+                helpers.setSubmitting(false);
+            }
+        }
     });
-
-    const handleChange = useCallback(
-        (event) => {
-            setValues((prevState) => ({
-                ...prevState,
-                [event.target.name]: event.target.value
-            }));
-        },
-        []
-    );
-
-    const handleSubmit = useCallback(
-        (event) => {
-            event.preventDefault();
-        },
-        []
-    );
-
-    const handleCountryChange = (event) => {
-        setCountry(event.target.value);
-        setUpdatedUser({...updatedUser, country: event.target.value});
-    };
 
     return (
         <form
-            autoComplete="off"
             noValidate
-            onSubmit={handleSubmit}
+            onSubmit={formik.handleSubmit}
         >
             <Paper elevation={10} sx={{width: '195%', height: '100%', ml: 20.4}}>
                 <Card>
                     <CardHeader
                         subheader="The information can be edited"
                         title="Profile"
-                        sx={{ml: 4, mt: 6}}
+                        sx={{ml: 4, mt: 2.5}}
                     />
                     <CardContent sx={{pt: 0, ml: 4, mr: 3.5, mt: 1}}>
                         <Box sx={{m: -1.5}}>
@@ -126,12 +104,11 @@ export const AccountProfileDetails = () => {
                                 >
                                     <TextField
                                         fullWidth
-                                        helperText="Please specify the first name"
+                                        disabled
+                                        helperText="Your first name cannot be changed."
                                         label="First name"
                                         name="firstName"
-                                        onChange={handleChange}
-                                        required
-                                        value={values.firstName}
+                                        value={formik.values.firstName}
                                     />
                                 </Grid>
                                 <Grid
@@ -140,11 +117,49 @@ export const AccountProfileDetails = () => {
                                 >
                                     <TextField
                                         fullWidth
+                                        disabled
+                                        helperText="Your last name cannot be changed."
                                         label="Last name"
                                         name="lastName"
-                                        onChange={handleChange}
-                                        required
-                                        value={values.lastName}
+                                        value={formik.values.lastName}
+                                    />
+                                </Grid>
+                                <Grid
+                                    xs={12}
+                                    md={12}
+                                >
+                                    <TextField
+                                        error={!!(formik.touched.phoneNumber && formik.errors.phoneNumber)}
+                                        fullWidth
+                                        helperText={formik.touched.phoneNumber && formik.errors.phoneNumber}
+                                        label="PhoneNumber"
+                                        name="phoneNumber"
+                                        onBlur={formik.handleBlur}
+                                        onChange={formik.handleChange}
+                                        value={formik.values.phoneNumber}
+                                        autoComplete="phoneNumber"
+                                    />
+                                </Grid>
+                            </Grid>
+                            <Grid
+                                container
+                                spacing={3}
+                                sx={{mt: 1.5}}
+                            >
+                                <Grid
+                                    xs={12}
+                                    md={6}
+                                >
+                                    <TextField
+                                        error={!!(formik.touched.username && formik.errors.username)}
+                                        fullWidth
+                                        helperText={formik.touched.username && formik.errors.username}
+                                        label="User Name"
+                                        name="username"
+                                        onBlur={formik.handleBlur}
+                                        onChange={formik.handleChange}
+                                        value={formik.values.username}
+                                        autoComplete="username"
                                     />
                                 </Grid>
                                 <Grid
@@ -152,143 +167,63 @@ export const AccountProfileDetails = () => {
                                     md={6}
                                 >
                                     <TextField
+                                        error={!!(formik.touched.email && formik.errors.email)}
                                         fullWidth
+                                        helperText={formik.touched.email && formik.errors.email}
                                         label="Email Address"
                                         name="email"
-                                        onChange={handleChange}
-                                        required
-                                        value={values.email}
+                                        onBlur={formik.handleBlur}
+                                        onChange={formik.handleChange}
+                                        type="email"
+                                        value={formik.values.email}
+                                        autoComplete="email"
                                     />
                                 </Grid>
+                                <CardHeader
+                                    subheader="You can change your password"
+                                    title="Account Password"
+                                    sx={{mt:-2}}
+                                />
                                 <Grid
                                     xs={12}
-                                    md={6}
+                                    md={12}
                                 >
                                     <TextField
+                                        error={!!(formik.touched.newPassword && formik.errors.newPassword)}
                                         fullWidth
-                                        label="Phone Number"
-                                        name="phone"
-                                        onChange={handleChange}
-                                        value={values.phone}
+                                        helperText={formik.touched.newPassword && formik.errors.newPassword}
+                                        label="NewPassword"
+                                        name="newPassword"
+                                        onBlur={formik.handleBlur}
+                                        onChange={formik.handleChange}
+                                        type="password"
+                                        value={formik.values.newPassword}
+                                        autoComplete="new-password"
                                     />
                                 </Grid>
                                 <Grid
                                     xs={12}
-                                    md={6}
+                                    md={12}
                                 >
-                                    <FormControl fullWidth>
-                                        <InputLabel
-                                            id="country-label"
-                                            required
-                                            sx={{
-                                                mt: '1px',
-                                                '&.MuiInputLabel-shrink': {
-                                                    marginTop: '1rem',
-                                                },
-                                            }}
-                                        >
-                                            Select Country
-                                        </InputLabel>
-                                        <Select
-                                            value={country}
-                                            onChange={handleCountryChange}
-                                            // defaultValue={originalUser?.country || ''}
-                                            variant="outlined"
-                                            labelId="country-label"
-                                            sx={{
-                                                height: '55px',
-                                                '.MuiSelect-select': {
-                                                    paddingTop: '33px',
-                                                    textAlign: 'left',
-                                                }
-                                            }}
-                                            MenuProps={{
-                                                anchorOrigin: {
-                                                    vertical: 'bottom',
-                                                    horizontal: 'left',
-                                                },
-                                                transformOrigin: {
-                                                    vertical: 'top',
-                                                    horizontal: 'left',
-                                                },
-                                                getContentAnchorEl: null,
-                                                style: {marginTop: '1px', maxHeight: 420},
-                                                PaperProps: {
-                                                    component: CustomScrollMenu,
-                                                },
-                                            }}
-                                        >
-                                            <MenuItem value="">None</MenuItem>
-                                            {countryMap.map((country) => (
-                                                <MenuItem key={country}
-                                                          value={country.toLowerCase()}>{country}</MenuItem>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
-                                </Grid>
-                                <Grid
-                                    xs={12}
-                                    md={6}
-                                >
-                                    <FormControl fullWidth>
-                                        <InputLabel
-                                            id="city-label"
-                                            required
-                                            sx={{
-                                                mt: '1px',
-                                                '&.MuiInputLabel-shrink': {
-                                                    marginTop: '1rem',
-                                                },
-                                            }}
-                                        >
-                                            Select City
-                                        </InputLabel>
-                                        <Select
-                                            fullWidth
-                                            variant="outlined"
-                                            labelId="city-label"
-                                            sx={{
-                                                height: '55px',
-                                                '.MuiSelect-select': {
-                                                    paddingTop: '33px',
-                                                    textAlign: 'left',
-                                                }
-                                            }}
-                                            onChange={(e) => {
-                                                setUpdatedUser({
-                                                    ...updatedUser,
-                                                    city: e.target.value
-                                                });
-                                            }}
-                                            MenuProps={{
-                                                anchorOrigin: {
-                                                    vertical: 'bottom',
-                                                    horizontal: 'left',
-                                                },
-                                                transformOrigin: {
-                                                    vertical: 'top',
-                                                    horizontal: 'left',
-                                                },
-                                                getContentAnchorEl: null,
-                                                style: {marginTop: '1px', maxHeight: 420},
-                                                PaperProps: {
-                                                    component: CustomScrollMenu,
-                                                },
-                                            }}
-                                        >
-                                            <MenuItem value="">None</MenuItem>
-                                            {countryCitiesMap[country] ? countryCitiesMap[country].map((city) => (
-                                                <MenuItem key={city} value={city.toLowerCase()}>{city}</MenuItem>
-                                            )) : null}
-                                        </Select>
-                                    </FormControl>
+                                    <TextField
+                                        error={!!(formik.touched.confirmPassword && formik.errors.confirmPassword)}
+                                        fullWidth
+                                        helperText={formik.touched.confirmPassword && formik.errors.confirmPassword}
+                                        label="ConfirmPassword"
+                                        name="confirmPassword"
+                                        onBlur={formik.handleBlur}
+                                        onChange={formik.handleChange}
+                                        type="password"
+                                        value={formik.values.confirmPassword}
+                                        autoComplete="confirm-password"
+                                    />
                                 </Grid>
                             </Grid>
                         </Box>
                     </CardContent>
                     <Divider/>
                     <CardActions sx={{justifyContent: 'flex-end'}}>
-                        <Button variant="contained" sx={{mr: 3.5, mb: 8}}>
+                        <Button variant="contained" type="submit" sx={{mr: 3.5, mb: 4}}>
                             Save details
                         </Button>
                     </CardActions>

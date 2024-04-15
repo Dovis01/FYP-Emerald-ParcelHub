@@ -64,13 +64,13 @@ export const AccountProfileDetails = () => {
                     updateRegisteredAccountInfo(values, auth.user.accountId)
                 ]);
                 if (courierResult.success && accountResult.success) {
-                    toast.success('Successfully updated!');
+                    toast.success('Your account info updated successfully!');
                 } else if(!courierResult.success) {
                     toast.error(courierResult.msg);
                 } else if (!accountResult.success) {
                     toast.error(accountResult.msg);
                 }else {
-                    toast.error('Failed to update');
+                    toast.error('Ooops! Failed to update account info.');
                 }
             } catch (err) {
                 helpers.setStatus({success: false});
@@ -90,7 +90,7 @@ export const AccountProfileDetails = () => {
                     <CardHeader
                         subheader="The information can be edited"
                         title="Profile"
-                        sx={{ml: 4, mt: 6}}
+                        sx={{ml: 4, mt: 2.5}}
                     />
                     <CardContent sx={{pt: 0, ml: 4, mr: 3.5, mt: 1}}>
                         <Box sx={{m: -1.5}}>
@@ -179,6 +179,11 @@ export const AccountProfileDetails = () => {
                                         autoComplete="email"
                                     />
                                 </Grid>
+                                <CardHeader
+                                    subheader="You can change your password"
+                                    title="Account Password"
+                                    sx={{mt:-2}}
+                                />
                                 <Grid
                                     xs={12}
                                     md={12}
@@ -218,7 +223,7 @@ export const AccountProfileDetails = () => {
                     </CardContent>
                     <Divider/>
                     <CardActions sx={{justifyContent: 'flex-end'}}>
-                        <Button variant="contained" type="submit" sx={{mr: 3.5, mb: 8}}>
+                        <Button variant="contained" type="submit" sx={{mr: 3.5, mb: 4}}>
                             Save details
                         </Button>
                     </CardActions>

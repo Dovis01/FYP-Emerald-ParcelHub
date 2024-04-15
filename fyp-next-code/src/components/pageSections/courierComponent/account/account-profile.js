@@ -9,13 +9,32 @@ import {
     Typography
 } from '@mui/material';
 import {useAuthContext} from "@/contexts/auth-context";
+import * as React from "react";
+import {disableCourier} from "@/api/springboot-api";
+import {toast} from "react-toastify";
+import {SeverityPill} from "@/components/customized/severityPill";
 
 export const AccountProfile = () => {
     const auth = useAuthContext();
+
+    const handleAvatarFileChange = (event) => {
+        const file = event.target.files[0];
+        console.log(file);
+    }
+
+    const handleDisableCourier = async () => {
+        const result = await disableCourier(auth.user.courierId);
+        if (result.success) {
+            toast.success('Apply for absence successfully!');
+        } else {
+            toast.error('Ooops! Apply for absence failed.');
+        }
+    }
+
     return (
         <Paper elevation={10} sx={{width: '150%', height: '100%'}}>
             <Card>
-                <CardContent sx={{mt: 6}}>
+                <CardContent sx={{mt: 2.5}}>
                     <Box
                         sx={{
                             alignItems: 'center',
@@ -43,16 +62,123 @@ export const AccountProfile = () => {
                         >
                             {auth.user.city} {auth.user.country}
                         </Typography>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                                flexWrap: 'nowrap',
+                                justifyContent: 'center',
+                                mt: 0.4
+                            }}
+                        >
+                            <Typography
+                                color="text.secondary"
+                                sx={{
+                                    fontSize: '0.95rem',
+                                    fontWeight: 'bold',
+                                    mt: 1,
+                                    mr: 0.8
+                                }}
+                            >
+                                Role Status:
+                            </Typography>
+                            <SeverityPill color={auth.user?.status === true ? 'success' : 'warning'} sx={{mt: 1}}>
+                                {auth.user?.status === true ? 'Active' : 'Absent'}
+                            </SeverityPill>
+                        </Box>
+                        <Typography
+                            color="text.secondary"
+                            sx={{
+                                fontSize: '0.95rem',
+                                fontWeight: 'bold',
+                                mt: 3.3,
+                            }}
+                        >
+                            Num of Remaining Parcels to Distribute: {''}
+                            <Box
+                                component="a"
+                                sx={{color: 'primary.main'}}
+                                target="_blank"
+                            >
+                                {auth.user?.remainingParcelsNumToDistribute}
+                            </Box>
+                        </Typography>
+                        <Typography
+                            color="text.secondary"
+                            sx={{
+                                fontSize: '0.95rem',
+                                fontWeight: 'bold',
+                                mt: 1,
+                            }}
+                        >
+                            Max Num of Assigned Parcels at Daily: {''}
+                            <Box
+                                component="a"
+                                sx={{color: 'primary.main',ml:0.5}}
+                                target="_blank"
+                            >
+                                {auth.user?.dailyMaxDistributionParcelsNum}
+                            </Box>
+                        </Typography>
+                        <Typography
+                            color="text.secondary"
+                            sx={{
+                                fontSize: '0.95rem',
+                                fontWeight: 'bold',
+                                mt: 1,
+                            }}
+                        >
+                            Register Time: {''}
+                            <Box
+                                component="a"
+                                sx={{color: 'primary.main',ml:4.8}}
+                                target="_blank"
+                            >
+                                {auth.user?.registerTime}
+                            </Box>
+                        </Typography>
                     </Box>
                 </CardContent>
                 <Divider/>
-                <CardActions>
-                    <Button
-                        fullWidth
-                        variant="text"
+                <CardActions
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'flex-end',
+                        alignItems: 'center'
+                    }}
+                >
+                    <Box
+                        sx={{
+                            mt: 22.5,
+                            width: '80%',
+                        }}
                     >
-                        Upload picture
-                    </Button>
+                        <input
+                            style={{display: 'none'}}
+                            id="raised-button-avatar"
+                            type="file"
+                            onChange={handleAvatarFileChange}
+                        />
+                        <label htmlFor="raised-button-avatar">
+                            <Button
+                                fullWidth
+                                component="span"
+                                variant="contained"
+                            >
+                                Upload picture
+                            </Button>
+                        </label>
+                        <Button
+                            fullWidth
+                            color="error"
+                            variant="contained"
+                            sx={{mt: 1.5}}
+                            onClick={handleDisableCourier}
+                        >
+                            Apply For Absence
+                        </Button>
+                    </Box>
                 </CardActions>
             </Card>
         </Paper>
