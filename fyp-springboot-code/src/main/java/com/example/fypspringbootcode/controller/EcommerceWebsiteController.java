@@ -1,8 +1,11 @@
 package com.example.fypspringbootcode.controller;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.example.fypspringbootcode.common.Result;
+import com.example.fypspringbootcode.service.IEcommerceWebsiteService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 /**
  *
@@ -13,5 +16,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/ecommerceWebsite")
 public class EcommerceWebsiteController {
+
+    @Autowired
+    IEcommerceWebsiteService ecommerceWebsiteService;
+
+    @GetMapping("/v1/info-statistics/customer/{customerId}")
+    public Result getEcommerceWebsiteInfoStatisticsByCustomerId(@PathVariable Integer customerId) {
+        Map<String,Integer> info =ecommerceWebsiteService.getEcommerceWebsiteInfoStatisticsByCustomerId(customerId);
+        return Result.success(info, "Get ecommerce website info statistics by customer id successfully");
+    }
 
 }

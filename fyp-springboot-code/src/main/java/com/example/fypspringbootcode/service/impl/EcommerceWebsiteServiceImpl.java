@@ -9,6 +9,10 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import static com.example.fypspringbootcode.common.ErrorCodeList.*;
 
 /**
@@ -18,6 +22,26 @@ import static com.example.fypspringbootcode.common.ErrorCodeList.*;
 @Service
 @Slf4j
 public class EcommerceWebsiteServiceImpl extends ServiceImpl<EcommerceWebsiteMapper, EcommerceWebsite> implements IEcommerceWebsiteService {
+
+    @Override
+    public Map<String, Integer> getEcommerceWebsiteInfoStatisticsByCustomerId(Integer customerId) {
+        List<String> allWebsitesName = baseMapper.selectEcommerceWebsitesByCustomerId(customerId);
+        Map<String, Integer> statistics = new HashMap<>();
+        int totalCount = allWebsitesName.size();
+
+        for (String websiteName : allWebsitesName) {
+            statistics.put(websiteName, statistics.getOrDefault(websiteName, 0) + 1);
+        }
+
+        Map<String, Integer> percentages = new HashMap<>();
+        for (Map.Entry<String, Integer> entry : statistics.entrySet()) {
+            int percentage = (entry.getValue() * 100) / totalCount;
+            percentages.put(entry.getKey(), percentage);
+        }
+
+        return percentages;
+    }
+
     @Override
     public void addEcommerceWebsite(EcommerceWebsite ecommerceWebsite) {
         try {

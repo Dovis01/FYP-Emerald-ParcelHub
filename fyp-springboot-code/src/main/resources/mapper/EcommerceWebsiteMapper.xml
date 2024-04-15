@@ -2,4 +2,17 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.fypspringbootcode.mapper.EcommerceWebsiteMapper">
 
+    <select id="selectEcommerceWebsitesByCustomerId" resultType="String">
+        SELECT ew.website_name
+        FROM t_22_ecommerce_website AS ew
+        RIGHT JOIN
+        t_61_order AS o
+        ON ew.ecommerce_website_id =o.ecommerce_website_id
+        <where>
+            <if test="customerId != null and customerId != ''">
+                AND o.customer_id = #{customerId}
+            </if>
+        </where>
+    </select>
+
 </mapper>

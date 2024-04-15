@@ -1,8 +1,10 @@
 package com.example.fypspringbootcode.controller.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 /**
  * @title:FinalYearProjectCode
@@ -18,6 +20,8 @@ public class LoginCourierDTO {
     private Integer employeeId;
     private Integer dailyMaxDistributionParcelsNum;
     private Integer remainingParcelsNumToDistribute;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Dublin")
+    private LocalDateTime registerTime;
     private String workType;
     private Boolean courierStatus;
     // truck table
