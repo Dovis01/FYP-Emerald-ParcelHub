@@ -135,7 +135,7 @@ export const DeliveryRouteMapPlanning = () => {
                     lng: currentAddrFullInfo.addressGeoInfo.longitude
                 }}
                 icon={{
-                    url: '/assets/icons/googleMap/truck.png',
+                    url: '/assets/icons/googleMap/Truck.png',
                     scaledSize: new window.google.maps.Size(64, 64),
                     anchor: new window.google.maps.Point(32, 50)
                 }}

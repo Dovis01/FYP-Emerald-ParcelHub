@@ -118,11 +118,12 @@ export const DeliveryTasksDataDisplay = () => {
     };
 
     const columns = [
-        {field: 'id', headerName: 'Delivery Record Id', headerClassName: 'super-app-theme--header', width: 170},
+        {field: 'id', headerName: 'Delivery Record Id', headerClassName: 'super-app-theme--header', width: 156},
         {
             field: 'DeliveryOperation',
             headerName: 'Confirm Delivery',
-            width: 145,
+            headerClassName: 'super-app-theme--header',
+            width: 155,
             renderCell: (params) => <CourierTasksConfirmButtonRenderer row={params.row} statusInfo='Delivered' taskType='Delivery'/>
         },
         {field: 'orderId', headerName: 'Order Id', headerClassName: 'super-app-theme--header', width: 90},

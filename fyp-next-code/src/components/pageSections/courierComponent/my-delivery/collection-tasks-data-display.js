@@ -36,7 +36,11 @@ export const CollectionTasksDataDisplay = () => {
         if (!result.success) {
             toast.error('Ooops! ' + result.msg);
             return;
-        } else {
+        } else if(result.data.length === 0) {
+            toast.info('No collection tasks for today!');
+            return;
+        }
+        else {
             toast.success('Successfully fetched today collection tasks!');
         }
         const companyAddress = result.data[0].courier.employeeInfo.parcelHubCompany.address + ', PHC';
@@ -118,11 +122,12 @@ export const CollectionTasksDataDisplay = () => {
     };
 
     const columns = [
-        {field: 'id', headerName: 'Collection Record Id', headerClassName: 'super-app-theme--header', width: 170},
+        {field: 'id', headerName: 'Collection Record Id', headerClassName: 'super-app-theme--header', width: 160},
         {
             field: 'CollectionOperation',
             headerName: 'Confirm Collection',
-            width: 145,
+            headerClassName: 'super-app-theme--header',
+            width: 150,
             renderCell: (params) => <CourierTasksConfirmButtonRenderer row={params.row} statusInfo='Collected' taskType='Collection'/>
         },
         {field: 'orderId', headerName: 'Order Id', headerClassName: 'super-app-theme--header', width: 90},
