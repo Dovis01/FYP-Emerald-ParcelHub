@@ -22,4 +22,10 @@ public class AppConfig {
 
     public static final String GOOGLE_MAPS_API_KEY = dotenv.get("GOOGLE_MAPS_API_KEY");
 
+    public static final String AWS_ACCESS_KEY_ID = dotenv.get("AWS_ACCESS_KEY_ID");
+
+    public static final String AWS_SECRET_ACCESS_KEY = dotenv.get("AWS_SECRET_ACCESS_KEY");
+
+    public static final String AWS_REGION = dotenv.get("AWS_REGION");
+
 }
