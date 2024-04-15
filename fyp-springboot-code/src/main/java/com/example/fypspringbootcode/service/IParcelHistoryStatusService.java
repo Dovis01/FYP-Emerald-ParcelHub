@@ -24,6 +24,8 @@ public interface IParcelHistoryStatusService extends IService<ParcelHistoryStatu
 
     void resetParcelsToBeDelivered();
 
+    void clearAllParcelHistoryStatusData();
+
     List<ParcelHistoryStatus> getParcelHistoryStatusListByParcelId(Integer parcelId);
 
 }

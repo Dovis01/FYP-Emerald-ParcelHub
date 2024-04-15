@@ -19,11 +19,19 @@ public interface IParcelService extends IService<Parcel> {
 
     ArrayList<Map<String, Object>> getParcelDataByCustomerId(Integer customerId);
 
+    ArrayList<Map<String, Object>> getParcelsDataDeliveringToStationByStationId(Integer stationId);
+
+    ArrayList<Map<String, Object>> getParcelsDataStoredInStationByStationId(Integer stationId);
+
     List<Parcel> getAllParcelsToBeCollected();
 
     List<Parcel> getAllParcelsToBeDelivered();
 
     Parcel getOneParcelFullInfo(Integer parcelId);
+
+    void updateParcelShelfId(Integer parcelId, Integer shelfId);
+
+    void resetParcelsShelfIdsOfOneStation(Integer stationId);
 
     void deleteAllParcelsData();
 

@@ -25,10 +25,10 @@ public class ParcelInfoDTO {
     private ParcelHubCompany parcelHubCompany;
     // Courier Table
     private Courier courier;
+    // Truck Table
+    private Truck truckInfo;
     // Parcel Station Table
     private ParcelStation parcelStation;
-    // Parcel Station Shelf Table
-    private ParcelStationShelf parcelStationShelf;
     // Parcel Station Manager Employee Table
     private CompanyEmployee parcelStationManager;
 }

@@ -75,6 +75,15 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     }
 
     @Override
+    public void updateOrderStatusById(Integer orderId, String orderStatus) {
+        try {
+            lambdaUpdate().eq(Order::getOrderId, orderId).set(Order::getOrderStatus, orderStatus).update();
+        } catch (Exception e) {
+            throw new ServiceException(ERROR_CODE_500, "The internal system is error.");
+        }
+    }
+
+    @Override
     public ArrayList<Map<String, Object>> getOrderDataByCustomerId(Integer customerId) {
         List<Order> orderDataList = list(new LambdaQueryWrapper<Order>().eq(Order::getCustomerId, customerId));
         ArrayList<String> jsonStringList = convertOrderInfoToJsonString(orderDataList);

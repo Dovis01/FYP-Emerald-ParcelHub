@@ -1,11 +1,14 @@
 package com.example.fypspringbootcode.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.example.fypspringbootcode.entity.Parcel;
 import com.example.fypspringbootcode.entity.ParcelHistoryStatus;
 import com.example.fypspringbootcode.entity.ParcelTrackingCode;
 import com.example.fypspringbootcode.exception.ServiceException;
 import com.example.fypspringbootcode.mapper.ParcelHistoryStatusMapper;
+import com.example.fypspringbootcode.mapper.ParcelMapper;
 import com.example.fypspringbootcode.mapper.ParcelTrackingCodeMapper;
+import com.example.fypspringbootcode.service.IOrderService;
 import com.example.fypspringbootcode.service.IParcelHistoryStatusService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,13 +30,26 @@ public class ParcelHistoryStatusServiceImpl extends ServiceImpl<ParcelHistorySta
     @Autowired
     private ParcelTrackingCodeMapper parcelTrackingCodeMapper;
 
+    @Autowired
+    private IOrderService orderService;
+
+    @Autowired
+    private ParcelMapper parcelMapper;
+
     @Override
     public void refreshParcelHistoryStatus(String parcelTrackingCode, String statusInfo) {
         ParcelHistoryStatus parcelHistoryStatus = new ParcelHistoryStatus();
         Integer parcelId = parcelTrackingCodeMapper.selectOne(Wrappers.<ParcelTrackingCode>lambdaQuery().select(ParcelTrackingCode::getParcelId).eq(ParcelTrackingCode::getParcelTrackingCode, parcelTrackingCode)).getParcelId();
+        Integer orderId = parcelMapper.selectOne(Wrappers.<Parcel>lambdaQuery().select(Parcel::getOrderId).eq(Parcel::getParcelId, parcelId)).getOrderId();
         parcelHistoryStatus.setParcelId(parcelId);
         parcelHistoryStatus.setStatusInfo(statusInfo);
         parcelHistoryStatus.setStatusUpdateTimestamp(LocalDateTime.now());
+        if (statusInfo.equals("Collected")) {
+            orderService.updateOrderStatusById(orderId, "In transit");
+        }
+        if (statusInfo.equals("Delivered")) {
+            orderService.updateOrderStatusById(orderId, "Delivered");
+        }
         try {
             save(parcelHistoryStatus);
         } catch (Exception e) {
@@ -89,6 +105,16 @@ public class ParcelHistoryStatusServiceImpl extends ServiceImpl<ParcelHistorySta
         } catch (Exception e) {
             log.error("The mybatis has failed to remove parcels to be delivered.", e);
             throw new ServiceException(ERROR_CODE_404, "The history status of parcels to be delivered is not found to delete.");
+        }
+    }
+
+    @Override
+    public void clearAllParcelHistoryStatusData() {
+        try {
+            remove(null);
+        } catch (Exception e) {
+            log.error("The mybatis has failed to delete all the parcel history status data", e);
+            throw new ServiceException(ERROR_CODE_500, "The internal system is error.");
         }
     }
 

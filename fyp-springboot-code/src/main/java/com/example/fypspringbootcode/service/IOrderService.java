@@ -16,6 +16,8 @@ public interface IOrderService extends IService<Order> {
 
     void addOrdersInfoInBatch(JsonArray ecommerceJsonData);
 
+    void updateOrderStatusById(Integer orderId, String orderStatus);
+
     ArrayList<Map<String, Object>> getOrderDataByCustomerId(Integer customerId);
 
     void deleteAllOrdersData();

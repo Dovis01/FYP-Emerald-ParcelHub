@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.fypspringbootcode.mapper.ParcelPickupCodeMapper">
+
+    <select id="getParcelPickupCodesByCustomerId" resultType="String">
+        SELECT ppc.pickup_code
+        FROM t_55_parcel_pickup_code AS ppc
+        LEFT JOIN
+        t_51_parcel AS p
+        ON ppc.parcel_id = p.parcel_id
+        LEFT JOIN
+        t_61_order AS o
+        ON p.order_id = o.order_id
+        <where>
+            <if test="customerId != null and customerId != ''">
+                AND o.customer_id = #{customerId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

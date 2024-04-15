@@ -29,6 +29,9 @@ public class Parcel implements Serializable {
     @TableField(exist = false)
     private String parcelTrackingCode;
 
+    @TableField(exist = false)
+    private String parcelPickupCode;
+
     private BigDecimal length;
 
     private BigDecimal width;
