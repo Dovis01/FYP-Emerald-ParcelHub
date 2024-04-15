@@ -1,6 +1,7 @@
 package com.example.fypspringbootcode.controller;
 
 import com.example.fypspringbootcode.common.Result;
+import com.example.fypspringbootcode.controller.dto.CustomerInfoDTO;
 import com.example.fypspringbootcode.controller.dto.LoginCustomerDTO;
 import com.example.fypspringbootcode.controller.request.LoginRequest;
 import com.example.fypspringbootcode.controller.request.RegisterCustomerRequest;
@@ -9,6 +10,8 @@ import com.example.fypspringbootcode.service.ICustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static com.example.fypspringbootcode.common.ErrorCodeList.ERROR_CODE_400;
 
@@ -49,6 +52,12 @@ public class CustomerController {
     public Result getByFullName(@PathVariable Integer customerId) {
         Customer customer = customerService.getByCustomerId(customerId);
         return Result.success(customer, "The customer has been found successfully");
+    }
+
+    @GetMapping("/v1/all/customers-info")
+    public Result getAllCustomersInfoForAdmin() {
+        List<CustomerInfoDTO> customersInfo = customerService.getAllCustomersInfoForAdmin();
+        return Result.success(customersInfo, "All customers' information has been retrieved successfully");
     }
 
     @DeleteMapping("/v1/{customerId}")

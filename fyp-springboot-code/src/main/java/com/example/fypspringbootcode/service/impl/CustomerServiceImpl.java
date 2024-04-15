@@ -3,6 +3,7 @@ package com.example.fypspringbootcode.service.impl;
 import cn.hutool.core.util.ArrayUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.example.fypspringbootcode.controller.dto.CustomerInfoDTO;
 import com.example.fypspringbootcode.controller.dto.LoginCustomerDTO;
 import com.example.fypspringbootcode.controller.request.LoginRequest;
 import com.example.fypspringbootcode.controller.request.RegisterCustomerRequest;
@@ -14,6 +15,7 @@ import com.example.fypspringbootcode.mapper.CustomerMapper;
 import com.example.fypspringbootcode.mapper.EcommerceJsonDataMapper;
 import com.example.fypspringbootcode.service.ICustomerService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.fypspringbootcode.service.IRegisteredAccountService;
 import com.example.fypspringbootcode.utils.FypProjectUtils;
 import com.example.fypspringbootcode.utils.TokenUtils;
 import com.google.gson.JsonArray;
@@ -41,7 +43,7 @@ import static com.example.fypspringbootcode.common.ErrorCodeList.*;
 public class CustomerServiceImpl extends ServiceImpl<CustomerMapper, Customer> implements ICustomerService {
 
     @Autowired
-    private RegisteredAccountServiceImpl registeredAccountService;
+    private IRegisteredAccountService registeredAccountService;
 
     @Autowired
     private EcommerceJsonDataMapper ecommerceJsonDataMapper;
@@ -180,6 +182,11 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerMapper, Customer> i
             throw new ServiceException(ERROR_CODE_500, "The internal system is error.");
         }
         return customer;
+    }
+
+    @Override
+    public List<CustomerInfoDTO> getAllCustomersInfoForAdmin() {
+        return baseMapper.getAllCustomersInfoList();
     }
 
     @Transactional

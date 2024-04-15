@@ -1,5 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.fypspringbootcode.mapper.CustomerMapper">
-
+    <select id="getAllCustomersInfoList" resultType="com.example.fypspringbootcode.controller.dto.CustomerInfoDTO">
+        SELECT c.customer_id,
+               c.full_name,
+               c.phone_number,
+               c.order_email,
+               c.city,
+               c.country,
+               c.address,
+               ra.username,
+               ra.email,
+               ra.register_time,
+               ra.update_time,
+               ra.status
+        FROM t_63_customer AS c
+                 LEFT JOIN
+             t_11_registered_account AS ra
+             ON c.account_id = ra.account_id
+    </select>
 </mapper>
