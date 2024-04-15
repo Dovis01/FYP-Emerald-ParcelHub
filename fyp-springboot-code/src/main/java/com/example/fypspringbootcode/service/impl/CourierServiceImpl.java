@@ -4,6 +4,7 @@ import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.fypspringbootcode.common.config.AppConfig;
+import com.example.fypspringbootcode.controller.dto.CourierInfoDTO;
 import com.example.fypspringbootcode.controller.dto.LoginCourierDTO;
 import com.example.fypspringbootcode.controller.request.LoginRequest;
 import com.example.fypspringbootcode.controller.request.RegisterEmployeeRoleRequest;
@@ -11,8 +12,10 @@ import com.example.fypspringbootcode.entity.CompanyEmployee;
 import com.example.fypspringbootcode.entity.Courier;
 import com.example.fypspringbootcode.exception.ServiceException;
 import com.example.fypspringbootcode.mapper.CourierMapper;
+import com.example.fypspringbootcode.service.ICompanyEmployeeService;
 import com.example.fypspringbootcode.service.ICourierService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.fypspringbootcode.service.IRegisteredAccountService;
 import com.example.fypspringbootcode.utils.FypProjectUtils;
 import com.example.fypspringbootcode.utils.TokenUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -31,10 +34,10 @@ import static com.example.fypspringbootcode.common.ErrorCodeList.*;
 public class CourierServiceImpl extends ServiceImpl<CourierMapper, Courier> implements ICourierService {
 
     @Autowired
-    private RegisteredAccountServiceImpl registeredAccountService;
+    private IRegisteredAccountService registeredAccountService;
 
     @Autowired
-    private CompanyEmployeeServiceImpl companyEmployeeService;
+    private ICompanyEmployeeService companyEmployeeService;
 
     @Override
     public LoginCourierDTO login(LoginRequest loginRequest) {
@@ -123,7 +126,15 @@ public class CourierServiceImpl extends ServiceImpl<CourierMapper, Courier> impl
     }
 
     @Override
+    public List<CourierInfoDTO> getAllCouriersInfoForAdmin() {
+        return baseMapper.getAllCouriersInfoList();
+    }
+
+    @Override
     public Courier getOneCourierFullObjectInfo(Integer courierId) {
+        if(courierId == null) {
+           return null;
+        }
         Courier courier = getById(courierId);
         courier.setEmployeeInfo(companyEmployeeService.getByEmployeeId(courier.getEmployeeId()));
         return courier;
@@ -218,10 +229,10 @@ public class CourierServiceImpl extends ServiceImpl<CourierMapper, Courier> impl
     @Override
     public void disableCourier(Integer courierId) {
         if (courierId == null) {
-            return;
+            throw new ServiceException(ERROR_CODE_400, "The courier id provided is null, please check it again.");
         }
         Courier courier = new Courier();
-        courier.setTruckId(courierId);
+        courier.setCourierId(courierId);
         courier.setCourierStatus(false);
         boolean isUpdated;
         try {

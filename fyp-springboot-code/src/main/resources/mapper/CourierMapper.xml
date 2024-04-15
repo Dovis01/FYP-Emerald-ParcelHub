@@ -8,6 +8,7 @@
         c.work_type,
         c.daily_max_distribution_parcels_num,
         c.remaining_parcels_num_to_distribute,
+        c.register_time,
         c.courier_status,
         t.truck_type,
         t.truck_plate_number,
@@ -62,6 +63,7 @@
         c.work_type,
         c.daily_max_distribution_parcels_num,
         c.remaining_parcels_num_to_distribute,
+        c.register_time,
         c.courier_status,
         t.truck_type,
         t.truck_plate_number,
@@ -103,5 +105,31 @@
                 AND c.courier_id = #{courierId}
             </if>
         </where>
+    </select>
+
+    <select id="getAllCouriersInfoList" resultType="com.example.fypspringbootcode.controller.dto.CourierInfoDTO">
+        SELECT c.courier_id,
+               c.work_type,
+               c.daily_max_distribution_parcels_num,
+               c.remaining_parcels_num_to_distribute,
+               c.register_time,
+               c.courier_status,
+               t.truck_type,
+               t.truck_plate_number,
+               t.max_weight,
+               t.storage_area_height,
+               t.storage_area_width,
+               t.storage_area_length,
+               t.volume,
+               t.truck_status,
+               ce.full_name,
+               ce.employee_code
+        FROM t_41_courier AS c
+                 LEFT JOIN
+             t_72_company_employee AS ce
+             ON c.employee_id = ce.employee_id
+                 LEFT JOIN
+             t_44_truck AS t
+             ON c.truck_id = t.truck_id
     </select>
 </mapper>

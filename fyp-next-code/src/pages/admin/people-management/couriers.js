@@ -1,14 +1,17 @@
 import Head from 'next/head';
 import {Box, Container, Stack, Typography, Unstable_Grid2 as Grid} from '@mui/material';
 import MainPageLayout from "@/components/layouts/mainPageLayout";
+import {
+    AllCouriersDataDisplay
+} from "@/components/pageSections/adminComponent/people-management/all-couriers-data-display";
 
 
-const OurPeopleCourierPage = () => {
+const PeopleManagementCouriersPage = () => {
     return (
         <>
             <Head>
                 <title>
-                    Our People | Courier
+                    People Management | Couriers
                 </title>
             </Head>
             <Box
@@ -33,7 +36,7 @@ const OurPeopleCourierPage = () => {
                                 md={6}
                                 lg={4}
                             >
-
+                                <AllCouriersDataDisplay/>
                             </Grid>
                         </Grid>
                     </Stack>
@@ -43,10 +46,10 @@ const OurPeopleCourierPage = () => {
     );
 };
 
-OurPeopleCourierPage.getLayout = (page) => (
+PeopleManagementCouriersPage.getLayout = (page) => (
     <MainPageLayout>
         {page}
     </MainPageLayout>
 );
 
-export default OurPeopleCourierPage;
+export default PeopleManagementCouriersPage;
