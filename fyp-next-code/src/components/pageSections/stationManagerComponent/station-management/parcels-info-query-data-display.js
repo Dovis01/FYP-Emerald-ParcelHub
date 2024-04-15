@@ -26,7 +26,6 @@ export const ParcelsInfoQueryDataDisplay = () => {
     const {user} = useAuthContext();
     const [rows, setRows] = useState([]);
     const [freshFlag, setFreshFlag] = useState(false);
-    const [informStatusText, setInformStatusText] = useState('Not yet');
 
     useEffect(() => {
         const fetchData = async () => {

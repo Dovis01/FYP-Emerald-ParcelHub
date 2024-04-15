@@ -1,32 +1,35 @@
-import PropTypes from 'prop-types';
-import ComputerDesktopIcon from '@heroicons/react/24/solid/ComputerDesktopIcon';
-import DeviceTabletIcon from '@heroicons/react/24/solid/DeviceTabletIcon';
-import PhoneIcon from '@heroicons/react/24/solid/PhoneIcon';
 import {
     Box,
     Card,
     CardContent,
     CardHeader,
     Stack,
-    SvgIcon,
-    Typography,
-    useTheme
+    Typography, useTheme
 } from '@mui/material';
-import dynamic from 'next/dynamic';
-import {styled} from '@mui/material/styles';
+import {Chart} from "@/components/customized/chart";
+import {useEffect, useState} from "react";
+import {getEcommerceWebsiteInfoStatisticsByCustomerId} from "@/api/springboot-api";
+import {useAuthContext} from "@/contexts/auth-context";
 
-
-const ApexChart = dynamic(() => import('react-apexcharts'), {
-    ssr: false,
-    loading: () => null
-});
-
-const Chart = styled(ApexChart)``;
-
-const useChartOptions = (labels) => {
+export const OverviewEwebsitePie = (props) => {
+    const {sx} = props;
+    const {user} = useAuthContext();
     const theme = useTheme();
+    const [chartSeries,setChartSeries] = useState([]);
+    const [labels,setLabels] = useState([]);
 
-    return {
+    useEffect(() => {
+        const fetchData = async () => {
+            const result = await getEcommerceWebsiteInfoStatisticsByCustomerId(user.customerId);
+            if(result.success){
+                setChartSeries(Object.values(result.data));
+                setLabels(Object.keys(result.data));
+            }
+        }
+        fetchData();
+    }, []);
+
+    const chartOptions = {
         chart: {
             background: 'transparent'
         },
@@ -36,15 +39,30 @@ const useChartOptions = (labels) => {
             theme.palette.warning.main
         ],
         dataLabels: {
-            enabled: false
+            enabled: true,
+            formatter(val, opts) {
+                const name = opts.w.globals.labels[opts.seriesIndex]
+                return [name, val.toFixed(1) + '%']
+            },
+            style: {
+                fontSize: '14px',
+                colors: ['#f1eaea']
+            }
         },
         labels,
         legend: {
-            show: false
+            show: true,
+            position: 'bottom',
+            horizontalAlign: 'center',
+            offsetY: 8,
+            offsetX: -5
         },
         plotOptions: {
             pie: {
-                expandOnClick: false
+                expandOnClick: false,
+                dataLabels: {
+                    offset: -5
+                }
             }
         },
         states: {
@@ -69,33 +87,10 @@ const useChartOptions = (labels) => {
             fillSeriesColor: false
         }
     };
-};
-
-const iconMap = {
-    Desktop: (
-        <SvgIcon>
-            <ComputerDesktopIcon/>
-        </SvgIcon>
-    ),
-    Tablet: (
-        <SvgIcon>
-            <DeviceTabletIcon/>
-        </SvgIcon>
-    ),
-    Phone: (
-        <SvgIcon>
-            <PhoneIcon/>
-        </SvgIcon>
-    )
-};
-
-export const OverviewContactTraffic = (props) => {
-    const {chartSeries, labels, sx} = props;
-    const chartOptions = useChartOptions(labels);
 
     return (
         <Card sx={sx}>
-            <CardHeader title="Contact Traffic Source"/>
+            <CardHeader title="E-commerce Websites Distribution for Orders"/>
             <CardContent>
                 <Chart
                     height={300}
@@ -123,7 +118,6 @@ export const OverviewContactTraffic = (props) => {
                                     alignItems: 'center'
                                 }}
                             >
-                                {iconMap[label]}
                                 <Typography
                                     sx={{my: 1}}
                                     variant="h6"
@@ -131,8 +125,8 @@ export const OverviewContactTraffic = (props) => {
                                     {label}
                                 </Typography>
                                 <Typography
-                                    color="text.secondary"
-                                    variant="subtitle2"
+                                    color="grey"
+                                    sx={{fontSize:'1rem',fontWeight:700}}
                                 >
                                     {item}%
                                 </Typography>
@@ -145,8 +139,3 @@ export const OverviewContactTraffic = (props) => {
     );
 };
 
-OverviewContactTraffic.propTypes = {
-    chartSeries: PropTypes.array.isRequired,
-    labels: PropTypes.array.isRequired,
-    sx: PropTypes.object
-};

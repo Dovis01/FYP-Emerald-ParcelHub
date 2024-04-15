@@ -1,35 +1,50 @@
-import ArrowDownIcon from '@heroicons/react/24/solid/ArrowDownIcon';
-import ArrowUpIcon from '@heroicons/react/24/solid/ArrowUpIcon';
-import DomainAddIcon from '@mui/icons-material/DomainAdd';
-import {Avatar, Box, Card, CardContent, Stack, SvgIcon, Typography} from '@mui/material';
-import {useEffect, useState} from "react";
-import {getAllCustomerPersonalParcelsData} from "@/api/springboot-api";
-import {useAuthContext} from "@/contexts/auth-context";
-import {Chart} from "@/components/customized/chart";
+import ListBulletIcon from '@heroicons/react/24/solid/ListBulletIcon';
+import {
+    Avatar,
+    Box,
+    Card,
+    CardContent,
+    Stack,
+    SvgIcon,
+    Typography
+} from '@mui/material';
 import {useTheme} from "@mui/material/styles";
+import {useAuthContext} from "@/contexts/auth-context";
+import {useEffect, useState} from "react";
+import {getAllCustomerPersonalOrdersData} from "@/api/springboot-api";
+import {Chart} from "@/components/customized/chart";
+import ArrowUpIcon from "@heroicons/react/24/solid/ArrowUpIcon";
+import ArrowDownIcon from "@heroicons/react/24/solid/ArrowDownIcon";
 
-export const OverviewParcelsOnWay = (props) => {
+function countTotalItems(data) {
+    return data.reduce((total, order) => {
+        const itemsCount = order.parcel.items.length;
+        return total + itemsCount;
+    }, 0);
+}
+
+export const OverviewItemsNum = (props) => {
     const theme = useTheme();
     const {difference, positive = false, sx, loadCacheData} = props;
-    const auth = useAuthContext();
+    const {user} = useAuthContext();
     const [value, setValue] = useState(null);
-    const seriesData = loadCacheData.OverviewParcelsOnWay || [];
+    const seriesData = loadCacheData.OverviewItemsNum || [];
 
     useEffect(() => {
         const fetchJsonData = async () => {
-            const result = await getAllCustomerPersonalParcelsData(auth.user.customerId);
-            setValue(() => result.data.length);
+            const result = await getAllCustomerPersonalOrdersData(user?.customerId);
+            setValue(() => countTotalItems(result.data));
         };
 
         fetchJsonData();
-    }, [auth.user.customerId]);
+    }, [user.customerId]);
 
     const options = {
         series: [{
-            name: 'No. of Parcels On the Way',
+            name: 'Total No. of Items in Parcels',
             data: seriesData
         }],
-        colors: [theme.palette.error.main],
+        colors: [theme.palette.warning.main],
         chart: {
             type: 'area',
             height: 160,
@@ -79,7 +94,7 @@ export const OverviewParcelsOnWay = (props) => {
                             <Typography
                                 sx={{fontSize: '1.08rem', fontWeight: '720'}}
                             >
-                                No. of Parcels On the Way
+                                Total No. of Items in Parcels
                             </Typography>
                             <Box
                                 sx={{
@@ -117,13 +132,13 @@ export const OverviewParcelsOnWay = (props) => {
                         </Stack>
                         <Avatar
                             sx={{
-                                backgroundColor: 'error.main',
+                                backgroundColor: 'warning.main',
                                 height: 56,
                                 width: 56
                             }}
                         >
                             <SvgIcon>
-                                <DomainAddIcon/>
+                                <ListBulletIcon/>
                             </SvgIcon>
                         </Avatar>
                     </Stack>

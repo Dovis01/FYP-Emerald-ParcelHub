@@ -3,17 +3,30 @@ import MainPageLayout from "@/components/layouts/mainPageLayout";
 import {Box, Grid, Paper} from "@mui/material";
 import {OverviewParcelsOnWay} from "@/components/pageSections/customerComponent/overview/overview-parcels-on-way";
 import {OverviewAwaitingPickup} from "@/components/pageSections/customerComponent/overview/overview-awaiting-pickup";
-import {OverviewPickupProgress} from "@/components/pageSections/customerComponent/overview/overview-pickup-progress";
-import {OverviewTotalProfit} from "@/components/pageSections/customerComponent/overview/overview-total-profit";
+import {OverviewItemsNum} from "@/components/pageSections/customerComponent/overview/overview-items-num";
+import {OverviewOrdersNum} from "@/components/pageSections/customerComponent/overview/overview-orders-num";
 import {OverviewTrends} from "@/components/pageSections/customerComponent/overview/overview-trends";
 import {OverviewToBePickedUpList} from "@/components/pageSections/customerComponent/overview/overview-to-be-pickedup-list";
-import {OverviewLatestInventory} from "@/components/pageSections/customerComponent/overview/overview-latest-inventory";
-import {OverviewLatestRecords} from "@/components/pageSections/customerComponent/overview/overview-latest-records";
-import {chartSeriesTrend, order, products} from "@/dataSimulation/overviewData";
 import {useAuthContext} from "@/contexts/auth-context";
+import {OverviewIntroDisplay} from "@/components/pageSections/customerComponent/overview/overview-intro-display";
+import {OverviewEwebsitePie} from "@/components/pageSections/customerComponent/overview/overview-ewebsite-pie";
+import {useEffect, useState} from "react";
+import {getEcommerceSimulationPastTimeDataByRoleType} from "@/api/springboot-api";
 
 const CustomerOverviewPage = () => {
     const auth = useAuthContext();
+    const [loadCacheData, setLoadCacheData] = useState({});
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const result = await getEcommerceSimulationPastTimeDataByRoleType("Customer");
+            if (result.success) {
+                setLoadCacheData(result.data);
+            }
+        }
+        fetchData();
+    }, []);
+
     return (
         <>
             <Head>
@@ -29,41 +42,52 @@ const CustomerOverviewPage = () => {
                     maxWidth: '250vh'
                 }}
             >
+                <Grid container spacing={2} justifyContent="space-evenly" sx={{py: 3}}>
+                    <Grid item xs={12} lg={8}>
+                        <Paper elevation={12} sx={{height: '468px'}}>
+                            <OverviewIntroDisplay />
+                        </Paper>
+                    </Grid>
+                    <Grid item xs={12} md={6} lg={4}>
+                        <Paper elevation={12} sx={{height: '468px'}}>
+                            <OverviewToBePickedUpList/>
+                        </Paper>
+                    </Grid>
+                </Grid>
                 <Grid container spacing={2} justifyContent="space-evenly">
                     <Grid item xs={12} sm={6} lg={3}>
-                        <Paper elevation={12} sx={{height: '100%'}}>
+                        <Paper elevation={12} sx={{height: '294px',borderRadius: 3}}>
                             <OverviewParcelsOnWay
-                                difference={12}
-                                positive
+                                {...(Object.keys(loadCacheData).length !== 0 ? { difference: 12, positive: true } : {})}
                                 sx={{height: '100%'}}
+                                loadCacheData={loadCacheData}
                             />
                         </Paper>
                     </Grid>
                     <Grid item xs={12} sm={6} lg={3}>
-                        <Paper elevation={12} sx={{height: '100%'}}>
+                        <Paper elevation={12} sx={{height: '294px',borderRadius: 3}}>
                             <OverviewAwaitingPickup
-                                difference={16}
-                                positive={false}
+                                {...(Object.keys(loadCacheData).length !== 0 ? { difference: 16, positive: false } : {})}
                                 sx={{height: '100%'}}
-                                value="1.6k"
+                                loadCacheData={loadCacheData}
                             />
                         </Paper>
                     </Grid>
                     <Grid item xs={12} sm={6} lg={3}>
-                        <Paper elevation={12} sx={{height: '100%'}}>
-                            <OverviewPickupProgress
+                        <Paper elevation={12} sx={{height: '294px',borderRadius: 3}}>
+                            <OverviewOrdersNum
+                                {...(Object.keys(loadCacheData).length !== 0 ? { difference: 19, positive: true } : {})}
                                 sx={{height: '100%'}}
-                                value={75.5}
+                                loadCacheData={loadCacheData}
                             />
                         </Paper>
                     </Grid>
                     <Grid item xs={12} sm={6} lg={3}>
-                        <Paper elevation={12} sx={{height: '100%'}}>
-                            <OverviewTotalProfit
-                                difference={19}
-                                positive
+                        <Paper elevation={12} sx={{height: '294px',borderRadius: 3}}>
+                            <OverviewItemsNum
                                 sx={{height: '100%'}}
-                                value="$15k"
+                                {...(Object.keys(loadCacheData).length !== 0 ? { difference: 25, positive: false } : {})}
+                                loadCacheData={loadCacheData}
                             />
                         </Paper>
                     </Grid>
@@ -72,33 +96,14 @@ const CustomerOverviewPage = () => {
                     <Grid item xs={12} lg={8}>
                         <Paper elevation={12} sx={{height: '100%'}}>
                             <OverviewTrends
-                                chartSeries={chartSeriesTrend}
                                 sx={{height: '100%'}}
+                                loadCacheData={loadCacheData}
                             />
                         </Paper>
                     </Grid>
                     <Grid item xs={12} md={6} lg={4}>
                         <Paper elevation={12} sx={{height: '100%'}}>
-                            <OverviewToBePickedUpList
-                                products={products}
-                                sx={{height: '100%'}}
-                            />
-                        </Paper>
-                    </Grid>
-                </Grid>
-                <Grid container spacing={3} justifyContent="space-evenly">
-                    <Grid item xs={12} md={6} lg={4.5}>
-                        <Paper elevation={12} sx={{height: '100%'}}>
-                            <OverviewLatestInventory
-                                products={products}
-                                sx={{height: '100%'}}
-                            />
-                        </Paper>
-                    </Grid>
-                    <Grid item xs={12} md={12} lg={7.5}>
-                        <Paper elevation={12} sx={{height: '100%'}}>
-                            <OverviewLatestRecords
-                                orders={order}
+                            <OverviewEwebsitePie
                                 sx={{height: '100%'}}
                             />
                         </Paper>

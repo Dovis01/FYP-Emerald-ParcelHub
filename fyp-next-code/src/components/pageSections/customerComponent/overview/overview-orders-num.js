@@ -1,35 +1,35 @@
-import ArrowDownIcon from '@heroicons/react/24/solid/ArrowDownIcon';
-import ArrowUpIcon from '@heroicons/react/24/solid/ArrowUpIcon';
-import DomainAddIcon from '@mui/icons-material/DomainAdd';
+import CurrencyDollarIcon from '@heroicons/react/24/solid/CurrencyDollarIcon';
 import {Avatar, Box, Card, CardContent, Stack, SvgIcon, Typography} from '@mui/material';
+import ArrowUpIcon from "@heroicons/react/24/solid/ArrowUpIcon";
+import ArrowDownIcon from "@heroicons/react/24/solid/ArrowDownIcon";
 import {useEffect, useState} from "react";
-import {getAllCustomerPersonalParcelsData} from "@/api/springboot-api";
+import {getAllCustomerPersonalOrdersData} from "@/api/springboot-api";
 import {useAuthContext} from "@/contexts/auth-context";
-import {Chart} from "@/components/customized/chart";
 import {useTheme} from "@mui/material/styles";
+import {Chart} from "@/components/customized/chart";
 
-export const OverviewParcelsOnWay = (props) => {
+export const OverviewOrdersNum = (props) => {
     const theme = useTheme();
     const {difference, positive = false, sx, loadCacheData} = props;
-    const auth = useAuthContext();
+    const {user} = useAuthContext();
     const [value, setValue] = useState(null);
-    const seriesData = loadCacheData.OverviewParcelsOnWay || [];
+    const seriesData = loadCacheData.OverviewOrdersNum || [];
 
     useEffect(() => {
         const fetchJsonData = async () => {
-            const result = await getAllCustomerPersonalParcelsData(auth.user.customerId);
+            const result = await getAllCustomerPersonalOrdersData(user?.customerId);
             setValue(() => result.data.length);
         };
 
         fetchJsonData();
-    }, [auth.user.customerId]);
+    }, [user.customerId]);
 
     const options = {
         series: [{
-            name: 'No. of Parcels On the Way',
+            name: 'No. of Purchase Orders',
             data: seriesData
         }],
-        colors: [theme.palette.error.main],
+        colors: [theme.palette.primary.main],
         chart: {
             type: 'area',
             height: 160,
@@ -79,7 +79,7 @@ export const OverviewParcelsOnWay = (props) => {
                             <Typography
                                 sx={{fontSize: '1.08rem', fontWeight: '720'}}
                             >
-                                No. of Parcels On the Way
+                                No. of Purchase Orders
                             </Typography>
                             <Box
                                 sx={{
@@ -117,13 +117,13 @@ export const OverviewParcelsOnWay = (props) => {
                         </Stack>
                         <Avatar
                             sx={{
-                                backgroundColor: 'error.main',
+                                backgroundColor: 'primary.main',
                                 height: 56,
                                 width: 56
                             }}
                         >
                             <SvgIcon>
-                                <DomainAddIcon/>
+                                <CurrencyDollarIcon/>
                             </SvgIcon>
                         </Avatar>
                     </Stack>

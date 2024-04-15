@@ -1,12 +1,7 @@
-import {formatDistanceToNow} from 'date-fns';
-import PropTypes from 'prop-types';
-import ArrowRightIcon from '@heroicons/react/24/solid/ArrowRightIcon';
 import EllipsisVerticalIcon from '@heroicons/react/24/solid/EllipsisVerticalIcon';
 import {
     Box,
-    Button,
     Card,
-    CardActions,
     CardHeader,
     Divider,
     IconButton,
@@ -14,57 +9,59 @@ import {
     ListItem,
     ListItemAvatar,
     ListItemText,
-    SvgIcon
+    SvgIcon, Typography
 } from '@mui/material';
 import {Scrollbar} from "@/components/customized/scrollbar";
+import {useEffect, useState} from "react";
+import {useAuthContext} from "@/contexts/auth-context";
+import {getParcelPickupCodesByCustomerId} from "@/api/springboot-api";
 
-export const OverviewToBePickedUpList = (props) => {
-    const {products = [], sx} = props;
+export const OverviewToBePickedUpList = () => {
+    const {user} = useAuthContext();
+    const [pickupCodes, setPickupCodes] = useState([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const result = await getParcelPickupCodesByCustomerId(user?.customerId);
+            if (result.success) setPickupCodes(result.data);
+        };
+        fetchData();
+    }, []);
 
     return (
-        <Card sx={{...sx, ml: 1.5}}>
+        <Card sx={{height: '100%', ml: 1.5}}>
             <CardHeader title="The list of parcels to be picked up"/>
             <Scrollbar sx={{flexGrow: 1, maxHeight: '430px', overflowY: 'auto', overflowX: 'hidden'}}>
-                <List sx={{ml: 1.1}}>
-                    {products.map((product, index) => {
-                        const hasDivider = index < products.length - 1;
-                        const ago = formatDistanceToNow(product.updatedAt);
-
+                <List sx={{ml: 1.1,mt:-1}}>
+                    {pickupCodes.map((code, index) => {
+                        const hasDivider = index < pickupCodes.length - 1;
                         return (
                             <ListItem
                                 divider={hasDivider}
-                                key={product.id}
+                                key={"pickup-" + index}
                             >
                                 <ListItemAvatar>
-                                    {
-                                        product.image
-                                            ? (
-                                                <Box
-                                                    component="img"
-                                                    src={product.image}
-                                                    sx={{
-                                                        borderRadius: 1,
-                                                        height: 48,
-                                                        width: 48
-                                                    }}
-                                                />
-                                            )
-                                            : (
-                                                <Box
-                                                    sx={{
-                                                        borderRadius: 1,
-                                                        backgroundColor: 'neutral.200',
-                                                        height: 48,
-                                                        width: 48
-                                                    }}
-                                                />
-                                            )
-                                    }
+                                    <Box
+                                        sx={{
+                                            borderRadius: '35%',
+                                            backgroundColor: 'customized.purpleDark',
+                                            color: 'white',
+                                            height: 45,
+                                            width: 45,
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                            alignItems: 'center'
+                                        }}
+                                    >
+                                        <Typography variant="subtitle1">
+                                            {index+1}
+                                        </Typography>
+                                    </Box>
                                 </ListItemAvatar>
                                 <ListItemText
-                                    primary={product.name}
+                                    primary={`Parcel Pickup Code: ${code}`}
                                     primaryTypographyProps={{variant: 'subtitle1'}}
-                                    secondary={`Updated ${ago} ago`}
+                                    secondary={`Updated By Emerald Parcel Hub`}
                                     secondaryTypographyProps={{variant: 'body2'}}
                                 />
                                 <IconButton edge="end">
@@ -78,24 +75,7 @@ export const OverviewToBePickedUpList = (props) => {
                 </List>
             </Scrollbar>
             <Divider/>
-            <CardActions sx={{justifyContent: 'flex-end', mt: 0.4, mb: 0.8}}>
-                <Button
-                    color="inherit"
-                    endIcon={(
-                        <SvgIcon fontSize="small">
-                            <ArrowRightIcon/>
-                        </SvgIcon>
-                    )}
-                    size="small"
-                    variant="text"
-                >
-                    View all
-                </Button>
-            </CardActions>
         </Card>
     );
 };
 
-OverviewToBePickedUpList.propTypes = {
-    sx: PropTypes.object
-};

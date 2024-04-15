@@ -4,7 +4,7 @@ const now = new Date();
 export const products=[
     {
         id: '5ece2c077e39da27658aa8a9',
-        image: '/assets/products/product-1.png',
+        //image: '/assets/products/product-1.png',
         name: 'Healthcare Erbology',
         updatedAt: subHours(now, 6).getTime()
     },
