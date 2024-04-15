@@ -1,6 +1,7 @@
 package com.example.fypspringbootcode.controller;
 
 import com.example.fypspringbootcode.common.Result;
+import com.example.fypspringbootcode.controller.dto.CourierInfoDTO;
 import com.example.fypspringbootcode.controller.dto.LoginCourierDTO;
 import com.example.fypspringbootcode.controller.request.LoginRequest;
 import com.example.fypspringbootcode.controller.request.RegisterEmployeeRoleRequest;
@@ -10,6 +11,8 @@ import com.example.fypspringbootcode.service.ICourierService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static com.example.fypspringbootcode.common.ErrorCodeList.ERROR_CODE_400;
 
@@ -52,6 +55,12 @@ public class CourierController {
         return Result.success(courier , "The courier has been found successfully");
     }
 
+    @GetMapping("/v1/all/couriers-info")
+    public Result getAllCouriersInfoForAdmin() {
+        List<CourierInfoDTO> couriersInfo = courierService.getAllCouriersInfoForAdmin();
+        return Result.success(couriersInfo, "All couriers' information has been retrieved successfully");
+    }
+
     @DeleteMapping("/v1/{courierId}")
     public Result delete(@PathVariable Integer courierId, @RequestBody Courier courier) {
         courierService.deleteOneCourier(courierId, courier);
@@ -68,6 +77,12 @@ public class CourierController {
     public Result updatePersonalInfo(@RequestBody CompanyEmployee companyEmployee, @PathVariable Integer courierId) {
         LoginCourierDTO updatedCourier = courierService.updatePersonalInfo(companyEmployee, courierId);
         return Result.success(updatedCourier,"The personal info of courier has been updated successfully");
+    }
+
+    @PutMapping("/v1/update/disable/{courierId}")
+    public Result disableCourier(@PathVariable Integer courierId) {
+        courierService.disableCourier(courierId);
+        return Result.success("The courier has been disabled successfully");
     }
 
 }

@@ -1,5 +1,6 @@
 package com.example.fypspringbootcode.service;
 
+import com.example.fypspringbootcode.controller.dto.CourierInfoDTO;
 import com.example.fypspringbootcode.controller.dto.LoginCourierDTO;
 import com.example.fypspringbootcode.controller.request.LoginRequest;
 import com.example.fypspringbootcode.controller.request.RegisterEmployeeRoleRequest;
@@ -20,6 +21,8 @@ public interface ICourierService extends IService<Courier> {
     void register(RegisterEmployeeRoleRequest registerRequest);
 
     LoginCourierDTO getByCourierId(Integer courierId);
+
+    List<CourierInfoDTO> getAllCouriersInfoForAdmin();
 
     Courier getOneCourierFullObjectInfo(Integer courierId);
 

@@ -1,8 +1,11 @@
 package com.example.fypspringbootcode.service;
 
+import com.example.fypspringbootcode.controller.dto.CompanyEmployeeInfoDTO;
 import com.example.fypspringbootcode.controller.request.RegisterEmployeeRoleRequest;
 import com.example.fypspringbootcode.entity.CompanyEmployee;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
  * @author Shijin Zhang
@@ -15,6 +18,8 @@ public interface ICompanyEmployeeService extends IService<CompanyEmployee> {
     void initializeRoleInfo(RegisterEmployeeRoleRequest registerRequest, CompanyEmployee companyEmployee, Integer accountId, String roleType);
 
     CompanyEmployee getByEmployeeId(Integer employeeId);
+
+    List<CompanyEmployeeInfoDTO> getAllCompanyEmployeesInfoForAdmin();
 
     CompanyEmployee updateEmployeeInfo(CompanyEmployee companyEmployee, Integer employeeId);
 

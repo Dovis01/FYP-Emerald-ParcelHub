@@ -1,11 +1,14 @@
 package com.example.fypspringbootcode.service;
 
+import com.example.fypspringbootcode.controller.dto.CustomerInfoDTO;
 import com.example.fypspringbootcode.controller.dto.LoginCustomerDTO;
 import com.example.fypspringbootcode.controller.request.LoginRequest;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.fypspringbootcode.controller.request.RegisterCustomerRequest;
 import com.example.fypspringbootcode.entity.Customer;
 import com.google.gson.JsonArray;
+
+import java.util.List;
 
 /**
  *
@@ -22,6 +25,8 @@ public interface ICustomerService extends IService<Customer> {
     Customer getByCustomerId(Integer customerId);
 
     Customer getCustomerByToken(Integer accountId);
+
+    List<CustomerInfoDTO> getAllCustomersInfoForAdmin();
 
     void deleteByCustomerId(Integer customerId, Integer accountId);
 
