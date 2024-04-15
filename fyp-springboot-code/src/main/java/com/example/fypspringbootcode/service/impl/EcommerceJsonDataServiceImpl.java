@@ -35,6 +35,15 @@ public class EcommerceJsonDataServiceImpl extends ServiceImpl<EcommerceJsonDataM
     private ICourierCollectionRecordService courierCollectionRecordService;
 
     @Autowired
+    private ICourierDeliveryRecordService courierDeliveryRecordService;
+
+    @Autowired
+    private IStationParcelsToPlaceService stationParcelsToPlaceService;
+
+    @Autowired
+    private IParcelStationShelfService parcelStationShelfService;
+
+    @Autowired
     private ICustomerService customerService;
 
     @Autowired
@@ -118,6 +127,9 @@ public class EcommerceJsonDataServiceImpl extends ServiceImpl<EcommerceJsonDataM
         }
         ecommerceWebsiteService.deleteAllEcommerceWebsite();
         courierCollectionRecordService.resetAllCollectionRecords();
+        courierDeliveryRecordService.resetAllDeliveryRecords();
+        stationParcelsToPlaceService.deleteAllPlaceParcelsRecords();
+        parcelStationShelfService.resetAllParcelStationShelfStorageData();
     }
 
     @Override

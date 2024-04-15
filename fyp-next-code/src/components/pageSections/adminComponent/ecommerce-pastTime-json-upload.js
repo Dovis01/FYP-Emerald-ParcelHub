@@ -48,7 +48,7 @@ export const PastTimeJSONDataFileUpload = ({onUpload}) => {
             reader.onload = (event) => {
                 try {
                     const json = JSON.parse(event.target.result);
-                    onUpload(json.simulation_data); // Callback function to pass the JSON to the parent component or to make an API call
+                    onUpload(json.simulation_past_data); // Callback function to pass the JSON to the parent component or to make an API call
                 } catch (error) {
                     console.error('Error parsing JSON:', error);
                 }

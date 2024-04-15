@@ -14,4 +14,6 @@ public interface IParcelStationService extends IService<ParcelStation> {
 
     Integer allocateParcelStationToManager(String workCity);
 
+    void resetParcelStationAssignmentStatus(Integer stationId);
+
 }
