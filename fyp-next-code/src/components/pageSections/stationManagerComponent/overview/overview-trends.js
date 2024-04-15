@@ -126,7 +126,7 @@ export const OverviewTrends = (props) => {
             Sync
           </Button>
         )}
-        title="Inventory Quantity Trends"
+        title="Quantity Trends Comparison for Parcels Inventory"
       />
       <CardContent>
         <Chart

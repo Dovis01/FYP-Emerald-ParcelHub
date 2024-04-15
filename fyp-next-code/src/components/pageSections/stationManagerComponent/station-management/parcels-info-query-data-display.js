@@ -48,7 +48,7 @@ export const ParcelsInfoQueryDataDisplay = () => {
         };
 
         fetchData();
-    }, [freshFlag]);
+    }, [freshFlag, user?.stationId]);
 
     const columns = [
         {field: 'id', headerName: 'Order ID', headerClassName: 'super-app-theme--header', width: 85},

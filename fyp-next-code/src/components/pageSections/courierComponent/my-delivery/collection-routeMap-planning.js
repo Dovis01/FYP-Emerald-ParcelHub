@@ -71,7 +71,7 @@ export const CollectionRouteMapPlanning = () => {
 
         googleMap.updateCourierCurrentCollectionAddr(defaultCOLAddressObj);
         setUniqueMarkers(uniqueMarkers);
-    }, [routeAllAddressesInfo]);
+    }, [googleMap, routeAllAddressesInfo]);
 
     useEffect(() => {
         const map = mapRef.current;

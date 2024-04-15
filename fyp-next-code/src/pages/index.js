@@ -3,6 +3,7 @@ import {useAuthContext} from "@/contexts/auth-context";
 import {useRouter} from "next/router";
 
 const getComponentForRole = (roleType) => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const router = useRouter();
     switch (roleType) {
         case 'Admin':

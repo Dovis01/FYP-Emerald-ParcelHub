@@ -39,14 +39,17 @@ const Fonts = () => (
             rel="preconnect"
             href="https://fonts.gstatic.com"
         />
+        {/* eslint-disable-next-line @next/next/no-page-custom-font */}
         <link
             rel="stylesheet"
             href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
         />
+        {/* eslint-disable-next-line @next/next/no-page-custom-font */}
         <link
             rel="stylesheet"
             href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400&display=swap"
         />
+        {/* eslint-disable-next-line @next/next/no-page-custom-font */}
         <link
             rel="stylesheet"
             href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700&display=swap"

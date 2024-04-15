@@ -107,7 +107,7 @@ export const ParcelDeliveryProgressDataDisplay = () => {
         };
 
         fetchJsonData();
-    }, []);
+    }, [auth.user.customerId, googleMap]);
 
     const columns = [
         {field: 'id', headerName: 'Order Id', headerClassName: 'super-app-theme--header', width: 100},

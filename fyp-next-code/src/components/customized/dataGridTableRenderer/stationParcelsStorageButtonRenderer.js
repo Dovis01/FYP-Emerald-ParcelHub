@@ -83,7 +83,7 @@ export const StationParcelsStorageButtonRenderer = ({row, updateFetchFlag}) => {
         if (open) {
             fetchData();
         }
-    }, [open]);
+    }, [open, row.stationId]);
 
     const formik = useFormik({
         initialValues: {
