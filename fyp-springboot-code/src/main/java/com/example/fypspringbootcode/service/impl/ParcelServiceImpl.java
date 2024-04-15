@@ -20,8 +20,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static com.example.fypspringbootcode.common.ErrorCodeList.*;
+import static java.util.Optional.ofNullable;
 
 /**
  * @author Shijin Zhang
@@ -38,6 +40,9 @@ public class ParcelServiceImpl extends ServiceImpl<ParcelMapper, Parcel> impleme
     private IParcelTrackingCodeService parcelTrackingCodeService;
 
     @Autowired
+    private IParcelPickupCodeService parcelPickupCodeService;
+
+    @Autowired
     private IParcelHistoryStatusService parcelHistoryStatusService;
 
     @Autowired
@@ -48,6 +53,9 @@ public class ParcelServiceImpl extends ServiceImpl<ParcelMapper, Parcel> impleme
 
     @Autowired
     private CourierCollectionRecordMapper courierCollectionRecordMapper;
+
+    @Autowired
+    private CourierDeliveryRecordMapper courierDeliveryRecordMapper;
 
     @Autowired
     private SenderMapper senderMapper;
@@ -65,7 +73,7 @@ public class ParcelServiceImpl extends ServiceImpl<ParcelMapper, Parcel> impleme
     private ParcelStationMapper parcelStationMapper;
 
     @Autowired
-    private ParcelStationShelfMapper parcelStationShelfMapper;
+    private ParcelPickupCodeMapper parcelPickupCodeMapper;
 
     @Autowired
     private ParcelTrackingCodeMapper parcelTrackingCodeMapper;
@@ -132,7 +140,39 @@ public class ParcelServiceImpl extends ServiceImpl<ParcelMapper, Parcel> impleme
             parcelDataList = list(new LambdaQueryWrapper<Parcel>().in(Parcel::getOrderId, orderIdList));
         }
         assert parcelDataList != null;
-        ArrayList<String> jsonStringList = convertParcelInfoListToJsonString(parcelDataList);
+        ArrayList<String> jsonStringList = convertParcelInfoListToJsonString(parcelDataList, "Collection");
+        ArrayList<Map<String, Object>> jsonMapArray = new ArrayList<>();
+        for (String data : jsonStringList) {
+            JsonObject jsonObject = JsonParser.parseString(data).getAsJsonObject();
+            Map<String, Object> map = FypProjectUtils.convertToMap(jsonObject);
+            jsonMapArray.add(map);
+        }
+        return jsonMapArray;
+    }
+
+    @Override
+    public ArrayList<Map<String, Object>> getParcelsDataDeliveringToStationByStationId(Integer stationId) {
+        List<Parcel> parcelDataList = list(new LambdaQueryWrapper<Parcel>().isNull(Parcel::getShelfId).eq(Parcel::getStationId, stationId));
+        if (parcelDataList == null || parcelDataList.isEmpty()) {
+            throw new ServiceException(ERROR_CODE_404, "No parcel will be delivered to this parcel station.");
+        }
+        ArrayList<String> jsonStringList = convertParcelInfoListToJsonString(parcelDataList, "Delivery");
+        ArrayList<Map<String, Object>> jsonMapArray = new ArrayList<>();
+        for (String data : jsonStringList) {
+            JsonObject jsonObject = JsonParser.parseString(data).getAsJsonObject();
+            Map<String, Object> map = FypProjectUtils.convertToMap(jsonObject);
+            jsonMapArray.add(map);
+        }
+        return jsonMapArray;
+    }
+
+    @Override
+    public ArrayList<Map<String, Object>> getParcelsDataStoredInStationByStationId(Integer stationId) {
+        List<Parcel> parcelDataList = list(new LambdaQueryWrapper<Parcel>().isNotNull(Parcel::getShelfId).eq(Parcel::getStationId, stationId));
+        if (parcelDataList == null || parcelDataList.isEmpty()) {
+            throw new ServiceException(ERROR_CODE_404, "No parcel stored in this parcel station.");
+        }
+        ArrayList<String> jsonStringList = convertStoredParcelsInfoListToJsonString(parcelDataList);
         ArrayList<Map<String, Object>> jsonMapArray = new ArrayList<>();
         for (String data : jsonStringList) {
             JsonObject jsonObject = JsonParser.parseString(data).getAsJsonObject();
@@ -181,13 +221,35 @@ public class ParcelServiceImpl extends ServiceImpl<ParcelMapper, Parcel> impleme
     }
 
     @Override
+    public void updateParcelShelfId(Integer parcelId, Integer shelfId) {
+        try {
+            lambdaUpdate().set(Parcel::getShelfId, shelfId).eq(Parcel::getParcelId, parcelId).update();
+        } catch (Exception e) {
+            log.error("Fail to update parcel shelf id", e);
+            throw new ServiceException(ERROR_CODE_500, "The internal system is error.");
+        }
+    }
+
+    @Override
+    public void resetParcelsShelfIdsOfOneStation(Integer stationId) {
+        try {
+            lambdaUpdate().set(Parcel::getShelfId, null).eq(Parcel::getStationId, stationId).update();
+        } catch (Exception e) {
+            log.error("Fail to reset parcel shelf ids of one station", e);
+            throw new ServiceException(ERROR_CODE_500, "The internal system is error.");
+        }
+    }
+
+    @Override
     public void deleteAllParcelsData() {
         itemService.clearItemsData();
+        parcelHistoryStatusService.clearAllParcelHistoryStatusData();
         parcelTrackingCodeService.clearParcelTrackingCode();
+        parcelPickupCodeService.clearAllPickupCodes();
         remove(null);
     }
 
-    private ArrayList<String> convertParcelInfoListToJsonString(List<Parcel> parcelDataList) {
+    private ArrayList<String> convertParcelInfoListToJsonString(List<Parcel> parcelDataList, String courierWorkType) {
         ArrayList<String> jsonStringList = new ArrayList<>();
 
         // Deserialize and serialize LocalDateTime
@@ -207,8 +269,10 @@ public class ParcelServiceImpl extends ServiceImpl<ParcelMapper, Parcel> impleme
             // get parcel related info
             List<Item> items = itemMapper.selectList(new LambdaQueryWrapper<Item>().eq(Item::getParcelId, data.getParcelId()));
             String trackingCode = parcelTrackingCodeMapper.selectOne(new LambdaQueryWrapper<ParcelTrackingCode>().eq(ParcelTrackingCode::getParcelId, data.getParcelId())).getParcelTrackingCode();
+            Optional<ParcelPickupCode> pickupCodeObj = ofNullable(parcelPickupCodeMapper.selectOne(new LambdaQueryWrapper<ParcelPickupCode>().eq(ParcelPickupCode::getParcelId, data.getParcelId())));
             data.setItems(items);
             data.setParcelTrackingCode(trackingCode);
+            data.setParcelPickupCode(pickupCodeObj.map(ParcelPickupCode::getPickupCode).orElse(null));
             parcelInfoDTO.setParcel(data);
             // get customer related info
             Customer customer = customerMapper.selectById(orderMapper.selectById(data.getOrderId()).getCustomerId());
@@ -220,17 +284,52 @@ public class ParcelServiceImpl extends ServiceImpl<ParcelMapper, Parcel> impleme
             // get parcel hub company related info
             parcelInfoDTO.setParcelHubCompany(parcelHubCompanyMapper.selectById(data.getEmeraldCompanyId()));
             // get courier related info
-            parcelInfoDTO.setCourier(courierService.getOneCourierFullObjectInfo(courierCollectionRecordMapper.getCourierIdByParcelId(data.getParcelId())));
+            if (courierWorkType.equals("Collection"))
+                parcelInfoDTO.setCourier(courierService.getOneCourierFullObjectInfo(courierCollectionRecordMapper.getCourierIdByParcelId(data.getParcelId())));
+            if (courierWorkType.equals("Delivery"))
+                parcelInfoDTO.setCourier(courierService.getOneCourierFullObjectInfo(courierDeliveryRecordMapper.getCourierIdByParcelId(data.getParcelId())));
             // get parcel station related info
             parcelInfoDTO.setParcelStation(parcelStationMapper.selectById(data.getStationId()));
-            // get parcel station shelf related info
-            parcelInfoDTO.setParcelStationShelf(parcelStationShelfMapper.selectById(data.getShelfId()));
             // get parcel station manager related info
             Integer companyEmployeeId = stationManagerMapper.selectOne(Wrappers.<StationManager>lambdaQuery().select(StationManager::getEmployeeId).eq(StationManager::getStationId, data.getStationId())).getEmployeeId();
-            parcelInfoDTO.setParcelStationManager(companyEmployeeMapper.selectById(companyEmployeeId));
+            parcelInfoDTO.setParcelStationManager(companyEmployeeMapper.selectOne(Wrappers.<CompanyEmployee>lambdaQuery().select(CompanyEmployee::getFullName, CompanyEmployee::getPhoneNumber).eq(CompanyEmployee::getEmployeeId, companyEmployeeId)));
             String jsonString = gson.toJson(parcelInfoDTO);
             jsonStringList.add(jsonString);
         }
         return jsonStringList;
     }
+
+    private ArrayList<String> convertStoredParcelsInfoListToJsonString(List<Parcel> parcelDataList) {
+        ArrayList<String> jsonStringList = new ArrayList<>();
+
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(LocalDateTime.class, (JsonSerializer<LocalDateTime>) (src, typeOfSrc, context) -> {
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+                    return src == null ? null : context.serialize(src.format(formatter));
+                })
+                .registerTypeAdapter(LocalDateTime.class, (JsonDeserializer<LocalDateTime>) (json, typeOfT, context) -> {
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+                    return json == null ? null : LocalDateTime.parse(json.getAsString(), formatter);
+                })
+                .create();
+
+        for (Parcel data : parcelDataList) {
+            ParcelInfoDTO parcelInfoDTO = new ParcelInfoDTO();
+            // get parcel related info
+            String trackingCode = parcelTrackingCodeMapper.selectOne(new LambdaQueryWrapper<ParcelTrackingCode>().eq(ParcelTrackingCode::getParcelId, data.getParcelId())).getParcelTrackingCode();
+            Optional<ParcelPickupCode> pickupCodeObj = ofNullable(parcelPickupCodeMapper.selectOne(new LambdaQueryWrapper<ParcelPickupCode>().eq(ParcelPickupCode::getParcelId, data.getParcelId())));
+            data.setParcelTrackingCode(trackingCode);
+            data.setParcelPickupCode(pickupCodeObj.map(ParcelPickupCode::getPickupCode).orElse(null));
+            parcelInfoDTO.setParcel(data);
+            // get customer related info
+            Customer customer = customerMapper.selectById(orderMapper.selectById(data.getOrderId()).getCustomerId());
+            parcelInfoDTO.setCustomer(customer);
+            // get parcel station related info
+            parcelInfoDTO.setParcelStation(parcelStationMapper.selectById(data.getStationId()));
+            String jsonString = gson.toJson(parcelInfoDTO);
+            jsonStringList.add(jsonString);
+        }
+        return jsonStringList;
+    }
+
 }

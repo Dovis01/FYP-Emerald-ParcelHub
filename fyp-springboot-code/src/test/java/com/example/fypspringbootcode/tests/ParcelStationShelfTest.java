@@ -22,7 +22,7 @@ import java.util.List;
  **/
 @SpringBootTest
 @Slf4j
-public class ParcelStationShelfTest extends ServiceImpl<ParcelStationShelfMapper, ParcelStationShelf> implements IParcelStationShelfService {
+public class ParcelStationShelfTest extends ServiceImpl<ParcelStationShelfMapper, ParcelStationShelf>{
 
     @Autowired
     private ParcelStationMapper parcelStationMapper;
@@ -43,5 +43,10 @@ public class ParcelStationShelfTest extends ServiceImpl<ParcelStationShelfMapper
                 }
             }
         }
+    }
+
+    @Test
+    public void test() {
+        lambdaUpdate().eq(ParcelStationShelf::getParcelStationId, 2001).set(ParcelStationShelf::getMaxStorageParcelNumber, 8).update();
     }
 }

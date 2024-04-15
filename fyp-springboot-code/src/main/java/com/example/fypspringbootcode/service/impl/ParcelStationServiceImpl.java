@@ -57,4 +57,11 @@ public class ParcelStationServiceImpl extends ServiceImpl<ParcelStationMapper, P
 
         return null;
     }
+
+    @Override
+    public void resetParcelStationAssignmentStatus(Integer stationId) {
+        lambdaUpdate().eq(ParcelStation::getStationId, stationId)
+                .set(ParcelStation::getStationAssignManagerStatus, true)
+                .update();
+    }
 }

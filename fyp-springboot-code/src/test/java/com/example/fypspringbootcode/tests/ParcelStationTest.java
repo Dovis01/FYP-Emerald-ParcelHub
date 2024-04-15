@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 
+
 /**
  * @title:FinalYearProjectCode
  * @description: <TODO description class purpose>
@@ -60,5 +61,10 @@ public class ParcelStationTest extends ServiceImpl<ParcelStationMapper, ParcelSt
             parcelStation.setCity(address[i - 2001].split(",")[2].trim());
             updateById(parcelStation);
         }
+    }
+
+    @Test
+    public void listTest() {
+        lambdaQuery().eq(ParcelStation::getCity,"Dublin").list().forEach(System.out::println);
     }
 }
