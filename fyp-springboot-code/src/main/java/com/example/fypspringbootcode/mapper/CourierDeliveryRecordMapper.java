@@ -9,5 +9,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @since 2024-02-13
  */
 public interface CourierDeliveryRecordMapper extends BaseMapper<CourierDeliveryRecord> {
-
+    Integer getCourierIdByParcelId(Integer parcelId);
 }

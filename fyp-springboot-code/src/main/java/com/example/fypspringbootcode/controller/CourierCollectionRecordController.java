@@ -19,7 +19,7 @@ import java.util.List;
 public class CourierCollectionRecordController {
 
     @Autowired
-    private ICourierCollectionRecordService courierCollectionRecordService;
+    ICourierCollectionRecordService courierCollectionRecordService;
 
     @GetMapping("/v1/today-tasks/{courierId}")
     public Result getTodayCollectionTasksById(@PathVariable Integer courierId) {
