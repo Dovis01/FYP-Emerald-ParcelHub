@@ -7,13 +7,14 @@ import IdentificationIcon from '@heroicons/react/24/solid/IdentificationIcon';
 import BuildingOffice2Icon from '@heroicons/react/24/solid/BuildingOffice2Icon';
 import BuildingStorefrontIcon from '@heroicons/react/24/solid/BuildingStorefrontIcon';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 import {SvgIcon} from '@mui/material';
 import {useAuthContext} from "@/contexts/auth-context";
 
 export const itemsAdmin = () => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const authContext = useAuthContext();
-    const adminName =authContext.currentUsername;
+    const adminName =authContext.currentUsername.replace(/\s+/g, '-');
     return [
         {
             title: 'E-commerce Order',
@@ -45,7 +46,7 @@ export const itemsAdmin = () => {
             ]
         },
         {
-            title: 'Our People',
+            title: 'People Management',
             path: '',
             icon: (
                 <SvgIcon fontSize="medium">
@@ -54,8 +55,8 @@ export const itemsAdmin = () => {
             ),
             children: [
                 {
-                    title: 'Company Employee',
-                    path: '/admin/our-people/company-employee',
+                    title: 'Company Employees',
+                    path: '/admin/people-management/company-employees',
                     icon: (
                         <SvgIcon fontSize="medium">
                             <BuildingOffice2Icon/>
@@ -63,8 +64,8 @@ export const itemsAdmin = () => {
                     )
                 },
                 {
-                    title: 'Courier',
-                    path: '/admin/our-people/courier',
+                    title: 'Couriers',
+                    path: '/admin/people-management/couriers',
                     icon: (
                         <SvgIcon fontSize="medium" sx={{mt:-0.2}}>
                             <LocalShippingIcon/>
@@ -72,11 +73,20 @@ export const itemsAdmin = () => {
                     )
                 },
                 {
-                    title: 'Station Manager',
-                    path: '/admin/our-people/station-manager',
+                    title: 'Station Managers',
+                    path: '/admin/people-management/station-managers',
                     icon: (
-                        <SvgIcon fontSize="medium">
+                        <SvgIcon fontSize="medium" sx={{mt:-0.2}}>
                             <BuildingStorefrontIcon/>
+                        </SvgIcon>
+                    )
+                },
+                {
+                    title: 'Customers',
+                    path: '/admin/people-management/customers',
+                    icon: (
+                        <SvgIcon fontSize="medium" sx={{mt:-0.2}}>
+                            <PersonSearchIcon/>
                         </SvgIcon>
                     )
                 }

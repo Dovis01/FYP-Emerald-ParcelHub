@@ -10,7 +10,7 @@ import {useAuthContext} from "@/contexts/auth-context";
 export const itemsCourier = () => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const authContext = useAuthContext();
-    const courierName = authContext.currentUsername;
+    const courierName = authContext.currentUsername.replace(/\s+/g, '-');
     return [
         {
             title: 'Overview',

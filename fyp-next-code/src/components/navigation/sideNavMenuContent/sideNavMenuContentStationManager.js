@@ -1,18 +1,18 @@
 import ChartBarIcon from '@heroicons/react/24/solid/ChartBarIcon';
 import CogIcon from '@heroicons/react/24/solid/CogIcon';
-import LockClosedIcon from '@heroicons/react/24/solid/LockClosedIcon';
 import UserIcon from '@heroicons/react/24/solid/UserIcon';
-import ViewInArIcon from '@mui/icons-material/ViewInAr';
-import UserPlusIcon from '@heroicons/react/24/solid/UserPlusIcon';
-import PresentationChartLineIcon from '@heroicons/react/24/solid/PresentationChartLineIcon';
+import InsightsIcon from '@mui/icons-material/Insights';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import {SvgIcon} from '@mui/material';
 import {useAuthContext} from "@/contexts/auth-context";
+import MagnifyingGlassCircleIcon from "@heroicons/react/24/solid/MagnifyingGlassCircleIcon";
+import BuildingStorefrontIcon from "@heroicons/react/24/solid/BuildingStorefrontIcon";
+import GetAppIcon from '@mui/icons-material/GetApp';
 
 export const itemsStationManager = () => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const authContext = useAuthContext();
-    const stationManagerName = authContext.currentUsername;
+    const stationManagerName = authContext.currentUsername.replace(/\s+/g, '-');
     return [
         {
             title: 'Overview',
@@ -24,29 +24,49 @@ export const itemsStationManager = () => {
             )
         },
         {
-            title: 'Delivery progress',
-            path: '',
-            icon: (
-                <SvgIcon fontSize="medium" sx={{mt:-0.2}}>
-                    <LocalShippingIcon/>
-                </SvgIcon>
-            )
-        },
-        {
-            title: 'Data Analytics',
+            title: 'Station Management',
             path: '',
             icon: (
                 <SvgIcon fontSize="medium">
-                    <PresentationChartLineIcon/>
+                    <InsightsIcon/>
                 </SvgIcon>
-            )
+            ),
+            children: [
+                {
+                    title: 'Delivery progress',
+                    path: '/station-manager/station-management/delivery-progress',
+                    icon: (
+                        <SvgIcon fontSize="medium" sx={{mt:-0.2}}>
+                            <LocalShippingIcon/>
+                        </SvgIcon>
+                    )
+                },
+                {
+                    title: 'Parcels Storage',
+                    path: '/station-manager/station-management/parcels-storage',
+                    icon: (
+                        <SvgIcon fontSize="medium">
+                            <GetAppIcon/>
+                        </SvgIcon>
+                    )
+                },
+                {
+                    title: 'Parcels Info Query',
+                    path: '/station-manager/station-management/parcels-info-query',
+                    icon: (
+                        <SvgIcon fontSize="medium">
+                            <MagnifyingGlassCircleIcon/>
+                        </SvgIcon>
+                    )
+                }
+            ]
         },
         {
-            title: 'Parcel Management',
-            path: '',
+            title: 'My Parcel Hub Station',
+            path: '/station-manager/my-station',
             icon: (
                 <SvgIcon fontSize="medium">
-                    <ViewInArIcon/>
+                    <BuildingStorefrontIcon/>
                 </SvgIcon>
             )
         },
@@ -65,24 +85,6 @@ export const itemsStationManager = () => {
             icon: (
                 <SvgIcon fontSize="medium">
                     <CogIcon/>
-                </SvgIcon>
-            )
-        },
-        {
-            title: 'SignIn',
-            path: '/auth/signIn',
-            icon: (
-                <SvgIcon fontSize="medium">
-                    <LockClosedIcon/>
-                </SvgIcon>
-            )
-        },
-        {
-            title: 'SignUp',
-            path: '/auth/signUp',
-            icon: (
-                <SvgIcon fontSize="medium">
-                    <UserPlusIcon/>
                 </SvgIcon>
             )
         }
