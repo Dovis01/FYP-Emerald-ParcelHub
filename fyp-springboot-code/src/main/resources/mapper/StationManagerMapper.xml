@@ -7,6 +7,7 @@
         sm.employee_id,
         sm.start_date,
         sm.end_date,
+        sm.register_time,
         sm.station_id,
         sm.station_manager_status,
         ps.community_name,
@@ -59,6 +60,7 @@
         sm.employee_id,
         sm.start_date,
         sm.end_date,
+        sm.register_time,
         sm.station_id,
         sm.station_manager_status,
         ps.community_name,
@@ -99,5 +101,27 @@
                 AND sm.station_manager_id = #{stationManagerId}
             </if>
         </where>
+    </select>
+
+    <select id="getAllStationManagersInfoList" resultType="com.example.fypspringbootcode.controller.dto.StationManagerInfoDTO">
+        SELECT sm.station_manager_id,
+               sm.start_date,
+               sm.end_date,
+               sm.register_time,
+               sm.station_manager_status,
+               ps.community_name,
+               ps.city,
+               ps.address,
+               ps.shelves_total_number,
+               ps.station_assign_manager_status,
+               ce.full_name,
+               ce.employee_code
+        FROM t_31_station_manager AS sm
+                 LEFT JOIN
+             t_72_company_employee AS ce
+             ON sm.employee_id = ce.employee_id
+                 LEFT JOIN
+             t_32_parcel_station AS ps
+             ON sm.station_id = ps.station_id
     </select>
 </mapper>

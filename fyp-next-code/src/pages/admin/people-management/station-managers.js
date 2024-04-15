@@ -1,14 +1,16 @@
 import Head from 'next/head';
 import {Box, Container, Stack, Typography, Unstable_Grid2 as Grid} from '@mui/material';
 import MainPageLayout from "@/components/layouts/mainPageLayout";
+import {
+    AllStationManagersDataDisplay
+} from "@/components/pageSections/adminComponent/people-management/all-stationManagers-data-display";
 
-
-const OurPeopleStationManagerPage = () => {
+const PeopleManagementStationManagersPage = () => {
     return (
         <>
             <Head>
                 <title>
-                    Our People | Station Manager
+                    People Management | Station Managers
                 </title>
             </Head>
             <Box
@@ -33,7 +35,7 @@ const OurPeopleStationManagerPage = () => {
                                 md={6}
                                 lg={4}
                             >
-
+                                <AllStationManagersDataDisplay />
                             </Grid>
                         </Grid>
                     </Stack>
@@ -43,10 +45,10 @@ const OurPeopleStationManagerPage = () => {
     );
 };
 
-OurPeopleStationManagerPage.getLayout = (page) => (
+PeopleManagementStationManagersPage.getLayout = (page) => (
     <MainPageLayout>
         {page}
     </MainPageLayout>
 );
 
-export default OurPeopleStationManagerPage;
+export default PeopleManagementStationManagersPage;

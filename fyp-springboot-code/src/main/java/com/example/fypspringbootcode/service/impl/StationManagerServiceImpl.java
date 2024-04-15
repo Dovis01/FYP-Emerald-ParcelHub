@@ -4,6 +4,7 @@ import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.fypspringbootcode.common.config.AppConfig;
 import com.example.fypspringbootcode.controller.dto.LoginStationManagerDTO;
+import com.example.fypspringbootcode.controller.dto.StationManagerInfoDTO;
 import com.example.fypspringbootcode.controller.request.LoginRequest;
 import com.example.fypspringbootcode.controller.request.RegisterEmployeeRoleRequest;
 import com.example.fypspringbootcode.entity.CompanyEmployee;
@@ -12,6 +13,9 @@ import com.example.fypspringbootcode.entity.StationManager;
 import com.example.fypspringbootcode.exception.ServiceException;
 import com.example.fypspringbootcode.mapper.ParcelHubCompanyMapper;
 import com.example.fypspringbootcode.mapper.StationManagerMapper;
+import com.example.fypspringbootcode.service.ICompanyEmployeeService;
+import com.example.fypspringbootcode.service.IParcelStationService;
+import com.example.fypspringbootcode.service.IRegisteredAccountService;
 import com.example.fypspringbootcode.service.IStationManagerService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.fypspringbootcode.utils.FypProjectUtils;
@@ -21,11 +25,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.util.List;
+
 import static com.example.fypspringbootcode.common.ErrorCodeList.*;
 import static com.example.fypspringbootcode.common.ErrorCodeList.ERROR_CODE_400;
 
 /**
- *
  * @author Shijin Zhang
  * @since 2024-02-05
  */
@@ -34,13 +40,13 @@ import static com.example.fypspringbootcode.common.ErrorCodeList.ERROR_CODE_400;
 public class StationManagerServiceImpl extends ServiceImpl<StationManagerMapper, StationManager> implements IStationManagerService {
 
     @Autowired
-    private RegisteredAccountServiceImpl registeredAccountService;
+    private IRegisteredAccountService registeredAccountService;
 
     @Autowired
-    private CompanyEmployeeServiceImpl companyEmployeeService;
+    private ICompanyEmployeeService companyEmployeeService;
 
     @Autowired
-    private ParcelStationServiceImpl parcelStationService;
+    private IParcelStationService parcelStationService;
 
     @Autowired
     private ParcelHubCompanyMapper parcelHubCompanyMapper;
@@ -64,7 +70,7 @@ public class StationManagerServiceImpl extends ServiceImpl<StationManagerMapper,
         }
 
         // check the role type
-        if(!loginStationManagerDTO.getRoleType().equals("Station-Manager")){
+        if (!loginStationManagerDTO.getRoleType().equals("Station-Manager")) {
             throw new ServiceException(ERROR_CODE_401, "The account is not a station manager, please check it again.");
         }
 
@@ -74,7 +80,7 @@ public class StationManagerServiceImpl extends ServiceImpl<StationManagerMapper,
         }
 
         // check the password
-        if(loginRequest.getPassword() == null || loginRequest.getPassword().isEmpty()){
+        if (loginRequest.getPassword() == null || loginRequest.getPassword().isEmpty()) {
             throw new ServiceException(ERROR_CODE_400, "The password provided is empty, please check it again.");
         }
         String securePasswordDatabase = loginStationManagerDTO.getPassword();
@@ -85,7 +91,7 @@ public class StationManagerServiceImpl extends ServiceImpl<StationManagerMapper,
         loginStationManagerDTO.setPassword(null);
 
         // generate token
-        String token = TokenUtils.genToken("stationManager", String.valueOf(loginStationManagerDTO.getEmployeeId()),String.valueOf(loginStationManagerDTO.getAccountId()));
+        String token = TokenUtils.genToken("stationManager", String.valueOf(loginStationManagerDTO.getEmployeeId()), String.valueOf(loginStationManagerDTO.getAccountId()));
         loginStationManagerDTO.setToken(token);
         return loginStationManagerDTO;
     }
@@ -95,15 +101,17 @@ public class StationManagerServiceImpl extends ServiceImpl<StationManagerMapper,
     public void register(RegisterEmployeeRoleRequest registerRequest) {
         Integer accountId = registeredAccountService.createRegisteredAccount(registerRequest);
         CompanyEmployee companyEmployee = companyEmployeeService.checkCompanyEmployee(registerRequest);
-        companyEmployeeService.initializeRoleInfo(registerRequest,companyEmployee,accountId, "Station-Manager");
+        companyEmployeeService.initializeRoleInfo(registerRequest, companyEmployee, accountId, "Station-Manager");
         ParcelHubCompany parcelHubCompany = parcelHubCompanyMapper.selectById(companyEmployee.getCompanyId());
         StationManager newStationManager = new StationManager();
+        newStationManager.setStartDate(LocalDate.now().plusDays(2));
+        newStationManager.setEndDate(LocalDate.now().plusDays(16));
         newStationManager.setEmployeeId(companyEmployee.getEmployeeId());
         newStationManager.setStationId(parcelStationService.allocateParcelStationToManager(parcelHubCompany.getCity()));
         try {
             save(newStationManager);
         } catch (Exception e) {
-            log.error("The mybatis has failed to insert the new station manager and its employeeId is {}", companyEmployee.getEmployeeId(),e);
+            log.error("The mybatis has failed to insert the new station manager and its employeeId is {}", companyEmployee.getEmployeeId(), e);
             throw new ServiceException(ERROR_CODE_500, "This employee code has been registered by another station manager or the station has been assigned to another.");
         }
     }
@@ -111,7 +119,7 @@ public class StationManagerServiceImpl extends ServiceImpl<StationManagerMapper,
     @Override
     public StationManager getStationManagerByToken(Integer employeeId, Integer accountId) {
         CompanyEmployee companyEmployee = companyEmployeeService.getByEmployeeId(employeeId);
-        if(!companyEmployee.getAccountId().equals(accountId)){
+        if (!companyEmployee.getAccountId().equals(accountId)) {
             throw new ServiceException(ERROR_CODE_401, "The account id of token is changed, please check the token.");
         }
 
@@ -119,7 +127,7 @@ public class StationManagerServiceImpl extends ServiceImpl<StationManagerMapper,
         try {
             stationManager = getOne(new QueryWrapper<StationManager>().eq("employee_id", employeeId));
         } catch (Exception e) {
-            log.error("The deserialization of mybatis has failed for the station manager by employee id {}",employeeId, e);
+            log.error("The deserialization of mybatis has failed for the station manager by employee id {}", employeeId, e);
             throw new ServiceException(ERROR_CODE_500, "The internal system is error.");
         }
         return stationManager;
@@ -142,14 +150,41 @@ public class StationManagerServiceImpl extends ServiceImpl<StationManagerMapper,
         return stationManager;
     }
 
+    @Override
+    public List<StationManagerInfoDTO> getAllStationManagersInfoForAdmin() {
+        return baseMapper.getAllStationManagersInfoList();
+    }
+
+    @Override
+    public void disableStationManager(Integer stationManagerId) {
+        if (stationManagerId == null) {
+            throw new ServiceException(ERROR_CODE_400, "The station manager id provided is null, please check it again.");
+        }
+        StationManager stationManager = new StationManager();
+        stationManager.setStationManagerId(stationManagerId);
+        stationManager.setStationManagerStatus(false);
+        boolean isUpdated;
+        try {
+            isUpdated = updateById(stationManager);
+        } catch (Exception e) {
+            log.error("The mybatis has failed to disable the station manager {}", stationManagerId, e);
+            throw new ServiceException(ERROR_CODE_500, "The internal system is error");
+        }
+        if (!isUpdated) {
+            throw new ServiceException(ERROR_CODE_404, "The station manager id provided is wrong, find no matched one to disable station manager");
+        }
+    }
+
     @Transactional
     @Override
     public void deleteOneStationManager(Integer stationManagerId, StationManager stationManager) {
+        Integer stationId = lambdaQuery().select(StationManager::getStationId).eq(StationManager::getStationManagerId, stationManagerId).one().getStationId();
+        parcelStationService.resetParcelStationAssignmentStatus(stationId);
         boolean isDeleted;
         try {
             isDeleted = removeById(stationManagerId);
         } catch (Exception e) {
-            log.error("The mybatis has failed to delete the station manager {}", stationManagerId,e);
+            log.error("The mybatis has failed to delete the station manager {}", stationManagerId, e);
             throw new ServiceException(ERROR_CODE_500, "The internal system is error.");
         }
         if (!isDeleted) {
@@ -164,9 +199,9 @@ public class StationManagerServiceImpl extends ServiceImpl<StationManagerMapper,
     @Override
     public StationManager updateInfoByAdmin(StationManager stationManager, Integer stationManagerId) {
         stationManager.setStationManagerId(stationManagerId);
-        if(stationManager.getStationId() != null){
+        if (stationManager.getStationId() != null) {
             StationManager matchedStationManager = FypProjectUtils.getEntityByCondition(StationManager::getStationId, stationManager.getStationId(), baseMapper);
-            if (matchedStationManager != null && !matchedStationManager.getStationManagerId().equals(stationManagerId)){
+            if (matchedStationManager != null && !matchedStationManager.getStationManagerId().equals(stationManagerId)) {
                 throw new ServiceException(ERROR_CODE_401, "The station id has been used by another station manager.");
             }
         }
@@ -175,7 +210,7 @@ public class StationManagerServiceImpl extends ServiceImpl<StationManagerMapper,
         try {
             isUpdated = updateById(stationManager);
         } catch (Exception e) {
-            log.error("The mybatis has failed to update the station manager {}", stationManagerId,e);
+            log.error("The mybatis has failed to update the station manager {}", stationManagerId, e);
             throw new ServiceException(ERROR_CODE_400, "The station manager info provided to update is null, please check it again.");
         }
         if (!isUpdated) {

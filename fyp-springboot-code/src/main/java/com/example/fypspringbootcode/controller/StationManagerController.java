@@ -2,6 +2,7 @@ package com.example.fypspringbootcode.controller;
 
 import com.example.fypspringbootcode.common.Result;
 import com.example.fypspringbootcode.controller.dto.LoginStationManagerDTO;
+import com.example.fypspringbootcode.controller.dto.StationManagerInfoDTO;
 import com.example.fypspringbootcode.controller.request.LoginRequest;
 import com.example.fypspringbootcode.controller.request.RegisterEmployeeRoleRequest;
 import com.example.fypspringbootcode.entity.CompanyEmployee;
@@ -10,6 +11,8 @@ import com.example.fypspringbootcode.service.IStationManagerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static com.example.fypspringbootcode.common.ErrorCodeList.ERROR_CODE_400;
 
@@ -52,6 +55,12 @@ public class StationManagerController {
         return Result.success(stationManager , "The station manager has been found successfully");
     }
 
+    @GetMapping("/v1/all/stationManagers-info")
+    public Result getAllStationManagersInfoForAdmin() {
+        List<StationManagerInfoDTO> stationManagersInfo = stationManagerService.getAllStationManagersInfoForAdmin();
+        return Result.success(stationManagersInfo, "All station managers' information has been retrieved successfully");
+    }
+
     @DeleteMapping("/v1/{stationManagerId}")
     public Result delete(@PathVariable Integer stationManagerId, @RequestBody StationManager stationManager) {
         stationManagerService.deleteOneStationManager(stationManagerId, stationManager);
@@ -68,5 +77,11 @@ public class StationManagerController {
     public Result updatePersonalInfo(@RequestBody CompanyEmployee companyEmployee, @PathVariable Integer stationManagerId) {
         LoginStationManagerDTO updatedStationManager = stationManagerService.updatePersonalInfo(companyEmployee, stationManagerId);
         return Result.success(updatedStationManager,"The personal info of station manager has been updated successfully");
+    }
+
+    @PutMapping("/v1/update/disable/{stationManagerId}")
+    public Result disableStationManager(@PathVariable Integer stationManagerId) {
+        stationManagerService.disableStationManager(stationManagerId);
+        return Result.success("The station manager has been disabled successfully");
     }
 }
