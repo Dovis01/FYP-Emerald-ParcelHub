@@ -1,0 +1,32 @@
+{
+  "simulation_past_data": {
+      "customer_data": {
+        "OverviewParcelsOnWay": [10, 23, 15, 78, 81, 87, 93, 33, 24, 30, 21, 14],
+        "OverviewAwaitingPickup": [10, 23, 58, 15, 81, 17, 93, 23, 24, 30, 11, 101],
+        "OverviewOrdersNum": [10, 2, 5, 18, 31, 17, 23, 33, 24, 30, 21, 4],
+        "OverviewItemsNum":[18, 20, 24, 8, 10, 57, 43, 43, 54, 30, 65, 92],
+        "OverviewTrends": [
+          {
+            "name": "No. of Parcels On the Way",
+            "type": "column",
+            "data": [10, 23, 15, 78, 81, 87, 93, 33, 24, 30, 21, 14]
+          },
+          {
+            "name": "No. of Parcels Awaiting Pickup",
+            "type": "area",
+            "data": [10, 23, 58, 15, 81, 17, 93, 23, 24, 30, 11, 101]
+          },
+          {
+            "name": "No. of Purchase Orders",
+            "type": "line",
+            "data": [10, 2, 5, 18, 31, 17, 23, 33, 24, 30, 21, 4]
+          },
+          {
+            "name": "Total No. of Items in Parcels",
+            "type": "area",
+            "data": [18, 20, 24, 8, 10, 57, 43, 43, 54, 30, 65, 92]
+          }
+        ]
+      }
+  }
+}
