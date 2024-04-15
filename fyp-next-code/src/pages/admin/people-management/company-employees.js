@@ -1,14 +1,17 @@
 import Head from 'next/head';
 import {Box, Container, Stack, Typography, Unstable_Grid2 as Grid} from '@mui/material';
 import MainPageLayout from "@/components/layouts/mainPageLayout";
+import {
+    AllEmployeesDataDisplay
+} from "@/components/pageSections/adminComponent/people-management/all-employees-data-display";
 
 
-const OurPeopleCompanyEmployeePage = () => {
+const PeopleManagementCompanyEmployeesPage = () => {
     return (
         <>
             <Head>
                 <title>
-                    Our People | Company Employee
+                    People Management | Company Employees
                 </title>
             </Head>
             <Box
@@ -33,7 +36,7 @@ const OurPeopleCompanyEmployeePage = () => {
                                 md={6}
                                 lg={4}
                             >
-
+                                <AllEmployeesDataDisplay/>
                             </Grid>
                         </Grid>
                     </Stack>
@@ -43,10 +46,10 @@ const OurPeopleCompanyEmployeePage = () => {
     );
 };
 
-OurPeopleCompanyEmployeePage.getLayout = (page) => (
+PeopleManagementCompanyEmployeesPage.getLayout = (page) => (
     <MainPageLayout>
         {page}
     </MainPageLayout>
 );
 
-export default OurPeopleCompanyEmployeePage;
+export default PeopleManagementCompanyEmployeesPage;

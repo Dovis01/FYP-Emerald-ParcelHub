@@ -2,4 +2,32 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.fypspringbootcode.mapper.CompanyEmployeeMapper">
 
+    <select id="getAllCompanyEmployeesInfoList" resultType="com.example.fypspringbootcode.controller.dto.CompanyEmployeeInfoDTO">
+        SELECT ce.employee_id,
+               ce.full_name,
+               ce.employee_code,
+               ce.phone_number,
+               rt.role_type,
+               phc.company_name,
+               phc.company_type,
+               phc.country,
+               phc.city,
+               phc.address,
+               ra.username,
+               ra.email,
+               ra.register_time,
+               ra.update_time,
+               ra.status
+        FROM t_72_company_employee AS ce
+                 LEFT JOIN
+             t_81_role_type AS rt
+             ON ce.role_id = rt.role_id
+                 LEFT JOIN
+             t_71_parcel_hub_company AS phc
+             ON ce.company_id = phc.company_id
+                 LEFT JOIN
+             t_11_registered_account AS ra
+             ON ce.account_id = ra.account_id
+    </select>
+
 </mapper>

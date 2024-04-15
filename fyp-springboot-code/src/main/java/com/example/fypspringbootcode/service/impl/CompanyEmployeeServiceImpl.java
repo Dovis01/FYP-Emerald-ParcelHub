@@ -3,6 +3,7 @@ package com.example.fypspringbootcode.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.example.fypspringbootcode.controller.dto.CompanyEmployeeInfoDTO;
 import com.example.fypspringbootcode.controller.request.RegisterEmployeeRoleRequest;
 import com.example.fypspringbootcode.entity.CompanyEmployee;
 import com.example.fypspringbootcode.entity.ParcelHubCompany;
@@ -12,6 +13,7 @@ import com.example.fypspringbootcode.mapper.ParcelHubCompanyMapper;
 import com.example.fypspringbootcode.mapper.RegisteredAccountMapper;
 import com.example.fypspringbootcode.service.ICompanyEmployeeService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.fypspringbootcode.service.IRoleTypeService;
 import com.example.fypspringbootcode.utils.FypProjectUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 import static com.example.fypspringbootcode.common.ErrorCodeList.*;
@@ -33,7 +36,7 @@ import static com.example.fypspringbootcode.common.ErrorCodeList.*;
 public class CompanyEmployeeServiceImpl extends ServiceImpl<CompanyEmployeeMapper, CompanyEmployee> implements ICompanyEmployeeService {
 
     @Autowired
-    private RoleTypeServiceImpl roleTypeService;
+    private IRoleTypeService roleTypeService;
 
     @Autowired
     private RegisteredAccountMapper registeredAccountMapper;
@@ -94,6 +97,11 @@ public class CompanyEmployeeServiceImpl extends ServiceImpl<CompanyEmployeeMappe
     }
 
     @Override
+    public List<CompanyEmployeeInfoDTO> getAllCompanyEmployeesInfoForAdmin() {
+        return baseMapper.getAllCompanyEmployeesInfoList();
+    }
+
+    @Override
     public CompanyEmployee updateEmployeeInfo(CompanyEmployee companyEmployee, Integer employeeId) {
         companyEmployee.setEmployeeId(employeeId);
         FypProjectUtils.setEntityEmptyStringsToNull(companyEmployee);
@@ -141,7 +149,7 @@ public class CompanyEmployeeServiceImpl extends ServiceImpl<CompanyEmployeeMappe
     @Override
     public void clearEmployeeSomeInfo(Integer employeeId) {
         UpdateWrapper<CompanyEmployee> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.set("role_type", null);
+        updateWrapper.set("role_id", null);
         updateWrapper.set("account_id", null);
         updateWrapper.eq("employee_id", employeeId);
         // Update the record
