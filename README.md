@@ -2,6 +2,10 @@
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).  And this system is made by Mr. Shijin Zhang from SETU (Ireland). This is my Final Year Project for Software System Practice.
 
+## Deployed Link
+
+You can access my deployed version, the website link is [`Emerald Parcel Hub`](https://fyp-emerald-parcel-hub-deployed.vercel.app/auth/signIn) Thanks!👍
+
 ## Some config before running
 
 1. You need to add your Google Map API Key in this file (`fyp-next-code/.env`). For the “.env” file, you must neet to create.
