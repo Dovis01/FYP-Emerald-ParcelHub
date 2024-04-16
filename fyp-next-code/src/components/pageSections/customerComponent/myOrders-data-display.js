@@ -65,7 +65,7 @@ export const MyOrdersDataDisplay = () => {
         };
 
         fetchData();
-    }, [currentCustomer.customerId]);
+    }, []);
 
     const columns = [
         {field: 'id', headerName: 'Order Id', headerClassName: 'super-app-theme--header', width: 85},

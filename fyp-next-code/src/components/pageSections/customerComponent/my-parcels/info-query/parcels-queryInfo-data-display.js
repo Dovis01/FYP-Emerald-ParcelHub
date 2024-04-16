@@ -100,7 +100,7 @@ export const ParcelQueryInfoDataDisplay = () => {
         };
 
         fetchJsonData();
-    }, [auth.user.customerId, googleMap]);
+    }, []);
 
     const columns = [
         {field: 'id', headerName: 'Order ID', headerClassName: 'super-app-theme--header', width:86},

@@ -52,7 +52,7 @@ export const ParcelsToStoreDataDisplay = () => {
         };
 
         fetchData();
-    }, [fetchFlag, user?.stationId, user?.stationManagerId]);
+    }, [fetchFlag]);
 
     const columns = [
         {field: 'id', headerName: 'Order ID', headerClassName: 'super-app-theme--header', width: 85},

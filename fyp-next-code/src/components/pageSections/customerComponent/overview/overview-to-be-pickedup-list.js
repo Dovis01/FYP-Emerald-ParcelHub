@@ -26,7 +26,7 @@ export const OverviewToBePickedUpList = () => {
             if (result.success) setPickupCodes(result.data);
         };
         fetchData();
-    }, [user?.customerId]);
+    }, []);
 
     return (
         <Card sx={{height: '100%', ml: 1.5}}>

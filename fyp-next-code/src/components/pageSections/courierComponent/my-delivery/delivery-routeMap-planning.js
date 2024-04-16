@@ -71,7 +71,7 @@ export const DeliveryRouteMapPlanning = () => {
 
         googleMap.updateCourierCurrentDeliveryAddr(defaultCOLAddressObj);
         setUniqueMarkers(uniqueMarkers);
-    }, [googleMap, routeAllAddressesInfo]);
+    }, [routeAllAddressesInfo]);
 
     useEffect(() => {
         const map = mapRef.current;

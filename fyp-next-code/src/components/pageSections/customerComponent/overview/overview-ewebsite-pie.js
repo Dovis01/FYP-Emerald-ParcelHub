@@ -27,7 +27,7 @@ export const OverviewEwebsitePie = (props) => {
             }
         }
         fetchData();
-    }, [user.customerId]);
+    }, []);
 
     const chartOptions = {
         chart: {

@@ -127,7 +127,7 @@ export const ProgressDataDisplay = () => {
         };
 
         fetchData();
-    }, [auth.user?.stationId, googleMap]);
+    }, []);
 
     const columns = [
         {field: 'id', headerName: 'Order Id', headerClassName: 'super-app-theme--header', width: 100},
