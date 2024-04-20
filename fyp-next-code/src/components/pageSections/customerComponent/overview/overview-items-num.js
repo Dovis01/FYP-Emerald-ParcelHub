@@ -9,7 +9,6 @@ import {
     Typography
 } from '@mui/material';
 import {useTheme} from "@mui/material/styles";
-import {useAuthContext} from "@/contexts/auth-context";
 import {useEffect, useState} from "react";
 import {getAllCustomerPersonalOrdersData} from "@/api/springboot-api";
 import {Chart} from "@/components/customized/chart";
@@ -26,18 +25,19 @@ function countTotalItems(data) {
 export const OverviewItemsNum = (props) => {
     const theme = useTheme();
     const {difference, positive = false, sx, loadCacheData} = props;
-    const {user} = useAuthContext();
     const [value, setValue] = useState(null);
     const seriesData = loadCacheData.OverviewItemsNum || [];
 
     useEffect(() => {
         const fetchJsonData = async () => {
-            const result = await getAllCustomerPersonalOrdersData(user?.customerId);
-            setValue(() => countTotalItems(result.data));
+            const result = await getAllCustomerPersonalOrdersData(props.userInfo.customerId);
+            if (result.data) {
+                setValue(() => countTotalItems(result.data));
+            }
         };
 
         fetchJsonData();
-    }, [user.customerId]);
+    }, [props.userInfo.customerId]);
 
     const options = {
         series: [{

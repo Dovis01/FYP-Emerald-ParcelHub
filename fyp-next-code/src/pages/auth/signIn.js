@@ -224,7 +224,7 @@ const SignInPage = () => {
                                                     disabled={method === 'admin'}/>
                                 <MyFormControlLabel value="Courier" control={<Radio/>} label="Courier"
                                                     disabled={method === 'admin'}/>
-                                <MyFormControlLabel value="ParcelStationManager" control={<Radio/>}
+                                <MyFormControlLabel value="Station-Manager" control={<Radio/>}
                                                     label="Parcel Station Manager" disabled={method === 'admin'}/>
                             </RadioGroup>
                         </FormControl>

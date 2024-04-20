@@ -61,17 +61,17 @@ public class TruckTest extends ServiceImpl<TruckMapper, Truck> {
         for (Truck truck : trucks) {
             BigDecimal length, width, height;
             switch (truck.getTruckType()) {
-                case "small":
+                case "Small":
                     length = BigDecimal.valueOf(random.nextInt(5) + 5); // 5-9
                     width = BigDecimal.valueOf(random.nextInt(2) + 2); // 2-3
                     height = BigDecimal.valueOf(random.nextInt(2) + 2); // 2-3
                     break;
-                case "medium":
+                case "Medium":
                     length = BigDecimal.valueOf(random.nextInt(10) + 10); // 10-19
                     width = BigDecimal.valueOf(random.nextInt(3) + 4); // 4-6
                     height = BigDecimal.valueOf(random.nextInt(3) + 4); // 4-6
                     break;
-                case "large":
+                case "Large":
                     length = BigDecimal.valueOf(random.nextInt(20) + 20); // 20-39
                     width = BigDecimal.valueOf(random.nextInt(5) + 7); // 7-11
                     height = BigDecimal.valueOf(random.nextInt(5) + 7); // 7-11

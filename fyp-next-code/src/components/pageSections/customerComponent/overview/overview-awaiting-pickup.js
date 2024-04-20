@@ -2,7 +2,6 @@ import ArrowDownIcon from '@heroicons/react/24/solid/ArrowDownIcon';
 import ArrowUpIcon from '@heroicons/react/24/solid/ArrowUpIcon';
 import WarehouseIcon from '@mui/icons-material/Warehouse';
 import {Avatar, Box, Card, CardContent, Stack, SvgIcon, Typography} from '@mui/material';
-import {useAuthContext} from "@/contexts/auth-context";
 import {useEffect, useState} from "react";
 import {getParcelPickupCodesByCustomerId} from "@/api/springboot-api";
 import {useTheme} from "@mui/material/styles";
@@ -11,18 +10,19 @@ import {Chart} from "@/components/customized/chart";
 export const OverviewAwaitingPickup = (props) => {
     const theme = useTheme();
     const {difference, positive = false, sx, loadCacheData} = props;
-    const auth = useAuthContext();
     const [value, setValue] = useState(null);
     const seriesData = loadCacheData.OverviewAwaitingPickup || [];
 
     useEffect(() => {
         const fetchJsonData = async () => {
-            const result = await getParcelPickupCodesByCustomerId(auth.user.customerId);
-            setValue(() => result.data.length);
+            const result = await getParcelPickupCodesByCustomerId(props.userInfo.customerId);
+            if (result.data) {
+                setValue(() => result.data.length);
+            }
         };
 
         fetchJsonData();
-    }, [auth.user.customerId]);
+    }, [props.userInfo.customerId]);
 
     const options = {
         series: [{

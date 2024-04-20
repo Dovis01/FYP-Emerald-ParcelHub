@@ -32,6 +32,9 @@ public class EcommerceJsonDataServiceImpl extends ServiceImpl<EcommerceJsonDataM
     private IEcommerceWebsiteService ecommerceWebsiteService;
 
     @Autowired
+    private IPastStatisticsService pastStatisticsService;
+
+    @Autowired
     private ICourierCollectionRecordService courierCollectionRecordService;
 
     @Autowired
@@ -115,6 +118,9 @@ public class EcommerceJsonDataServiceImpl extends ServiceImpl<EcommerceJsonDataM
     @Transactional
     @Override
     public void deleteAllEcommerceJsonData() {
+        courierCollectionRecordService.resetAllCollectionRecords();
+        courierDeliveryRecordService.resetAllDeliveryRecords();
+        stationParcelsToPlaceService.deleteAllPlaceParcelsRecords();
         parcelService.deleteAllParcelsData();
         orderService.deleteAllOrdersData();
         customerService.deleteOrderCustomerRecordsFromJsonDataInBatch();
@@ -126,9 +132,7 @@ public class EcommerceJsonDataServiceImpl extends ServiceImpl<EcommerceJsonDataM
             throw new ServiceException(ERROR_CODE_500, "The internal system is error");
         }
         ecommerceWebsiteService.deleteAllEcommerceWebsite();
-        courierCollectionRecordService.resetAllCollectionRecords();
-        courierDeliveryRecordService.resetAllDeliveryRecords();
-        stationParcelsToPlaceService.deleteAllPlaceParcelsRecords();
+        pastStatisticsService.deleteAllPastStatistics();
         parcelStationShelfService.resetAllParcelStationShelfStorageData();
     }
 

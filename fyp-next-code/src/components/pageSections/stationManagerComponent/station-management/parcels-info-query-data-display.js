@@ -30,21 +30,23 @@ export const ParcelsInfoQueryDataDisplay = () => {
     useEffect(() => {
         const fetchData = async () => {
             const result = await getStoredParcelsDataOfParcelStation(user?.stationId);
-            const newRows = result.data.map((item) => {
-                return {
-                    id: item.parcel.orderId,
-                    parcelTrackingCode: item.parcel.parcelTrackingCode,
-                    parcelPickupCode: item.parcel.parcelPickupCode,
-                    customerFullName: item.customer.fullName,
-                    customerPhoneNumber: item.customer.phoneNumber,
-                    customerOrderEmail: item.customer.orderEmail,
-                    customerAddress: item.customer.address,
-                    parcelStationCommunityName: item.parcelStation.communityName,
-                    parcelStationAddress: item.parcelStation.address,
-                    informStatus: 'Not yet',
-                };
-            });
-            setRows(newRows.flat());
+            if (result.data) {
+                const newRows = result.data.map((item) => {
+                    return {
+                        id: item.parcel.orderId,
+                        parcelTrackingCode: item.parcel.parcelTrackingCode,
+                        parcelPickupCode: item.parcel.parcelPickupCode,
+                        customerFullName: item.customer.fullName,
+                        customerPhoneNumber: item.customer.phoneNumber,
+                        customerOrderEmail: item.customer.orderEmail,
+                        customerAddress: item.customer.address,
+                        parcelStationCommunityName: item.parcelStation.communityName,
+                        parcelStationAddress: item.parcelStation.address,
+                        informStatus: 'Not yet',
+                    };
+                });
+                setRows(newRows.flat());
+            }
         };
 
         fetchData();

@@ -28,7 +28,7 @@ public class ParcelHistoryStatusTest extends ServiceImpl<ParcelHistoryStatusMapp
     }
 
     @Test
-    public void test() {
+    public void simulateAllParcelsInParcelHub() {
         List<Integer> parcelIds = lambdaQuery().eq(ParcelHistoryStatus::getStatusInfo, "In parcel hub").list().stream().map(ParcelHistoryStatus::getParcelId).toList();
         List<Integer> allParcelIds = listObjs(Wrappers.<ParcelHistoryStatus>lambdaQuery().select(ParcelHistoryStatus::getParcelId), obj -> (Integer) obj);
         List<Integer> filteredParcelIds = allParcelIds.stream()

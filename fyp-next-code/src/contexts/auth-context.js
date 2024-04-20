@@ -148,7 +148,8 @@ export const AuthContextProvider = (props) => {
             adminName: result.data?.adminName,
             fullName: result.data?.fullName,
             username: result.data?.username,
-            roleType: result.data?.roleType
+            roleType: result.data?.roleType,
+            customerId: result.data?.customerId
         }));
 
         const user = {
@@ -175,7 +176,8 @@ export const AuthContextProvider = (props) => {
             adminName: result.data?.adminName,
             fullName: result.data?.fullName,
             username: result.data?.username,
-            roleType: result.data?.roleType
+            roleType: result.data?.roleType,
+            customerId: result.data?.customerId
         }));
 
         const user = {

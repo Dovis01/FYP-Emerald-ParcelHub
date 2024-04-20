@@ -49,4 +49,9 @@ public class PastStatisticsServiceImpl extends ServiceImpl<PastStatisticsMapper,
         Map<String, Object> map = FypProjectUtils.convertToMap(jsonObject);
         return map;
     }
+
+    @Override
+    public void deleteAllPastStatistics() {
+        remove(null);
+    }
 }

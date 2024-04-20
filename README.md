@@ -77,6 +77,12 @@ This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-opti
 
 and running the java class(FypSpringbootCodeApplication) to start the backend server.
 
+## Attention Points
+
+This is project is based on the E-commerce simulation data to run for other roles. And I have design the two types simulation json file (`Real time` and `Past Time`). You check it [`E-commerce-Json-data.json`](https://github.com/Dovis01/FYP-Emerald-ParcelHub/blob/main/fyp-next-code/src/dataSimulation/E-commerce-Json-data.json) and [`E-commerce-past-Json-data.json`](https://github.com/Dovis01/FYP-Emerald-ParcelHub/blob/main/fyp-next-code/src/dataSimulation/E-commerce-past-Json-data.json). Firstly, you must log in the system by Admin role to upload these simulation data files.
+
+# Existing Accounts for All Roles
+
 ## Admin Login
 Basically, all the test user account's password is `Zsj123456.`
 
@@ -84,3 +90,28 @@ Basically, all the test user account's password is `Zsj123456.`
 
 + password: zsj123456
 
+## Station Manager Login
+
+- username: Liacac
+- email: Liacacadh@163.com
+- password: Zsj123456.
+
+## Courier Login
+
+Work Type: Collect Parcels
+
+- username: IsabellaSScott
+- email: IsabellaSScott@gmail.com
+- password: Zsj123456.
+
+Work Type: Deliver Parcels
+
+- username: HannLLewis
+- email: Hann665lewis@gmail.com
+- password: Zsj123456.
+
+## Customer Login
+
+- username: JohnLDoe44
+- email: johndoe223344@gmail.com
+- password: Zsj123456.

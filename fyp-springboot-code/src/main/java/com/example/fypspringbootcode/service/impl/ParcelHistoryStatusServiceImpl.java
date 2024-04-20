@@ -85,6 +85,9 @@ public class ParcelHistoryStatusServiceImpl extends ServiceImpl<ParcelHistorySta
     @Override
     public void resetParcelsToBeCollected() {
         List<Integer> parcelIds =listObjs(Wrappers.<ParcelHistoryStatus>lambdaQuery().select(ParcelHistoryStatus::getParcelId).eq(ParcelHistoryStatus::getStatusInfo, "To be collected"), o -> (Integer) o);
+        if (parcelIds.isEmpty()) {
+            return;
+        }
         try {
             lambdaUpdate().in(ParcelHistoryStatus::getParcelId, parcelIds).remove();
         } catch (Exception e) {
@@ -96,6 +99,9 @@ public class ParcelHistoryStatusServiceImpl extends ServiceImpl<ParcelHistorySta
     @Override
     public void resetParcelsToBeDelivered() {
         List<Integer> parcelIds =listObjs(Wrappers.<ParcelHistoryStatus>lambdaQuery().select(ParcelHistoryStatus::getParcelId).eq(ParcelHistoryStatus::getStatusInfo, "To be delivered"), o -> (Integer) o);
+        if (parcelIds.isEmpty()) {
+            return;
+        }
         try {
             lambdaUpdate().eq(ParcelHistoryStatus::getStatusInfo, "To be delivered").or()
                     .eq(ParcelHistoryStatus::getStatusInfo, "In transit").or()

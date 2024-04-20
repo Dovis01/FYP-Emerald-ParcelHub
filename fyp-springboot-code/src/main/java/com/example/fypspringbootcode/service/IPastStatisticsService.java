@@ -16,4 +16,6 @@ public interface IPastStatisticsService extends IService<PastStatistics> {
 
     Map<String, Object> getPartEcommercePastStatisticsByRoleType(String roleType);
 
+    void deleteAllPastStatistics();
+
 }

@@ -16,6 +16,7 @@ import {getEcommerceSimulationPastTimeDataByRoleType} from "@/api/springboot-api
 const CustomerOverviewPage = () => {
     const auth = useAuthContext();
     const [loadCacheData, setLoadCacheData] = useState({});
+    const userInfo = JSON.parse(window.sessionStorage.getItem('userInfo'));
 
     useEffect(() => {
         const fetchData = async () => {
@@ -61,6 +62,7 @@ const CustomerOverviewPage = () => {
                                 {...(Object.keys(loadCacheData).length !== 0 ? { difference: 12, positive: true } : {})}
                                 sx={{height: '100%'}}
                                 loadCacheData={loadCacheData}
+                                userInfo={userInfo}
                             />
                         </Paper>
                     </Grid>
@@ -70,6 +72,7 @@ const CustomerOverviewPage = () => {
                                 {...(Object.keys(loadCacheData).length !== 0 ? { difference: 16, positive: false } : {})}
                                 sx={{height: '100%'}}
                                 loadCacheData={loadCacheData}
+                                userInfo={userInfo}
                             />
                         </Paper>
                     </Grid>
@@ -79,6 +82,7 @@ const CustomerOverviewPage = () => {
                                 {...(Object.keys(loadCacheData).length !== 0 ? { difference: 19, positive: true } : {})}
                                 sx={{height: '100%'}}
                                 loadCacheData={loadCacheData}
+                                userInfo={userInfo}
                             />
                         </Paper>
                     </Grid>
@@ -88,6 +92,7 @@ const CustomerOverviewPage = () => {
                                 sx={{height: '100%'}}
                                 {...(Object.keys(loadCacheData).length !== 0 ? { difference: 25, positive: false } : {})}
                                 loadCacheData={loadCacheData}
+                                userInfo={userInfo}
                             />
                         </Paper>
                     </Grid>

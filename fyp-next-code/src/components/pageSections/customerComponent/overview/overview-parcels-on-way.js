@@ -4,25 +4,25 @@ import DomainAddIcon from '@mui/icons-material/DomainAdd';
 import {Avatar, Box, Card, CardContent, Stack, SvgIcon, Typography} from '@mui/material';
 import {useEffect, useState} from "react";
 import {getAllCustomerPersonalParcelsData} from "@/api/springboot-api";
-import {useAuthContext} from "@/contexts/auth-context";
 import {Chart} from "@/components/customized/chart";
 import {useTheme} from "@mui/material/styles";
 
 export const OverviewParcelsOnWay = (props) => {
     const theme = useTheme();
     const {difference, positive = false, sx, loadCacheData} = props;
-    const auth = useAuthContext();
     const [value, setValue] = useState(null);
     const seriesData = loadCacheData.OverviewParcelsOnWay || [];
 
     useEffect(() => {
         const fetchJsonData = async () => {
-            const result = await getAllCustomerPersonalParcelsData(auth.user.customerId);
-            setValue(() => result.data.length);
+            const result = await getAllCustomerPersonalParcelsData(props.userInfo.customerId);
+            if (result.data) {
+                setValue(() => result.data.length);
+            }
         };
 
         fetchJsonData();
-    }, [auth.user.customerId]);
+    }, [props.userInfo.customerId]);
 
     const options = {
         series: [{
@@ -89,7 +89,7 @@ export const OverviewParcelsOnWay = (props) => {
                                 }}
                             >
                                 <Typography variant="h4" sx={{mr: 2}}>
-                                    {value}
+                                    {value || 0}
                                 </Typography>
                                 {difference && (
                                     <>

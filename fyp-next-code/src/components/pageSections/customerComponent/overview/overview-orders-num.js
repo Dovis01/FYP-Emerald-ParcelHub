@@ -4,25 +4,25 @@ import ArrowUpIcon from "@heroicons/react/24/solid/ArrowUpIcon";
 import ArrowDownIcon from "@heroicons/react/24/solid/ArrowDownIcon";
 import {useEffect, useState} from "react";
 import {getAllCustomerPersonalOrdersData} from "@/api/springboot-api";
-import {useAuthContext} from "@/contexts/auth-context";
 import {useTheme} from "@mui/material/styles";
 import {Chart} from "@/components/customized/chart";
 
 export const OverviewOrdersNum = (props) => {
     const theme = useTheme();
     const {difference, positive = false, sx, loadCacheData} = props;
-    const {user} = useAuthContext();
     const [value, setValue] = useState(null);
     const seriesData = loadCacheData.OverviewOrdersNum || [];
 
     useEffect(() => {
         const fetchJsonData = async () => {
-            const result = await getAllCustomerPersonalOrdersData(user?.customerId);
-            setValue(() => result.data.length);
+            const result = await getAllCustomerPersonalOrdersData(props.userInfo.customerId);
+            if (result.data) {
+                setValue(() => result.data.length);
+            }
         };
 
         fetchJsonData();
-    }, [user.customerId]);
+    }, [props.userInfo.customerId]);
 
     const options = {
         series: [{

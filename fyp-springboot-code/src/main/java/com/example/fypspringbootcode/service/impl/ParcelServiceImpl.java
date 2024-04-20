@@ -189,7 +189,7 @@ public class ParcelServiceImpl extends ServiceImpl<ParcelMapper, Parcel> impleme
         List<Parcel> parcels = baseMapper.getParcelsToBeCollectedSortedByOrderDate(parcelIdsToBeCollected);
 
         if (parcels.isEmpty()) {
-            throw new ServiceException(ERROR_CODE_404, "No parcels to be collected, all parcels have been ToBeCollected.");
+            throw new ServiceException(ERROR_CODE_404, "No parcels to be collected.");
         }
         return parcels;
     }
