@@ -5,7 +5,6 @@ import {useRouter} from 'next/router';
 import {useFormik} from 'formik';
 import * as Yup from 'yup';
 import {
-    Alert,
     Box,
     Button, FormControl, FormControlLabel,
     FormLabel,
@@ -156,14 +155,6 @@ const SignInPage = () => {
         []
     );
 
-    const handleSkip = useCallback(
-        () => {
-            auth.skip();
-            router.push('/');
-        },
-        [auth, router]
-    );
-
     return (
         <>
             <Head>
@@ -311,29 +302,6 @@ const SignInPage = () => {
                                 >
                                     Continue
                                 </Button>
-                                <Button
-                                    fullWidth
-                                    size="large"
-                                    sx={{mt: 1}}
-                                    onClick={handleSkip}
-                                >
-                                    Skip authentication
-                                </Button>
-                                <Alert
-                                    color="primary"
-                                    severity="info"
-                                    sx={{
-                                        mt: -0.6,
-                                        width: '100%',
-                                        display: 'flex',
-                                        justifyContent: 'center',
-                                        backgroundColor: 'transparent'
-                                    }}
-                                >
-                                    <div>
-                                        You can use <b>adminRoot</b> and password <b>zsj123456</b>
-                                    </div>
-                                </Alert>
                             </form>
                         )}
                         {method === 'email' && (
@@ -393,29 +361,6 @@ const SignInPage = () => {
                                 >
                                     Continue
                                 </Button>
-                                <Button
-                                    fullWidth
-                                    size="large"
-                                    sx={{mt: 1}}
-                                    onClick={handleSkip}
-                                >
-                                    Skip authentication
-                                </Button>
-                                <Alert
-                                    color="primary"
-                                    severity="info"
-                                    sx={{
-                                        mt: -0.6,
-                                        width: '100%',
-                                        display: 'flex',
-                                        justifyContent: 'center',
-                                        backgroundColor: 'transparent'
-                                    }}
-                                >
-                                    <div>
-                                        You can use <b>adminRoot</b> and password <b>zsj123456</b>
-                                    </div>
-                                </Alert>
                             </form>
                         )}
                         {method === 'admin' && (
@@ -474,29 +419,6 @@ const SignInPage = () => {
                                 >
                                     Continue
                                 </Button>
-                                <Button
-                                    fullWidth
-                                    size="large"
-                                    sx={{mt: 1}}
-                                    onClick={handleSkip}
-                                >
-                                    Skip authentication
-                                </Button>
-                                <Alert
-                                    color="primary"
-                                    severity="info"
-                                    sx={{
-                                        mt: -0.6,
-                                        width: '100%',
-                                        display: 'flex',
-                                        justifyContent: 'center',
-                                        backgroundColor: 'transparent'
-                                    }}
-                                >
-                                    <div>
-                                        You can use <b>adminRoot</b> and password <b>zsj123456</b>
-                                    </div>
-                                </Alert>
                             </form>
                         )}
                     </div>
