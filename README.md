@@ -6,6 +6,14 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 You can access my deployed version, the website link is [`Emerald Parcel Hub`](https://fyp-emerald-parcel-hub-deployed.vercel.app/auth/signIn) Thanks!👍
 
+## Swagger Address
+
+Once you have running the backend server, you can check the system swagger APIs from links below:
+
+Local Version: [`http://localhost:9090/swagger-ui/index.html`](http://localhost:9090/swagger-ui/index.html)
+
+Deployed Version: [`https://fyp-emerald-b9f8febb1c59.herokuapp.com/swagger-ui/index.html`](https://fyp-emerald-b9f8febb1c59.herokuapp.com/swagger-ui/index.html)
+
 ## Some config before running
 
 1. You need to add your Google Map API Key in this file (`fyp-next-code/.env`). For the “.env” file, you must neet to create.
